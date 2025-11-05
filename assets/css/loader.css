@@ -1,0 +1,36 @@
+.overlay{
+    background:rgba(0, 0, 0, 0.532);
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:0px;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+  }
+
+  .letter{
+    font-family:'Pacifico', cursive;
+    font-size:6em;
+    background:linear-gradient(90deg, #ff7ce5, #8acbff, #ffe395);
+    -webkit-background-clip:text;
+    color:transparent;
+    opacity:0;
+    transform:translateY(20px);
+    animation:reveal .8s ease forwards, floaty 3s ease-in-out infinite;
+  }
+
+  .letter:nth-child(2){
+    animation-delay:0.3s, 0.3s;
+  }
+  @keyframes reveal{
+  0% {opacity:0;filter:blur(8px);transform:translateY(20px);}
+  100% {opacity:1;filter:blur(0);transform:translateY(0);}
+}
+
+@keyframes floaty{
+  0%,100% {transform:translateY(0);}
+  50% {transform:translateY(-8px);}
+}

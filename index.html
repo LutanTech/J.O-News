@@ -3,10 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/loader.css">
     <title>JO News || Home</title>
 </head>
+<style>
+    *{
+       margin: 0; 
+       padding: 0;
+       box-sizing: border-box;
+    }
+    body{
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+
+    }
+    .logo-name{
+        font-weight: 900;
+        font-size: 2em;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        
+    }
+    .links{
+        display: flex;
+        padding: 0 20px;
+        background: rgb(5, 148, 5);
+        flex-wrap: wrap;
+        gap: 10px;
+        border: 1px solid px;
+
+    }
+    .links a{
+        color: rgb(255, 255, 255);
+        padding: 10px;
+        text-decoration: none;
+        font-weight: 400 !important;
+        font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        &:hover{
+            background: red;
+        }
+    }
+</style>
 <body>
-    JO News
-    
+    <div class="overlay">
+        <div class="letter">J</div>
+        <div class="letter">O</div>
+        </div>
+  <header class="header">
+    <div class="logo-name">J.O News</div>
+    <hr>
+    <div class="links">
+            <a href="">All News</a>
+            <a href="/people">People</a>
+            <a href="/entertainment">Entertainment</a>
+            <a href="/health">Health</a>
+            <a href="/climate">Climate</a>
+            <a href="/politics">Politics</a>
+            <a href="/business">Business</a>
+            <a href="/sports">Sports</a>
+            <a href="/world">World</a>
+    </div>
+  </header>    
 </body>
 </html>

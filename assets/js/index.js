@@ -7,13 +7,13 @@ document.addEventListener('DOMContentLoaded', ()=>{
         const seconds = Math.floor((new Date() - new Date(date)) / 1000)
     
         const intervals = [
-            { label: 'year', secs: 31536000 },
-            { label: 'month', secs: 2592000 },
-            { label: 'week', secs: 604800 },
-            { label: 'day', secs: 86400 },
-            { label: 'hour', secs: 3600 },
-            { label: 'minute', secs: 60 },
-            { label: 'second', secs: 1 }
+            { label: 'yr', secs: 31536000 },
+            { label: 'mon', secs: 2592000 },
+            { label: 'wk', secs: 604800 },
+            { label: 'd', secs: 86400 },
+            { label: 'hr', secs: 3600 },
+            { label: 'min', secs: 60 },
+            { label: 'sec', secs: 1 }
         ]
     
         for (const i of intervals){
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
     
     function fetchLatestNews(){
-        showLoader()
+        // showLoader()
         fetch(`${baseUrl}/get_news`)
         .then(res=>res.json())
         .then(data=>{
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 showMessage(data.error, 'error')
             } else{
                 const news = data.news
-                lNews.innerHTML = ''
+                lNews.innerHTML = '<h2>Latest News</h2> <hr>'
 
                 if(news){
                     news.forEach(n => {
@@ -49,17 +49,28 @@ document.addEventListener('DOMContentLoaded', ()=>{
                         <div class="image"><img src="${n.image_url ? n.image_url : '/assets/images/logo.jpg'}" alt="${n.title} Image" srcset=""></div>
                         <div class="details">
                             <div class="title"><b>
-                               ${n.title.length > 50 ? n.title.slice(0, 50) + "..." : n.title}
+                               ${n.title.length > 50 ? n.title.slice(0, 100) + "..." : n.title}
                             </b></div>
                             <div class="context">
-                                ${parseMarkdown(n.content)}...
+                                ${parseMarkdown(n.content)}
                             </div>
                             <div class="dets">
-                            <div class="time"> <i class="fas fa-clock"></i> ${ft}</div>
+                            <div class="time">
+                             <i class="fas fa-clock"></i>
+                             <span> ${ft} </span> 
+                             </div>
+                            <div class="category" tooltip="Category">
+                              <i class="fas fa-tags"></i>
+                              <span> ${n.categ ? n.categ : 'Unknown'}</span>
+                            </div>
+                            <div class="verified" tooltip="Verified">
+                              <i class="fas fa-check-circle" style="color:blue;"></i>
+                            </div>
                             
                             </div>
+
                         </div>`
-                        const previewText = safeText(n.content).slice(0, 20) + "..."
+                        const previewText = safeText(n.content).slice(0,60) + "..."
                          div.querySelector('.context').textContent = previewText
 
                         a.append(div)
@@ -70,8 +81,27 @@ document.addEventListener('DOMContentLoaded', ()=>{
             }
         })
     }
+    function appendMostV(a, type){
+        if(a){
+            const parent = document.querySelector('.featured')
+            const div = document.createElement('div')
+            div.classList.add('featured-news')
+            div.innerHTML = `
+            <div class="ft-imgDiv">
+            <div class="type">${type.replace('_',' ')}</div>
+                <img id="ft-img" src="${a.image_url ? a.image_url  : '/assets/images/logo.jpg'} "  alt="">
+            </div>
+            <div class="article-data">
+            <div class="article-title">
+                ${a.title.length > 100 ? a.title.slice(0, 100) + '...' : a.title}
+            </div>
+            </div>
+            `
+            parent.appendChild(div)
+        }
+    }
     function fetchMostRead(){
-        showLoader()
+        // showLoader()
         fetch(`${baseUrl}/most_read`)
         .then(res=>res.json())
         .then(data=>{
@@ -79,8 +109,10 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 showMessage(data.error, 'error')
             } else{
                 const news = data.news
+                const p1 = data.news[0]
+                appendMostV(p1, 'Most_Read')
                 if(news){
-                        mRead.innerHTML = ''
+                        mRead.innerHTML = '<h2>Most Read</h2>  <hr>'
                         news.forEach(n => {
                             const div = document.createElement('div')
                             const a = document.createElement('a')     
@@ -96,11 +128,21 @@ document.addEventListener('DOMContentLoaded', ()=>{
                                     ${parseMarkdown(n.content)}...
                                 </div>
                              <div class="dets">
-                            <div class="time"> <i class="fas fa-clock"></i> ${timeAgo(n.added)}</div>
+                            <div class="time"> 
+                            <i class="fas fa-clock"></i>
+                            <span> ${timeAgo(n.added)}</span>
+                            </div>
+                            <div class="category" tooltip="Category">
+                              <i class="fas fa-tags"></i>
+                              <span> ${n.categ ? n.categ : 'Unknown'}</span>
+                            </div>
+                            <div class="verified" tooltip="Verified">
+                              <i class="fas fa-check-circle" style="color:blue;"></i>
+                            </div>
                             
                             </div>
                             </div>`
-                            const previewText = safeText(n.content).slice(0, 20) + "..."
+                            const previewText = safeText(n.content).slice(0, 60) + "..."
                              div.querySelector('.context').textContent = previewText
     
                             a.append(div)
@@ -112,7 +154,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
         })
     }
     function fetchTrending(){
-        showLoader()
+        // showLoader()
         fetch(`${baseUrl}/trending`)
         .then(res=>res.json())
         .then(data=>{
@@ -120,9 +162,10 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 showMessage(data.error, 'error')
             } else{
                 const news = data.news
+                const t1 = data.news[0]
+                appendMostV(t1, 'Trending')
                 trending.innerHTML = `
-               
-                
+               <h2>Trending</h2>  <hr>
                 `
 
                 if(news){
@@ -136,18 +179,25 @@ document.addEventListener('DOMContentLoaded', ()=>{
                         div.innerHTML = `
                         <div class="image"><img src="${n.image_url ? n.image_url : '/assets/images/logo.jpg'}" alt="${n.title} Image" srcset=""></div>
                         <div class="details">
-                            <div class="title"><b>
-                            ${n.title.length > 50 ? n.title.slice(0, 50) + "..." : n.title}
+                          <div class="title"><b>
+                              ${n.title.length > 50 ? n.title.slice(0, 70) + "..." : n.title}
                             </b></div>
-                            <div class="context">
-                                ${parseMarkdown(n.content)}...
-                            </div>
-                            <div class="dets">
+                          <div class="context">
+                            ${parseMarkdown(n.content)}...
+                          </div>
+                          <div class="dets">
                             <div class="time"> <i class="fas fa-clock"></i> ${timeAgo(n.added)}</div>
-                            
+                            <div class="category" tooltip="Category">
+                              <i class="fas fa-tags"></i>
+                              <span> ${n.categ ? n.categ : 'Unknown'}</span>
                             </div>
-                        </div>`
-                        const previewText = safeText(n.content).slice(0, 20) + "..."
+                            <div class="verified" tooltip="Verified">
+                              <i class="fas fa-check-circle" style="color:blue;"></i>
+                            </div>
+                          </div>
+                        </div>
+                        `
+                        const previewText = safeText(n.content).slice(0, 60) + "..."
                          div.querySelector('.context').textContent = previewText
 
                         a.append(div)

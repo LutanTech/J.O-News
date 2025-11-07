@@ -78,7 +78,7 @@ def new():
         print(str(e))
         log(str(e), 'error')
         return jsonify({'error': 'Failed to Post: Database Error'}), 500
-    
+
 
 @app.route('/get_news')
 def news():
@@ -89,7 +89,7 @@ def news():
 
     if limit:
         news_query = news_query.limit(limit)
-    
+
     news_query = news_query.offset(offset)
 
     news_dict = news_query.all()
@@ -114,6 +114,7 @@ def trendingNews():
 def get_article(slug):
     article = News.query.filter_by(slug=slug).first()
     if article:
+        article.views = int(article.views) + 1
         return jsonify({'news':article.to_dict()}), 200
     return jsonify({'error':'Not found'}), 400
 
@@ -123,4 +124,4 @@ with app.app_context():
     db.create_all()
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000, host='0.0.0.0')
+    print("app.run(debug=True, port=5000, host='0.0.0.0')")

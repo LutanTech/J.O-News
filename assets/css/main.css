@@ -11,6 +11,7 @@
      justify-content: space-between;
      align-items:stretch;
      min-height: 100vh;
+     
 
  }
  .logo-name{
@@ -146,7 +147,6 @@ overflow: auto;
 .newsDiv, .mostRead, .trending{
     background: white !important;
     width: 32%;
-    border-right: 1px solid rgba(0, 0, 0, 0.148);
     min-width: 300px;
     flex-grow: 1;
 
@@ -155,6 +155,7 @@ overflow: auto;
 @media (max-width:768px) {
 .newsDiv, .mostRead, .trending{
     position: relative !important;
+    border-right: 0; 
 }
 }
 .mostRead{
@@ -164,6 +165,9 @@ overflow: auto;
 .-news{
     display: flex;
     flex-grow: 1;
+    .title{
+        font-family: 'Times New Roman', Times, serif;
+    }
 }
 .-news .image{
   width: 100%;
@@ -173,7 +177,7 @@ overflow: auto;
     max-width: 200px;
     object-fit: cover;
     max-height: 150px;
-    min-width: 200px;
+    min-width: 150px;
   }
 }
 .context{
@@ -400,4 +404,69 @@ opacity: .7;
     border-right-color: #111;
     transform: translateY(-50%);
   }
-  
+  .none{
+    display: none;
+  }
+  .seen{
+    display: flex;
+  }
+  .searchDiv{
+    /* width: fit-content; */
+    padding: 10px;
+    height: 100%;
+    width: 100%;
+
+    position: fixed;
+    background-repeat: no-repeat;
+    background-color: rgba(255, 255, 255, 0.773);
+    backdrop-filter: blur(100px);
+
+    bottom: 0;
+    right: 0;
+    top: 0;
+    left: 0;
+    z-index: 3764;
+    justify-content: center;
+    align-items: center;
+ }
+ #query{
+     padding: 10px;
+     border: 3px solid white;
+     font-size: large;
+     width: 90%;
+     border-bottom: 3px solid rgba(0, 0, 255, 0.518);
+     outline: none;
+     color: #000000;
+     max-width: 500px;
+     background: #fff;
+     &::-webkit-search-cancel-button{
+         cursor: pointer;
+         fill: red;
+     }
+
+ }
+ #searchBtn{
+     border: 3px solid rgb(255, 255, 255);
+     font-size: large;
+     border-bottom: 3px solid rgba(0, 0, 255, 0.518);
+     padding: 10px;
+     cursor: pointer;
+     &:hover{
+         background: lightcoral;
+     }
+ }
+ .closeSearch{
+     display: flex;
+     font-size: 3em;
+     float: right;
+     position: absolute;
+     right: 10%;
+     border: 0;
+     background: #0000;
+     color: red;
+     top: 10%;
+     cursor: pointer;
+     &:active{
+         scale: 0.97;
+     }
+ }

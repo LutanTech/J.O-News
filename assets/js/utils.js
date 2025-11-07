@@ -1,4 +1,5 @@
-const baseUrl = 'http://127.0.0.1:5000'
+// const baseUrl = 'http://127.0.0.1:5000'
+const baseUrl = 'https://jomc.pythonanywhere.com'
 
 
 document.addEventListener('DOMContentLoaded',()=>{
@@ -76,3 +77,26 @@ window.parseMarkdown = parseMarkdown
 window.baseUrl = baseUrl
 window.safeText = safeText
 
+document.addEventListener('DOMContentLoaded', ()=>{
+    const searchDiv = document.querySelector('.searchDiv')
+    const tr = document.querySelector('.search')
+    tr.addEventListener('click', ()=>{
+        if(searchDiv){
+            searchDiv.classList.toggle('seen')
+            searchDiv.classList.toggle('none')
+        }
+    })
+    searchDiv.querySelector('.closeSearch').addEventListener('click', ()=>{
+        searchDiv.classList.toggle('seen')
+        searchDiv.classList.toggle('none')
+    })
+    const q = searchDiv.querySelector('#query')
+    const qbtn = searchDiv.querySelector('#searchBtn')
+    qbtn.addEventListener('click',()=>{
+        if(q.value && q.value != ''){
+            window.location.href = `/search/?q=${q.value.trim()}`
+        } else if(q.value.trim() == ''){
+            alert('Empty Search Item')
+        }
+    })
+})

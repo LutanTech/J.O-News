@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Video Upload</title>
+  <script src="https://cdn.jsdelivr.net/npm/@mux/mux-player"></script>
+
+  <style>
+    body {
+      font-family: Poppins, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #f3f4f6;
+    }
+    .upload-box {
+      width: 400px;
+      background: white;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 0 18px rgba(0,0,0,.1);
+      text-align: center;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      cursor: pointer;
+      border-radius: 10px;
+      font-weight: bold;
+      background: black;
+      color: white;
+      margin-top: 10px;
+    }
+    progress {
+      width: 100%;
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="upload-box">
+  <h2>📤 Upload Video</h2>
+  <input type="file" id="video" accept="video/*">
+  <button id="uploadBtn">Upload</button>
+
+  <progress id="bar" value="0" max="100"></progress>
+  <p id="msg"></p>
+
+
+<div id="videoContainer"></div>
+</div>
+
+<script>
+    const btn = document.querySelector("#uploadBtn");
+    const bar = document.querySelector("#bar");
+    const msg = document.querySelector("#msg");
+    
+    btn.onclick = () => {
+      let file = document.querySelector("#video").files[0];
+      if (!file) return msg.textContent = "Pick a vid yoh 😭";
+    
+      let form = new FormData();
+      form.append("video", file);
+    
+      let xhr = new XMLHttpRequest();
+      xhr.open("POST", "https://vidupload.onrender.com/upload");
+    
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+          let p = (e.loaded / e.total) * 100;
+          bar.value = p;
+          bar.style.display = "block";
+          msg.textContent = `Uploading ${Math.round(p)}%...`;
+        }
+      };
+    
+      xhr.onload = () => {
+        let res = JSON.parse(xhr.responseText);
+        if (res.error) {
+          msg.textContent = "🥲 " + res.error;
+        } else {
+          msg.textContent = `✅ Done! Upload id: ${res.upload_id}`;
+          bar.style.display = "none";
+    
+          // Poll for playback ID
+          const pollPlayback = () => {
+            fetch(`https://vidupload.onrender.com/asset/${res.upload_id}`)
+            .then(r => r.json())
+            .then(data => {
+              console.table(data);
+              if (data.playback_id) {
+                msg.textContent = `🎬 Video ready! Playback ID: ${data.playback_id}`;
+                // Embed video
+                const videoContainer = document.querySelector("#videoContainer");
+                videoContainer.innerHTML = `
+                <iframe
+                src="https://player.mux.com/${data.playback_id}"
+                style="width: 100%; border: none; aspect-ratio: 16/9;"
+                allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+                allowfullscreen
+                ></iframe>
+                `;
+              } else {
+                msg.textContent = `⏳ Processing... status: ${data.status}`;
+                setTimeout(pollPlayback, 3000); // Retry after 3 sec
+              }
+            })
+            .catch(err => msg.textContent = "Error fetching asset status 😔 " + err);
+          };
+    
+          pollPlayback();
+        }
+      };
+    
+      xhr.onerror = () => msg.textContent = "Network go brrrr, upload go bye 😔";
+    
+      xhr.send(form);
+    };
+    </script>
+    
+</script>
+</body>
+</html>

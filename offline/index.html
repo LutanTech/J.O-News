@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>No Internet</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html { font-family: Inter, sans-serif; }
+    body {
+      background: #1f2937;
+      color: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+      margin: 0;
+    }
+    .card {
+      width: 100%;
+      max-width: 380px;
+      background: #374151;
+      padding: 32px;
+      border-radius: 16px;
+      text-align: center;
+      border: 2px solid rgba(239,68,68,.5);
+      box-shadow: 0 20px 25px -6px rgba(0,0,0,.4);
+    }
+    .icon { font-size: 58px; color: #ef4444; }
+    h1 { font-size: 28px; font-weight: 800; color: #f87171; margin-bottom: 8px; }
+    p { font-size: 18px; font-weight: 500; color: #9ca3af; margin-bottom: 32px; }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #dc2626;
+      color: #fff;
+      font-weight: 600;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+    }
+    button:active { scale: .97; }
+    .spin {
+      width: 22px;
+      height: 22px;
+      border: 3px solid rgba(255,255,255,.2);
+      border-top: 3px solid #fff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-left: 8px;
+      display: none;
+    }
+    .show { display: inline-block; }
+    @keyframes spin {
+      0% { transform: rotate(0); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="card" id="c">
+  <div class="icon" id="ico">🚫</div>
+  <h1 id="h">Network Error</h1>
+  <p id="m">Internet dipped harder than vibes on Monday.</p>
+  <button id="btn">
+    <span id="t">Reconnect</span>
+    <div class="spin" id="sp"></div>
+  </button>
+</div>
+
+<script>
+
+const btn = document.getElementById("btn");
+const t = document.getElementById("t");
+const sp = document.getElementById("sp");
+
+btn.onclick = () => {
+  t.textContent = "Checking";
+  sp.classList.add("show");
+  btn.disabled = true;
+  setTimeout(()=>location.reload(), 800);
+};
+
+if(navigator.onLine){
+    window.location.href="/"
+} else{
+    if(!navigator.onLine){
+        return
+    }
+}
+</script>
+
+</body>
+</html>

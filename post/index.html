@@ -10,6 +10,7 @@
     
     <script src="/assets/js/loader.js"></script>
     <script src="/assets/js/utils.js"></script>
+    <script src="/assets/js/main.js"></script>
         <link rel="stylesheet" href="/assets/css/loader.css">
         <link rel="stylesheet" href="/assets/css/main.css">
         <link rel="stylesheet" href="/assets/css/dark.css">
@@ -63,7 +64,7 @@
         }
     }
 
-    .addImageBtn, .draftBtn, .previewBtn{
+    .addImageBtn, .draftBtn, .previewBtn, .addVideoBtn{
         padding: 10px;
         border: 1px solid blue;
         border-radius: 50%;
@@ -102,6 +103,14 @@
     display: flex;
     gap: 10px;
 }
+.hidden{
+  display: none;
+}
+.fixed{
+  position: fixed;
+  background: rgba(0, 0, 0, 0.595);
+  z-index: 300;
+}
 </style>
 <body>
     <div class="overlay">
@@ -136,10 +145,27 @@
             <a href="/sports">Sports</a>
             <a href="/world">World</a>
     </div>
-  </header>    
+  </header>  
+  <div class="ad">
+    <!-- <iframe src="https://lutan-tech-inline-ads.vercel.app" frameborder="0" id="inline-ad" width="100%" height="200"></iframe> -->
+  </div>  
   <div class="content">
+    <div id="uploadCircle" class="hidden fixed " style="right: 45%; left: 45%; top: 50%;">
+      <svg width="60" height="60">
+        <circle cx="30" cy="30" r="26" stroke="#eee" stroke-width="6" fill="none"/>
+        <circle id="circleProgress" cx="30" cy="30" r="26" stroke="#00aaff" stroke-width="6" fill="none"
+          stroke-linecap="round" stroke-dasharray="163" stroke-dashoffset="163"
+          transform="rotate(-90 30 30)"/>
+      </svg>
+    </div>
     <form class="publishForm form">
       <div class="inputs">
+      <div class="inp">
+      <input type="file" name="image" id="image" accept="image/*">
+      <input type="file" name="newImage" id="newImage" accept="image/*" style="display:none;">
+      <input type="file" name="newVideo" id="newVideo" accept="video/*" style="display:none;">
+    </div>
+      
         <div class="inp" tooltip="Maximum of 150 characters">
           <label for="title">Enter Title</label>
           <input type="text" name="title" id="title" maxlength="150" >
@@ -182,9 +208,12 @@
 
         </div>
         <div class="editBtns">
-        <div class="addImageBtn" tooltip="Attach an image">
+          <div class="addImageBtn" tooltip="Attach an image">
             <i class="fas fa-paperclip"></i>
         </div>
+        <div class="addVideoBtn" tooltip="Attach a video">
+          <i class="fas fa-video"></i>
+      </div>
         
         <div class="previewBtn" tooltip="Preview article">
             <i class="fas fa-eye"></i>
@@ -194,62 +223,232 @@
             <i class="fas fa-bookmark"></i>
         </div>
     </div>
+    <div class="inp">
+  <progress id="bar" value="0" max="100" style="width: 100%;"></progress>
+  <p id="msg"></p>
+      <div id="videoContainer"></div>
+    </div>
             <button type="submit" style="min-width: 300px;" tooltip="Publish">Publish</button>
       </div>
       <script>
         const editor = document.getElementById("editable");
         const imgBtn = document.querySelector(".addImageBtn");
         const prevBtn = document.querySelector(".previewBtn");
+        const vidBtn = document.querySelector(".addVideoBtn");
         const saveBtn = document.querySelector(".draftBtn");
-
-    editor.addEventListener("input", () => {
-       const draft = editor.innerHTML
-       localStorage.setItem('draft', draft)
-       console.log(draft)
-
-    });
-    document.addEventListener('DOMContentLoaded', ()=>{
-        const saved = localStorage.getItem('draft')
-        if(saved){
-            editor.innerHTML = saved
+        
+        editor.addEventListener("input", () => {
+            localStorage.setItem('draft', editor.innerHTML);
+        });
+        
+        document.addEventListener('DOMContentLoaded', ()=>{
+            const saved = localStorage.getItem('draft');
+            if(saved) editor.innerHTML = saved;
+        
+            const form = document.querySelector('.form');
+            if(form){
+                form.addEventListener('submit', (e)=>{
+                    e.preventDefault();
+                    const title = form.querySelector('#title');
+                    const categ = form.querySelector('#category');
+                    const sub = form.querySelector('#sub');
+                    const content = form.querySelector('#editable');
+                    if(!title.value.trim()) return alert("Title missing");
+                    if(!categ.value.trim()) return alert("Pick a category first 🤨");
+                    if(!sub.value.trim()) return alert("Sub category  is empty");
+                    if(!content.innerText.trim()) return alert("Drop some content fam 👀");
+                    const trending = document.querySelector('#trending').checked;
+                    fetch(`${baseUrl}/new`, {
+                        method: 'POST',
+                        headers: {"Content-Type": "application/json"},
+                        body: JSON.stringify({
+                            title: title.value,
+                            sub: sub.value,
+                            categ: categ.value,
+                            trending: trending,
+                            content: content.innerHTML
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if(data.error) return alert(data.error);
+                        alert("Saved ✅");
+                        localStorage.removeItem("draft");
+                        form.reset();
+                    })
+                    .catch(err => alert("Network Error 😭"));
+                });
+            }
+        });
+        
+        let savedRange = null;
+        editor.addEventListener("mouseup", saveCursorPosition);
+        editor.addEventListener("keyup", saveCursorPosition);
+        
+        function saveCursorPosition() {
+            const sel = window.getSelection();
+            if(sel.rangeCount) savedRange = sel.getRangeAt(0);
         }
+        // editor.addEventListener('keydown', (e)=>{
+        //   console.log(e)
+        //   if(e.key == 'Control'){
+        //     e.preventDefault()
+        //    editor.addEventListener('keydown', (e)=>{
+        //     if(e.key == 'V'){
+        //       e.preventDefault()
+        //       fileInput.click()
+        //     }
+        //    })
 
-        const form = document.querySelector('.form')
-        if(form){
-            form.addEventListener('submit', (e)=>{
-    e.preventDefault();
-
-    const title = form.querySelector('#title');
-    const categ = form.querySelector('#category');
-    const sub = form.querySelector('#sub');
-    const content = form.querySelector('#editable');
-
-    // check inputs
-    if(!title.value.trim()){
-        alert("Yo, title missing 😭");
-        return;
-    }
-
-    if(!categ.value.trim()){
-        alert("Pick a category first 🤨");
-        return;
-    }
-
-    if(!sub.value.trim()){
-        alert("Sub category cant be ghosting us 😒");
-        return;
-    }
-
-
-    console.log("Form validated ✅ sending...");
-    console.log(content.innerHTML)
-    // you can send it here
-});
-
+        //   }
+        // })
+        
+        const fileInput = document.getElementById("newImage");
+        const addImageBtn = imgBtn;
+        addImageBtn.addEventListener('click', ()=>{
+          fileInput.click()
+        });
+        vidBtn.addEventListener('click', ()=>{
+          document.querySelector("#newVideo").click()
+        });
+        
+        fileInput.onchange = () => {
+            const file = fileInput.files[0];
+            if(!file) return;
+            const formData = new FormData();
+            formData.append("image", file);
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", `https://vidupload.onrender.com/upload-image`);
+            uploadCircle.classList.remove("hidden");
+            setProgress(0);
+        
+            xhr.upload.onprogress = e => {
+                if(e.lengthComputable) setProgress((e.loaded/e.total)*100);
+            };
+        
+            xhr.onload = () => {
+                uploadCircle.classList.add("hidden");
+                setProgress(0);
+                const data = JSON.parse(xhr.responseText);
+                if(!data.url) return alert("Bruh server said no");
+                insertImageAtCursor(data.url);
+            };
+        
+            xhr.onerror = () => {
+                uploadCircle.classList.add("hidden");
+                alert("Network L");
+            };
+        
+            xhr.send(formData);
+            fileInput.value = "";
+        };
+        
+        function setProgress(percent){
+            const offset = 163 - (percent/100)*163;
+            circleProgress.style.strokeDashoffset = offset;
         }
-    })
+        
 
-      </script>
+        
+        const bar = document.querySelector("#bar");
+        const msg = document.querySelector("#msg");
+        
+        document.querySelector("#newVideo").addEventListener('input', () => {
+            const file = document.querySelector("#newVideo").files[0];
+            if(!file) return msg.textContent = "Pick a video please";
+            const form = new FormData();
+            form.append("video", file);
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "https://vidupload.onrender.com/upload");
+        
+            xhr.upload.onprogress = e => {
+                if(e.lengthComputable){
+                    let p = (e.loaded/e.total)*100;
+                    bar.value = p;
+                    bar.style.display = "block";
+                    msg.textContent = `Uploading ${Math.round(p)}%...`;
+                }
+            };
+        
+            xhr.onload = () => {
+                const res = JSON.parse(xhr.responseText);
+                if(res.error) return msg.textContent = "🥲 " + res.error;
+                msg.textContent = `✅ Done!`;
+                bar.style.display = "none";
+        
+                const pollPlayback = () => {
+                    fetch(`https://vidupload.onrender.com/asset/${res.upload_id}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        console.table(data);
+                        if(data.playback_id){
+                            msg.textContent = `🎬 Video ready!`;
+                            insertVideoAtCursor(data.playback_id);
+                        } else {
+                            msg.textContent = `⏳ Processing... status: ${data.status || 'pending'}`;
+                            setTimeout(pollPlayback, 3000);
+                        }
+                    })
+                    .catch(err => msg.textContent = "Error fetching asset status 😔 " + err);
+                };
+        
+                pollPlayback();
+            };
+        
+            xhr.onerror = () => msg.textContent = "Network go brrrr, upload go bye 😔";
+            xhr.send(form);
+        });
+        
+
+
+// Save cursor in editor, not toolbar
+editor.addEventListener("mouseup", saveCursorPosition);
+editor.addEventListener("keyup", saveCursorPosition);
+
+function saveCursorPosition() {
+    const sel = window.getSelection();
+    if(sel.rangeCount > 0) {
+        const range = sel.getRangeAt(0);
+        if(editor.contains(range.commonAncestorContainer)) {
+            savedRange = range.cloneRange();
+        }
+    }
+}
+
+function insertAtCursor(node){
+    if(!savedRange) {
+        editor.appendChild(node); // fallback
+        return;
+    }
+    const sel = window.getSelection();
+    const range = savedRange.cloneRange();
+    range.deleteContents();
+    range.insertNode(node);
+    range.collapse(false);
+    sel.removeAllRanges();
+    sel.addRange(range);
+}
+
+// Image insertion
+function insertImageAtCursor(url){
+    const img = document.createElement("img");
+    img.src = url;
+    img.style.maxWidth = "100%";
+    insertAtCursor(img);
+}
+
+// Video insertion
+function insertVideoAtCursor(id){
+    const iframe = document.createElement("iframe");
+    iframe.src = `https://player.mux.com/${id}`;
+    iframe.style.cssText = "width:100%; border:none; aspect-ratio:16/9;";
+    iframe.allow = "accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture";
+    iframe.allowFullscreen = true;
+    insertAtCursor(iframe);
+}
+
+        </script>
+        
 
       </div>
     </form>

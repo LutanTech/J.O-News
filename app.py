@@ -1,0 +1,94 @@
+from flask import Flask, jsonify, request
+from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
+from flask_migrate import Migrate
+from datetime import datetime, timedelta
+import models
+from models import News, Log
+
+from utils import generate_random_id, make_slug
+
+app = Flask(__name__)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///news.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = 'not_really_a_secret'
+
+CORS(app)
+models.db.init_app(app)
+db = models.db
+migrate = Migrate(app, db)
+
+
+def log(content, type):
+    new_log = Log(id=generate_random_id(6), type=type, content=content)
+    try:
+        db.session.add(new_log)
+        db.session.commit()
+        return True
+    except Exception as e:
+        print('error during logging')
+        return False
+
+@app.route('/new', methods=['POST'])
+def new():
+    data = request.get_json()
+    print(data)
+
+    title = data.get('title')
+    sub = data.get('sub')
+    categ = data.get('categ')
+    trending = data.get('trending')
+    content = data.get('content')
+
+    # make sure ID function runs
+    new_post = News(
+        id = generate_random_id(),title = title,categ = categ,sub = sub,content = content,is_trending = bool(trending)
+    )
+
+    new_post.slug = make_slug(title)
+
+    try:
+        db.session.add(new_post)
+        db.session.commit()
+        return jsonify({'message': 'posted successfully'}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        print(str(e))
+        log(str(e), 'error')
+        return jsonify({'error': 'Failed to Post: Database Error'}), 500
+    
+
+@app.route('/get_news')
+def news():
+    news_dict = News.query.order_by(News.added.desc()).limit(10).all()
+    return jsonify({'news': [n.to_small_dict() for n in news_dict]})
+
+
+
+@app.route('/most_read')
+def mostReadNews():
+    news_dict = News.query.order_by(News.views.desc()).limit(6).all()
+    return jsonify({'news': [n.to_small_dict() for n in news_dict]})
+
+
+@app.route('/trending')
+def trendingNews():
+    news_dict = News.query.filter_by(is_trending=True).order_by(News.added.desc()).limit(6).all()
+    return jsonify({'news': [n.to_small_dict() for n in news_dict]})
+
+@app.route('/get/<slug>')
+def get_article(slug):
+    article = News.query.filter_by(slug=slug).first()
+    if article:
+        return jsonify({'news':article.to_dict()}), 200
+    return jsonify({'error':'Not found'}), 400
+
+
+
+with app.app_context():
+    db.create_all()
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5000, host='0.0.0.0')

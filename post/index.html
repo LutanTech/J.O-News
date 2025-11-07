@@ -241,44 +241,64 @@
             localStorage.setItem('draft', editor.innerHTML);
         });
         
+        editor.addEventListener("paste", function(e) {
+          e.preventDefault();
+          const text = e.clipboardData.getData("text/plain");
+          const saved = localStorage.setItem('draft', text)
+          document.execCommand("insertText", false, text);
+        });
         document.addEventListener('DOMContentLoaded', ()=>{
             const saved = localStorage.getItem('draft');
             if(saved) editor.innerHTML = saved;
         
             const form = document.querySelector('.form');
             if(form){
-                form.addEventListener('submit', (e)=>{
-                    e.preventDefault();
-                    const title = form.querySelector('#title');
-                    const categ = form.querySelector('#category');
-                    const sub = form.querySelector('#sub');
-                    const content = form.querySelector('#editable');
-                    if(!title.value.trim()) return alert("Title missing");
-                    if(!categ.value.trim()) return alert("Pick a category first 🤨");
-                    if(!sub.value.trim()) return alert("Sub category  is empty");
-                    if(!content.innerText.trim()) return alert("Drop some content fam 👀");
-                    const trending = document.querySelector('#trending').checked;
-                    fetch(`${baseUrl}/new`, {
-                        method: 'POST',
-                        headers: {"Content-Type": "application/json"},
-                        body: JSON.stringify({
-                            title: title.value,
-                            sub: sub.value,
-                            categ: categ.value,
-                            trending: trending,
-                            content: content.innerHTML
-                        })
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        if(data.error) return alert(data.error);
-                        alert("Saved ✅");
-                        localStorage.removeItem("draft");
-                        form.reset();
-                    })
-                    .catch(err => alert("Network Error 😭"));
+            form.addEventListener('submit', async (e)=>{
+              e.preventDefault();
+
+              const title = form.querySelector('#title');
+              const categ = form.querySelector('#category');
+              const sub = form.querySelector('#sub');
+              const content = form.querySelector('#editable');
+              const trending = document.querySelector('#trending').checked;
+
+              const fileInput = document.getElementById("image");
+              const file = fileInput.files[0];
+
+              // lil validation vibes
+              if(!file) return alert("Add a pic bro 😭");
+              if(!title.value.trim()) return alert("Title missing");
+              if(!categ.value.trim()) return alert("Pick a category first 🤨");
+              if(!sub.value.trim()) return alert("Sub category empty fam");
+              if(!content.innerText.trim()) return alert("Drop some content 👀");
+
+              const formData = new FormData();
+              formData.append("image", file);
+              formData.append("title", title.value);
+              formData.append("categ", categ.value);
+              formData.append("sub", sub.value);
+              formData.append("trending", trending);
+              formData.append("content", content.innerHTML);
+
+              try {
+                const res = await fetch(`${baseUrl}/new`, {
+                  method: 'POST',
+                  body: formData
                 });
-            }
+
+                const data = await res.json();
+                if(data.error) return alert(data.error);
+
+                alert("Saved ✅");
+                localStorage.removeItem("draft");
+                form.reset();
+
+              } catch (err) {
+                alert("Network error");
+              }
+            });
+          }
+
         });
         
         let savedRange = null;

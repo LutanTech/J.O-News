@@ -6,10 +6,10 @@
  body{
      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
      background: white;
-     display: flex;
+     display: flex !important;
      flex-direction: column;
      justify-content: space-between;
-     align-items:safe;
+     align-items:stretch;
      min-height: 100vh;
 
  }
@@ -17,10 +17,19 @@
      font-weight: bolder;
      text-decoration: none;
      color: black;
-     font-size: 3em;
+     display: flex;
+     flex-direction: column;
+     font-size: 1em;
      font-family: 'Times New Roman', Times, serif;
      *{
          color: black;
+     }
+     a{
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        justify-content: center;
+        align-items: center;
      }
      
  }
@@ -135,11 +144,12 @@ overflow: auto;
 }
 
 .newsDiv, .mostRead, .trending{
-    min-width: 200px;
-    flex-grow: 1;
     background: white !important;
-    width: 30%;
+    width: 32%;
+    border-right: 1px solid rgba(0, 0, 0, 0.148);
     min-width: 300px;
+    flex-grow: 1;
+
 
 }
 @media (max-width:768px) {
@@ -170,13 +180,29 @@ overflow: auto;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
 }
-.n-link{
+.n-link {
     text-decoration: none;
     color: black;
-    &:hover{
-        text-decoration: underline;
-    }
 }
+
+.n-link * {
+    text-decoration: none;
+}
+
+.n-link:hover .title {
+    text-decoration: underline;
+}
+
+.n-link:hover .time {
+    text-decoration: none !important;
+}
+
+.news-content-image{
+    width: 95%;
+    float: left;
+    margin: 20px;
+}
+
 .title{
     font-family: 'Times New Roman', Times, serif;
 }
@@ -305,6 +331,10 @@ opacity: .7;
     transform: translateX(-50%);
     box-shadow: 0px 0px 10px white !important;
 
+  }
+
+  .f{
+    text-transform: capitalize !important;
   }
   
   [tooltip]:hover::before {

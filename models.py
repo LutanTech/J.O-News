@@ -39,7 +39,7 @@ class News(db.Model):
         return {
             "id": self.id,
             "title": self.title,
-            "content": (self.content or "")[:100],
+            "content": self.content or "",
             "image_url": self.image_url,
             "added": self.added.isoformat(),
             "slug":self.slug
@@ -49,7 +49,7 @@ class News(db.Model):
         return {
             "id": self.id,
             "title": self.title,
-            "content": (self.content or "")[:400],
+            "content": self.content or "",
             "categ": self.categ,
             "sub": self.sub,
             "image_url": self.image_url,

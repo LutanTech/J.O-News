@@ -40,7 +40,7 @@ def validate_token(token, expected_id):
     except Exception:
         return False
 
-IMGBB_API_KEY = "6de633240918c57b729c9beb75952985"
+IMGBB_API_KEY = "9ff810430da3f1d639d10033e9269f18"
 
 def upload_to_imgbb(image_b64):
     url = "https://api.imgbb.com/1/upload"

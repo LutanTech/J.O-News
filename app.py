@@ -5,8 +5,9 @@ from flask_migrate import Migrate
 from datetime import datetime, timedelta
 import models
 from models import News, Log
+import base64, json, uuid
 
-from utils import generate_random_id, make_slug
+from utils import generate_random_id, make_slug, upload_to_imgbb, remove_punct, generate_otp, generate_token, validate_token
 
 app = Flask(__name__)
 
@@ -32,18 +33,37 @@ def log(content, type):
 
 @app.route('/new', methods=['POST'])
 def new():
-    data = request.get_json()
-    print(data)
+    # get form text fields
+    title = request.form.get('title')
+    sub = request.form.get('sub')
+    categ = request.form.get('categ')
+    trending = request.form.get('trending')
+    content = request.form.get('content')
 
-    title = data.get('title')
-    sub = data.get('sub')
-    categ = data.get('categ')
-    trending = data.get('trending')
-    content = data.get('content')
+    # get file
+    image_file = request.files.get("image")
+    image_url = None
 
-    # make sure ID function runs
+    if image_file:
+        # convert to base64 for imgbb
+        image_file.seek(0)
+        image_b64 = base64.b64encode(image_file.read()).decode()
+        image_url = upload_to_imgbb(image_b64)
+
+    if not title or not sub or not categ or not content:
+        return jsonify({'error': 'Missing fields'}), 400
+
+    if not image_url:
+        return jsonify({'error':'Image not Uploaded'}), 400
+
     new_post = News(
-        id = generate_random_id(),title = title,categ = categ,sub = sub,content = content,is_trending = bool(trending)
+        id = generate_random_id(),
+        image_url = image_url,
+        title = title,
+        categ = categ,
+        sub = sub,
+        content = content,
+        is_trending = trending == "true"
     )
 
     new_post.slug = make_slug(title)
@@ -62,8 +82,20 @@ def new():
 
 @app.route('/get_news')
 def news():
-    news_dict = News.query.order_by(News.added.desc()).limit(10).all()
+    limit = request.args.get('limit', type=int)
+    offset = request.args.get('offset', 0, type=int)
+
+    news_query = News.query.order_by(News.added.desc())
+
+    if limit:
+        news_query = news_query.limit(limit)
+    
+    news_query = news_query.offset(offset)
+
+    news_dict = news_query.all()
+
     return jsonify({'news': [n.to_small_dict() for n in news_dict]})
+
 
 
 

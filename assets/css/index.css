@@ -1,0 +1,27 @@
+.-news .image{
+    width: fit-content !important;
+    img{
+        height: 100px;
+        object-fit: cover;
+    }
+  }
+  .-news{
+    border-bottom:  1px solid rgba(0, 0, 0, 0.181);
+    padding: 10px 0;
+    div{
+        font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .title{
+        font-weight: 400 !important;
+    }
+  }
+  .time{
+    color: rgba(128, 128, 128, 0.822);
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: small;
+    margin-top: 10px;
+    text-decoration: none !important;
+    &:hover{
+        text-decoration: none !important;
+    }
+  }

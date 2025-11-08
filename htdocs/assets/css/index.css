@@ -1,0 +1,106 @@
+.-news .image{
+    width: fit-content !important;
+    img{
+        height: 100px;
+        object-fit: cover;
+        width: 100px !important;
+    }
+  }
+  .-news{
+    border-bottom:  1px solid rgba(0, 0, 0, 0.163);
+    padding: 10px 5px;
+    font-size: smaller;
+
+    div{
+        font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .title{
+        font-weight: 400 !important;
+    }
+  }
+  .time{
+    color: rgba(128, 128, 128, 0.822);
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: x-small !important;
+    margin-top: 10px;
+    text-decoration: none !important;
+    &:hover{
+        text-decoration: none !important;
+    }
+  }
+  .dets{
+    display: flex;
+    font-size: small;
+    justify-content: start;
+    align-items: baseline;
+    gap: 10px;
+    padding: 2px 10px ;
+    width: 100%;
+    flex-grow: 1;
+    text-align: center;
+  }
+  .category{
+    text-transform: capitalize;
+    background: rgba(51, 255, 0, 0.182);
+    padding: 5px 10px;
+    font-size: x-small !important;
+
+  }
+  .featured{
+    display: flex;
+    gap: 10px;
+  }
+  
+  .featured-news{
+    display: flex;
+    font-family:'Times New Roman', Times, serif;
+    flex-direction: column;
+    max-width: 50%;
+    width: 100%;
+    padding: 10px;
+    position: relative;
+  }
+  .article-data{
+    position: absolute;
+    font-size: large;
+    right: 10px;
+    left: 10px;
+    bottom: 20px;
+    background: linear-gradient( to top right,  rgba(0, 0, 0, 0.703), black, red);
+    padding: 10px;
+    backdrop-filter: blur(10px);
+    color: white !important;
+    width: 95%;
+    margin: auto;
+}
+  #ft-img{
+    max-width: 100%;
+    height: 300px;
+    object-fit: cover;
+    width: 100%;
+
+  }
+  @media (max-width:768px) {
+    .featured{
+      flex-direction: column;
+
+    }
+    .featured-news{
+      width: 100%;
+      max-width: none !important;
+    }
+    #ft-img{
+      width: 100%;
+      max-width: none !important;
+    }
+    
+  }
+  .type{
+    padding: 5px 10px;
+    width: fit-content;
+    position: absolute;
+    right: 30px;
+    top: 20px;
+    background: brown;
+    color: white;
+  }

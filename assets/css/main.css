@@ -149,6 +149,16 @@ overflow: auto;
     width: 32%;
     min-width: 300px;
     flex-grow: 1;
+    iframe{
+        margin: 10px auto !important;
+        padding: 2px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        *{
+            margin: auto !important;
+        }
+    }
 
 
 }

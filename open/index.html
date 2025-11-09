@@ -14,7 +14,7 @@
   <!-- Open Graph -->
   <meta property="og:title" content="JOMC News Article">
   <meta property="og:description" content="World news, trending stories and real time global headlines">
-  <meta property="og:image" content="https://jomc-news.vercel.app/assets/images/logo.jpg">
+  <meta property="og:image" id="og_" content="https://jomc-news.vercel.app/assets/images/logo.jpg">
   <meta property="og:url" content="https://jomc-news.vercel.app/">
   <meta property="og:type" content="article">
 
@@ -22,7 +22,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="JOMC News Article">
   <meta name="twitter:description" content="Breaking global stories and top world headlines">
-  <meta name="twitter:image" content="https://jomc-news.vercel.app/assets/images/logo.jpg">
+  <meta name="twitter:image" id="t_i" content="https://jomc-news.vercel.app/assets/images/logo.jpg">
 
   <!-- JSON-LD Structured Data -->
   <script id="article-schema" type="application/ld+json">
@@ -541,6 +541,12 @@ div.querySelector('#copyLink').addEventListener('click', (e) => {
 });
     document.querySelector('.news-wrapper').appendChild(div)
 fetchTags(n.categ, n.sub)
+ document.querySelector('title').innerText = `JOMC News : ${n.title}`
+ const ic = document.querySelector('#t_i')
+  ic.setAttribute('content', n.image_url)
+  const og = document.querySelector('#o_g')
+  og.setAttribute('content', n.image_url)
+
 
           hideLoader()
         }

@@ -112,10 +112,15 @@
         <div class="search">
           <i class="fas fa-search"></i>
         </div>
+        <div class="menu-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
       </div>
     </div>
     <hr>
-    <div class="links">
+    <div class="links" >
       <a href="/">All News</a>
       <a href="/people">People</a>
       <a href="/entertainment">Entertainment</a>
@@ -127,6 +132,59 @@
       <a href="/world">World</a>
     </div>
   </header>
+  <style>
+    @media (max-width:768px) {
+        .links{
+            display: none !important;
+        }
+        .menu-icon{
+            display: flex !important;
+        }        
+    }
+    .links{
+        display: flex;
+    }
+    .menu-icon{
+        display: none;
+        gap: 5px;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        width: 40px !important;
+        padding: 10px 5px !important;
+        height: 40px !important;
+        &:hover{
+            span{
+                background: black;
+            }
+
+        }
+    }
+    .menu-icon span{
+        background: rgb(255, 255, 255) ;
+        width: 100%;
+        padding: 1px;
+        flex-grow: 1;
+        height: 2px;
+    }
+    .large{
+        width: 100%;
+        background: green;
+        position: fixed;
+        top: 0;
+        z-index: 20000;
+        height: 100%;
+        justify-content: start;
+        align-items: flex-start;
+        flex-direction: column;
+        a{
+            width: 100%;
+            &:nth-of-type(1){
+                margin-top: 100px;
+            }
+        }
+    }
+  </style>
 
   <div class="featured featured-latest"></div>
   <div class="featured featured-mostread"></div>
@@ -238,6 +296,7 @@
 </div>
     <div class="trending">
       <h2>Trending</h2>
+      <div class="tr">
       <div class="skeleton news-art">
 
         <div class="image"></div>
@@ -275,6 +334,7 @@
           </div>
         </div>
       </div>
+    </div>
     </div>
 
   </div>

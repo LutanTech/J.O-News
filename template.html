@@ -1,107 +1,279 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>JOMC News | World Updates, Hot Headlines, Breaking Stories</title>
+    <meta name="description" content="JOMC News brings real time world news. Fast reliable and student powered.">
+    <meta name="keywords" content="JOMC News, World news, News Site Kenya news, student journalism, Moi University news, Joseph Owino news">
+    <meta name="author" content="JOMC News Team">
+    <link rel="canonical" href="https://jomc-news.vercel.app/">
+    <link rel="icon" href="/assets/images/logo.jpg" type="image/x-icon">
+  <link rel="shortcut-icon" href="/assets/images/logo.jpg" type="image/x-icon">
+    <!-- OpenGraph -->
+    <meta property="og:title" content="JOMC News">
+    <meta property="og:description" content="Real time World news.">
+    <meta property="og:image" content="https://jomc-news.vercel.app/assets/images/logo.jpg">
+    <meta property="og:url" content="https://jomc-news.vercel.app/">
+    <meta property="og:type" content="website">
+  
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="JOMC News">
+    <meta name="twitter:description" content="Real time world news.">
+    <meta name="twitter:image" content="https://jomc-news.vercel.app/assets/images/logo.jpg">
+  
+    <!-- Fonts and Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" xintegrity="sha512-Fo3rlrZj/liSp/NWE/y6J7o9S3eC2z3n5I2J4mQ6J6c4b/c6Z5M5E3M5J5K5N5L5P5Q5R5S5T5U5V5W5X5Y5Z5a5b5c5d5e5f5g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script async="async" data-cfasync="false" src="//pl28003297.effectivegatecpm.com/53af17ddb9e4b799586ecb86dc439eb2/invoke.js"></script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" preconnect>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
+  
+    <!-- Ads -->
+    <script async data-cfasync="false" src="//pl28003297.effectivegatecpm.com/53af17ddb9e4b799586ecb86dc439eb2/invoke.js" defer></script>
+    <script async data-cfasync="false" src="//pl28005774.effectivegatecpm.com/83706ba541e98f9c09f46db018571cf6/invoke.js" defer></script>
+    <script async data-cfasync="false" src="//pl28010045.effectivegatecpm.com/545445584d06c09fd1a832fa75e54619/invoke.js" defer></script>
+  
+    <!-- Service Worker -->
     <script>
-        if ("serviceWorker" in navigator) {
-          navigator.serviceWorker.register("/sw.js")
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js")
           .then(() => console.log("SW Registered ✅"))
           .catch(err => console.log("SW fail 💀", err));
-        }
-        </script>
-        
-
-    <script src="/assets/js/loader.js"></script>
-    <script src="/assets/js/main.js"></script>
-    <script src="/assets/js/index.js"></script>
+      }
+    </script>
+  
+    <!-- JS -->
+    <script src="/assets/js/loader.js" defer></script>
+    <script src="/assets/js/main.js" defer></script>
+    <script src="/assets/js/index.js" defer></script>
     <script src="/assets/js/utils.js"></script>
-    
+  
+    <!-- CSS -->
     <link rel="stylesheet" href="/assets/css/loader.css">
     <link rel="stylesheet" href="/assets/css/index.css">
     <link rel="stylesheet" href="/assets/css/main.css">
     <link rel="stylesheet" href="/assets/css/dark.css">
-    <title>JO News || Home</title>
+  
+    <!-- JSON LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "NewsMediaOrganization",
+      "name": "JOMC News",
+      "url": "https://jomc-news.vercel.app",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://jomc-news.vercel.app/assets/images/logo.jpg"
+      },
+      "description": "Digital news site with world updates",
+      "sameAs": [
+        "https://www.instagram.com/",
+        "https://twitter.com/",
+        "https://www.tiktok.com/"
+      ]
+    }
+    </script>
+  </head>
+  
 
-</head>
-<style>
-
-</style>
 <body>
-    <div class="overlay">
-      <div class="loader"></div>
-        </div>
+
+  <div class="overlay">
+    <div class="loader"></div>
+  </div>
   <header class="header">
     <div class="l090-ic">
-    <div class="logo-name">
+      <div class="logo-name">
         <a href="/" style="text-decoration: none;">
-             <img src="/assets/images/logo.jpg" width="70">
-             <span> J.O News </span></a>
-    </div>
-    <style>
+          <img src="/assets/images/logo.jpg" width="70">
+        </a>
+      </div>
+      <style>
 
-    </style>
+      </style>
 
-    <div class="searchDiv none">
+      <div class="searchDiv none">
         <button class="closeSearch">&times;</button>
         <input type="search" name="query" id="query" placeholder="Enter your query">
         <button type="button" id="searchBtn">
-            <i class="fas fa-search"></i>
+          <i class="fas fa-search"></i>
         </button>
-    </div>
-    <div class="icons">
+      </div>
+      <div class="icons">
         <div class="modes">
-            <i class="fas fa-moon"></i>
+          <i class="fas fa-moon"></i>
         </div>
         <div class="help">
-        <i class="fas fa-info-circle"></i>
+          <i class="fas fa-info-circle"></i>
         </div>
-    <div class="search">
-        <i class="fas fa-search"></i>
+        <div class="search">
+          <i class="fas fa-search"></i>
+        </div>
+      </div>
     </div>
-    </div>
-</div>
     <hr>
     <div class="links">
-            <a href="/">All News</a>
-            <a href="/people">People</a>
-            <a href="/entertainment">Entertainment</a>
-            <a href="/health">Health</a>
-            <a href="/climate">Climate</a>
-            <a href="/politics">Politics</a>
-            <a href="/business">Business</a>
-            <a href="/sports">Sports</a>
-            <a href="/world">World</a>
+      <a href="/">All News</a>
+      <a href="/people">People</a>
+      <a href="/entertainment">Entertainment</a>
+      <a href="/health">Health</a>
+      <a href="/climate">Climate</a>
+      <a href="/politics">Politics</a>
+      <a href="/business">Business</a>
+      <a href="/sports">Sports</a>
+      <a href="/world">World</a>
     </div>
-  </header>    
-  <!-- <div class="ad" tooltip="Ad"> -->
-    <!-- <iframe src="https://lutan-tech-inline-ads.vercel.app" frameborder="0" id="inline-ad" width="100%" height="150"></iframe> -->
-  <!-- </div> -->
+  </header>
 
-<!-- <script async="async" data-cfasync="false" src="//pl28003396.effectivegatecpm.com/007fd972b8495182decb806571941725/invoke.js"></script> -->
-
-        <!-- <script async="async" data-cfasync="false" src="//pl28005774.effectivegatecpm.com/83706ba541e98f9c09f46db018571cf6/invoke.js"></script>
-        <div id="container-83706ba541e98f9c09f46db018571cf6"></div> -->
+  <div class="featured featured-latest"></div>
+  <div class="featured featured-mostread"></div>
+  <div class="featured featured-trending"></div>
   <div class="content">
-  
-
+    <div class="newsDiv">
+        <h2>Latest News</h2>
+      <div class="newsWrapper">
+        <div class="skeleton news-art">
+          <div class="image"></div>
+          <div class="details">
+            <div class="title"></div>
+            <div class="context">
+              <div class="c-line"></div>
+              <div class="c-line"></div>
+              <div class="c-line"></div>
+              <div class="c-line"></div>
+            </div>
+          </div>
+        </div>
+        <div class="skeleton news">
+          <div class="image"></div>
+          <div class="details">
+            <div class="title"></div>
+            <div class="context">
+              <div class="c-line"></div>
+              <div class="c-line"></div>
+              <div class="c-line"></div>
+              <div class="c-line"></div>
+            </div>
+          </div>
+        </div>
+        <div class="skeleton news">
+          <div class="image"></div>
+          <div class="details">
+            <div class="title"></div>
+            <div class="context">
+              <div class="c-line"></div>
+              <div class="c-line"></div>
+              <div class="c-line"></div>
+              <div class="c-line"></div>
+            </div>
+          </div>
+        </div>
+        <div class="skeleton news">
+          <div class="image"></div>
+          <div class="details">
+            <div class="title"></div>
+            <div class="context">
+              <div class="c-line"></div>
+              <div class="c-line"></div>
+              <div class="c-line"></div>
+              <div class="c-line"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mostRead">
+      <h2>Most Read </h2>
+      <div class="mr">
+      <div class="skeleton news-art">
+        <div class="image"></div>
+        <div class="details">
+          <div class="title"></div>
+          <div class="context">
+            <div class="c-line"></div>
+            <div class="c-line"></div>
+            <div class="c-line"></div>
+            <div class="c-line"></div>
+          </div>
+        </div>
+      </div>
+      <div class="skeleton news">
+        <div class="image"></div>
+        <div class="details">
+          <div class="title"></div>
+          <div class="context">
+            <div class="c-line"></div>
+            <div class="c-line"></div>
+            <div class="c-line"></div>
+            <div class="c-line"></div>
+          </div>
+        </div>
+      </div>
+      <div class="skeleton news">
+        <div class="image"></div>
+        <div class="details">
+          <div class="title"></div>
+          <div class="context">
+            <div class="c-line"></div>
+            <div class="c-line"></div>
+            <div class="c-line"></div>
+            <div class="c-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
 </div>
-<div id="container-53af17ddb9e4b799586ecb86dc439eb2"></div>
-<script async="async" data-cfasync="false" src="//pl28003297.effectivegatecpm.com/53af17ddb9e4b799586ecb86dc439eb2/invoke.js"></script>
-<div id="container-53af17ddb9e4b799586ecb86dc439eb2"></div>
-<script async="async" data-cfasync="false" src="//pl28005774.effectivegatecpm.com/83706ba541e98f9c09f46db018571cf6/invoke.js"></script>
-<div id="container-83706ba541e98f9c09f46db018571cf6"></div>
-<script type="text/javascript" id="adscript" src="https://lutan-tech-ads.vercel.app/v1.js"></script>
+    <div class="trending">
+      <h2>Trending</h2>
+      <div class="tr">
+      <div class="skeleton news-art">
 
-<footer class="footer">
+        <div class="image"></div>
+        <div class="details">
+          <div class="title"></div>
+          <div class="context">
+            <div class="c-line"></div>
+            <div class="c-line"></div>
+            <div class="c-line"></div>
+            <div class="c-line"></div>
+          </div>
+        </div>
+      </div>
+      <div class="skeleton news">
+        <div class="image"></div>
+        <div class="details">
+          <div class="title"></div>
+          <div class="context">
+            <div class="c-line"></div>
+            <div class="c-line"></div>
+            <div class="c-line"></div>
+            <div class="c-line"></div>
+          </div>
+        </div>
+      </div>
+      <div class="skeleton news">
+        <div class="image"></div>
+        <div class="details">
+          <div class="title"></div>
+          <div class="context">
+            <div class="c-line"></div>
+            <div class="c-line"></div>
+            <div class="c-line"></div>
+            <div class="c-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+  </div>
+  <div id="container-53af17ddb9e4b799586ecb86dc439eb2"></div>
+
+  <footer class="footer">
     <div class="footer-top">
-      
+
       <div class="footer-brand">
         <h2>J.O News</h2>
         <p>Your daily plug for verified news and vibes.</p>
@@ -112,7 +284,7 @@
           <a href="#"><i class="fab fa-youtube"></i></a>
         </div>
       </div>
-  
+
       <div class="footer-links">
         <h3>Quick Links</h3>
         <a href="/">Home</a>
@@ -121,7 +293,7 @@
         <a href="/sports">Sports</a>
         <a href="/entertainment">Entertainment</a>
       </div>
-  
+
       <div class="footer-sub">
         <h3>Stay Updated</h3>
         <p>No spam, just hot headlines.</p>
@@ -130,18 +302,14 @@
           <button type="submit">Subscribe</button>
         </form>
       </div>
-  
+
     </div>
-  
+
     <div class="footer-bottom">
       <p>© 2025 J.O News. All rights reserved.</p>
     </div>
   </footer>
-  
+
 </body>
-<script>
-    setTimeout(() => {
-            // showLoader()
-    }, 2000);
-</script>
+
 </html>

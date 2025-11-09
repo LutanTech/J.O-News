@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="category" tooltip="Category"><i class="fas fa-tags"></i> <span>${n.categ || 'Unknown'}</span></div>
                         <div class="time"><i class="fas fa-clock"></i> <span>${timeAgo(n.added)}</span></div>
 
-                        <div class="user" tooltip="Publisher"><i class="fas fa-user" style="color:blue;"></i> By Lutan </div>
+                        <div class="user" tooltip="Publisher"><i class="fas fa-user" ></i> By Lutan </div>
                     </div>
                 </div>
             `;
@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sections = [
         { url: `${baseUrl}/get_news`, container: document.querySelector('.newsWrapper'), key: '1904', type: 'Latest News' },
         { url: `${baseUrl}/most_read`, container: document.querySelector('.mr'), key: 'ec8a', type: 'Most_Read' },
-        { url: `${baseUrl}/trending`, container: document.querySelector('.trending'), key: 'a677', type: 'Trending' }
+        { url: `${baseUrl}/trending`, container: document.querySelector('.tr'), key: 'a677', type: 'Trending' }
     ];
 
     sections.forEach(s => {

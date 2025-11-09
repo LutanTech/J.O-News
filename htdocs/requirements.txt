@@ -1,8 +1,0 @@
-Flask
-Flask_SQLAlchemy
-Flask_Migrate
-Flask_Cors
-requests
-python_dotenv
-gunicorn
-psycopg2_binary

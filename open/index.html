@@ -542,12 +542,6 @@ div.querySelector('#copyLink').addEventListener('click', (e) => {
     document.querySelector('.news-wrapper').appendChild(div)
 fetchTags(n.categ, n.sub)
  document.querySelector('title').innerText = `JOMC News : ${n.title}`
- const ic = document.querySelector('#t_i')
-  ic.setAttribute('content', n.image_url)
-  const og = document.querySelector('#o_g')
-  og.setAttribute('content', n.image_url)
-
-
           hideLoader()
         }
       })

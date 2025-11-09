@@ -30,6 +30,10 @@ def log(content, type):
     except Exception as e:
         print('error during logging')
         return False
+    
+@app.route('/')
+def index():
+    return 'This is the homepage'
 
 @app.route('/new', methods=['POST'])
 def new():

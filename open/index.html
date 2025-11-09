@@ -2,71 +2,83 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>JOMC News | Article</title>
-  <meta name="description" content="Breaking world news, trending global stories, politics, tech, sports, entertainment and more. Real time global updates.">
-
-  <link rel="canonical" href="https://jomc-news.vercel.app/">
-  <link rel="icon" href="/assets/images/logo.jpg" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>JOMC News | World Updates, Hot Headlines, Breaking Stories</title>
+    <meta name="description" content="JOMC News brings real time world news. Fast reliable and student powered.">
+    <meta name="keywords" content="JOMC News, World news, News Site Kenya news, student journalism, Moi University news, Joseph Owino news">
+    <meta name="author" content="JOMC News Team">
+    <link rel="canonical" href="https://jomc-news.vercel.app/">
+    <link rel="icon" href="/assets/images/logo.jpg" type="image/x-icon">
   <link rel="shortcut-icon" href="/assets/images/logo.jpg" type="image/x-icon">
-  <!-- Open Graph -->
-  <meta property="og:title" content="JOMC News Article">
-  <meta property="og:description" content="World news, trending stories and real time global headlines">
-  <meta property="og:image" id="o_g" content="https://jomc-news.vercel.app/assets/images/logo.jpg">
-  <meta property="og:url" content="https://jomc-news.vercel.app/">
-  <meta property="og:type" content="article">
-
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="JOMC News Article">
-  <meta name="twitter:description" content="Breaking global stories and top world headlines">
-  <meta name="twitter:image" id="t_i" content="https://jomc-news.vercel.app/assets/images/logo.jpg">
-
-  <!-- JSON-LD Structured Data -->
-  <script id="article-schema" type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "NewsArticle",
-    "headline": "JOMC News Article",
-    "image": ["https://jomc-news.vercel.app/assets/images/logo.jpg"],
-    "datePublished": "",
-    "dateModified": "",
-    "author": { "@type": "Person", "name": "JOMC News Reporter" },
-    "publisher": {
-      "@type": "Organization",
+    <!-- OpenGraph -->
+    <meta property="og:title" content="JOMC News">
+    <meta property="og:description" content="Real time World news.">
+    <meta property="og:image" content="https://jomc-news.vercel.app/assets/images/logo.jpg">
+    <meta property="og:url" content="https://jomc-news.vercel.app/">
+    <meta property="og:type" content="website">
+  
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="JOMC News">
+    <meta name="twitter:description" content="Real time world news.">
+    <meta name="twitter:image" content="https://jomc-news.vercel.app/assets/images/logo.jpg">
+  
+    <!-- Fonts and Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" preconnect>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
+  
+    <!-- Ads -->
+    <script async data-cfasync="false" src="//pl28003297.effectivegatecpm.com/53af17ddb9e4b799586ecb86dc439eb2/invoke.js" defer></script>
+    <script async data-cfasync="false" src="//pl28005774.effectivegatecpm.com/83706ba541e98f9c09f46db018571cf6/invoke.js" defer></script>
+    <script async data-cfasync="false" src="//pl28010045.effectivegatecpm.com/545445584d06c09fd1a832fa75e54619/invoke.js" defer></script>
+  
+    <!-- Service Worker -->
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js")
+          .then(() => console.log("SW Registered ✅"))
+          .catch(err => console.log("SW fail 💀", err));
+      }
+    </script>
+  
+    <!-- JS -->
+    <script src="/assets/js/loader.js"></script>
+    <script src="/assets/js/main.js" defer></script>
+    <script src="/assets/js/utils.js"></script>
+    <link rel="stylesheet" href="/assets/css/o.css"  >
+  
+    <!-- CSS -->
+    <link rel="stylesheet" href="/assets/css/loader.css">
+    <link rel="stylesheet" href="/assets/css/index.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/dark.css">
+  
+    <!-- JSON LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "NewsMediaOrganization",
       "name": "JOMC News",
-      "logo": { "@type": "ImageObject", "url": "https://jomc-news.vercel.app/assets/images/logo.jpg" }
-    },
-    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://jomc-news.vercel.app/" },
-    "description": "Breaking world news and international headlines"
-  }
-  </script>
-
-  <!-- Fonts & Icons -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
-
-  <!-- Ads -->
-  <script async data-cfasync="false" src="//pl28003297.effectivegatecpm.com/53af17ddb9e4b799586ecb86dc439eb2/invoke.js"></script>
-
-  <!-- Scripts -->
-  <script src="/assets/js/loader.js"></script>
-  <script src="/assets/js/main.js"></script>
-  <script src="/assets/js/utils.js"></script>
-
-  <!-- Styles -->
-  <link rel="stylesheet" href="/assets/css/loader.css">
-  <link rel="stylesheet" href="/assets/css/main.css">
-  <link rel="stylesheet" href="/assets/css/dark.css">
-
-</head>
-
-<style>
-.action{
+      "url": "https://jomc-news.vercel.app",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://jomc-news.vercel.app/assets/images/logo.jpg"
+      },
+      "description": "Digital news site with world updates",
+      "sameAs": [
+        "https://www.instagram.com/",
+        "https://twitter.com/",
+        "https://www.tiktok.com/"
+      ]
+    }
+    </script>
+  </head>
+  <style>
+    .action{
     font-size: 1.8em;
     max-width: fit-content;
     cursor: pointer;
@@ -170,47 +182,6 @@ iframe{
   object-fit: cover;
   flex-grow: 1;
 }
-</style>
-
-<body>
-  <div class="overlay">
-    <div class="loader"></div>
-  </div>
-  <header class="header">
-    <div class="l090-ic">
-      <div class="logo-name">
-        <a href="/" style="text-decoration: none;"> J.O News</a>
-      </div>
-      <div class="icons">
-        <div class="modes" tooltip="Switch Modes">
-          <i class="fas fa-moon"></i>
-        </div>
-        <div class="help" tooltip="Help">
-          <i class="fas fa-info-circle"></i>
-        </div>
-        <div class="search" tooltip="Search" tooltip-pos="left">
-          <i class="fas fa-search"></i>
-        </div>
-      </div>
-    </div>
-    <hr>
-    <div class="links">
-      <a href="/">All News</a>
-      <a href="/people">People</a>
-      <a href="/entertainment">Entertainment</a>
-      <a href="/health">Health</a>
-      <a href="/climate">Climate</a>
-      <a href="/politics">Politics</a>
-      <a href="/business">Business</a>
-      <a href="/sports">Sports</a>
-      <a href="/world">World</a>
-    </div>
-  </header>
-  <style>
-
-  </style>
-<div id="container-6adad3404bda5547a35f0dfe778b4446"></div>
-<style>
   .content{
     display: flex;
     flex-wrap: nowrap;
@@ -372,7 +343,64 @@ iframe{
     width: 100%;
   }
 }
-</style>
+  </style>
+  
+
+<body>
+
+  <div class="overlay">
+    <div class="loader"></div>
+  </div>
+  <header class="header">
+    <div class="l090-ic">
+      <div class="logo-name">
+        <a href="/" style="text-decoration: none;">
+          <img src="/assets/images/logo.jpg" width="70">
+        </a>
+      </div>
+      <style>
+
+      </style>
+
+      <div class="searchDiv none">
+        <button class="closeSearch">&times;</button>
+        <input type="search" name="query" id="query" placeholder="Enter your query">
+        <button type="button" id="searchBtn">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+      <div class="icons">
+        <div class="modes">
+          <i class="fas fa-moon"></i>
+        </div>
+        <div class="help">
+          <i class="fas fa-info-circle"></i>
+        </div>
+        <div class="search">
+          <i class="fas fa-search"></i>
+        </div>
+        <div class="menu-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="links" >
+      <a href="/">All News</a>
+      <a href="/people">People</a>
+      <a href="/entertainment">Entertainment</a>
+      <a href="/health">Health</a>
+      <a href="/climate">Climate</a>
+      <a href="/politics">Politics</a>
+      <a href="/business">Business</a>
+      <a href="/sports">Sports</a>
+      <a href="/world">World</a>
+    </div>
+  </header>
+
+<div id="container-6adad3404bda5547a35f0dfe778b4446"></div>
   <div class="content">
     <div class="newsDivL">
       <div class="news-wrapper">

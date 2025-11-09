@@ -93,17 +93,13 @@ document.addEventListener('DOMContentLoaded', ()=>{
     searchDiv.querySelector('.closeSearch').addEventListener('click', () => {
         const params = new URLSearchParams(window.location.search);
     
-        // toggle search overlay visibility
         searchDiv.classList.toggle('seen');
         searchDiv.classList.toggle('none');
     
-        // remove "action" from query
         params.delete('action');
     
-        // construct the new URL
         const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
     
-        // update browser URL without reloading
         window.history.pushState({}, '', newUrl);
     });
     
@@ -111,8 +107,19 @@ document.addEventListener('DOMContentLoaded', ()=>{
     const q = searchDiv.querySelector('#query')
     if(q){
     const qbtn = searchDiv.querySelector('#searchBtn')
+    q.addEventListener('keydown', (e)=>{
+        if(e.key== 'Enter'){
+            if(q.value && q.value != ''){
+
+                window.location.href = `/search/?q=${q.value.trim()}`
+            } else if(q.value.trim() == ''){
+                alert('Empty Search Item', 'error')
+            }
+        }
+    })
     qbtn.addEventListener('click',()=>{
         if(q.value && q.value != ''){
+
             window.location.href = `/search/?q=${q.value.trim()}`
         } else if(q.value.trim() == ''){
             alert('Empty Search Item', 'error')
@@ -135,14 +142,29 @@ if(search){
 function alert(text, type = 'info') {
     const div = document.createElement('div');
     div.classList.add('toast', type, 'seen');
+    let msg = String(text).toLowerCase();
+
+    if (
+      msg.includes('unexpected') || 
+      msg.includes('syntax') || 
+      msg.includes('traceback') ||
+      msg.includes('internal')
+    ) {
+      text = 'Server not yet configured, please contact support';
+    }
+
+    
     div.textContent = text;
+    
+      div.textContent = text;
+      
     document.body.appendChild(div);
 
     setTimeout(() => {
       div.classList.remove('seen');
       div.classList.add('removing');
       setTimeout(() => div.remove(), 500);
-    }, 3500);
+    }, 5000);
   }
 
   window.alert = alert

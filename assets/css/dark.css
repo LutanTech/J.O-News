@@ -1,9 +1,14 @@
 .dark{
     background: #000 !important;
     div{
-        background: #000;
+        background-color: #000;
         color: #fff;
-
+    }
+    .cover{
+        background-color: #000dff71;
+        *{
+            background-color: #0000;
+        }
     }
    h1, h2, h3, h4{
         background: #000;

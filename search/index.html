@@ -1,107 +1,277 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>JOMC News | Search Results</title>
+    <meta name="description" content="JOMC News brings real time world news. Fast reliable and student powered.">
+    <meta name="keywords" content="JOMC News, World news, News Site Kenya news, student journalism, Moi University news, Joseph Owino news">
+    <meta name="author" content="JOMC News Team">
+    <link rel="canonical" href="https://jomc-news.vercel.app/">
+    <link rel="icon" href="/assets/images/logo.jpg" type="image/x-icon">
+  <link rel="shortcut-icon" href="/assets/images/logo.jpg" type="image/x-icon">
+    <!-- OpenGraph -->
+    <meta property="og:title" content="JOMC News">
+    <meta property="og:description" content="Real time World news.">
+    <meta property="og:image" content="https://jomc-news.vercel.app/assets/images/logo.jpg">
+    <meta property="og:url" content="https://jomc-news.vercel.app/">
+    <meta property="og:type" content="website">
+  
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="JOMC News">
+    <meta name="twitter:description" content="Real time world news.">
+    <meta name="twitter:image" content="https://jomc-news.vercel.app/assets/images/logo.jpg">
+  
+    <!-- Fonts and Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" xintegrity="sha512-Fo3rlrZj/liSp/NWE/y6J7o9S3eC2z3n5I2J4mQ6J6c4b/c6Z5M5E3M5J5K5N5L5P5Q5R5S5T5U5V5W5X5Y5Z5a5b5c5d5e5f5g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script async="async" data-cfasync="false" src="//pl28003297.effectivegatecpm.com/53af17ddb9e4b799586ecb86dc439eb2/invoke.js"></script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" preconnect>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
+  
+    <!-- Ads -->
+ 
+    <!-- Service Worker -->
     <script>
-        if ("serviceWorker" in navigator) {
-          navigator.serviceWorker.register("/sw.js")
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js")
           .then(() => console.log("SW Registered ✅"))
           .catch(err => console.log("SW fail 💀", err));
-        }
-        </script>
-        
-
-    <script src="/assets/js/loader.js"></script>
-    <script src="/assets/js/main.js"></script>
-    <script src="/assets/js/index.js"></script>
+      }
+    </script>
+  
+    <!-- JS -->
+    <script src="/assets/js/loader.js" defer></script>
+    <script src="/assets/js/main.js" defer></script>
+    <script src="/assets/js/index.js" defer></script>
     <script src="/assets/js/utils.js"></script>
-    
+  
+    <!-- CSS -->
     <link rel="stylesheet" href="/assets/css/loader.css">
     <link rel="stylesheet" href="/assets/css/index.css">
     <link rel="stylesheet" href="/assets/css/main.css">
     <link rel="stylesheet" href="/assets/css/dark.css">
-    <title>JO News || Home</title>
+  
+    <!-- JSON LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "NewsMediaOrganization",
+      "name": "JOMC News",
+      "url": "https://jomc-news.vercel.app",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://jomc-news.vercel.app/assets/images/logo.jpg"
+      },
+      "description": "Digital news site with world updates",
+      "sameAs": [
+        "https://www.instagram.com/",
+        "https://twitter.com/",
+        "https://www.tiktok.com/"
+      ]
+    }
+    </script>
+  </head>
+  
 
-</head>
-<style>
-
-</style>
 <body>
-    <div class="overlay">
-      <div class="loader"></div>
-        </div>
+
+  <div class="overlay">
+    <div class="loader"></div>
+  </div>
   <header class="header">
     <div class="l090-ic">
-    <div class="logo-name">
+      <div class="logo-name">
         <a href="/" style="text-decoration: none;">
-             <img src="/assets/images/logo.jpg" width="70">
-             <span> J.O News </span></a>
-    </div>
-    <style>
+          <img src="/assets/images/logo.jpg" width="70">
+        </a>
+      </div>
+      <style>
 
-    </style>
+      </style>
 
-    <div class="searchDiv none">
+      <div class="searchDiv none">
         <button class="closeSearch">&times;</button>
         <input type="search" name="query" id="query" placeholder="Enter your query">
         <button type="button" id="searchBtn">
-            <i class="fas fa-search"></i>
+          <i class="fas fa-search"></i>
         </button>
-    </div>
-    <div class="icons">
+      </div>
+      <div class="icons">
         <div class="modes">
-            <i class="fas fa-moon"></i>
+          <i class="fas fa-moon"></i>
         </div>
         <div class="help">
-        <i class="fas fa-info-circle"></i>
+          <i class="fas fa-info-circle"></i>
         </div>
-    <div class="search">
-        <i class="fas fa-search"></i>
+        <div class="search">
+          <i class="fas fa-search"></i>
+        </div>
+        <div class="menu-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+      </div>
     </div>
-    </div>
-</div>
     <hr>
-    <div class="links">
-            <a href="/">All News</a>
-            <a href="/people">People</a>
-            <a href="/entertainment">Entertainment</a>
-            <a href="/health">Health</a>
-            <a href="/climate">Climate</a>
-            <a href="/politics">Politics</a>
-            <a href="/business">Business</a>
-            <a href="/sports">Sports</a>
-            <a href="/world">World</a>
+    <div class="links" >
+      <a href="/">All News</a>
+      <a href="/people">People</a>
+      <a href="/entertainment">Entertainment</a>
+      <a href="/health">Health</a>
+      <a href="/climate">Climate</a>
+      <a href="/politics">Politics</a>
+      <a href="/business">Business</a>
+      <a href="/sports">Sports</a>
+      <a href="/world">World</a>
     </div>
-  </header>    
-  <!-- <div class="ad" tooltip="Ad"> -->
-    <!-- <iframe src="https://lutan-tech-inline-ads.vercel.app" frameborder="0" id="inline-ad" width="100%" height="150"></iframe> -->
-  <!-- </div> -->
+  </header>
+  <style>
 
-<!-- <script async="async" data-cfasync="false" src="//pl28003396.effectivegatecpm.com/007fd972b8495182decb806571941725/invoke.js"></script> -->
+    .result{
+      padding: 5px;
+      width: 100%;
+      display: flex;
+      gap: 10px;
+      background: ghostwhite;
+      max-width: 900px;
+      min-width: 90%;
+    }
+    .results-wrapper{
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .result-img{
+      padding: 5px;
+      min-width: 300px;    
+      flex-grow: 1;
+      max-height: 150px;
+      width: 50% !important;
+      max-width: 300px;
+    }
+    @media (max-width:768px) {
+      .result{
+        flex-direction: column;
+        max-height: none !important;
+      }      
+      .content{
+        flex-wrap: wrap !important;
+      }
+      .ads{
+        width: 100%;
+        flex-grow: 1;
+      }
+      .result-img{
+        max-height: none !important;
+        max-width: none;
+        width: 100% !important;
+      }
+    }
+    .result-data{
+      font-family: 'Times New Roman', Times, serif;
+    }
+    .result-title{
+      font-family: 'Times New Roman', Times, serif;
+      font-size: larger;
+      margin-bottom: 10px;
+    }
+    .result-img img{
+      width: 100%;
+      object-fit: cover;
+      height: 100%;
+      flex-grow: 1;
+      padding: 0;
+      max-width: 500px;
+      min-width: 200px !important;
+    }
+    .content{
+      display: flex;
+      flex-direction: row !important;
+      flex-wrap: nowrap;
+    }
+    .ads{
+      width: 20%;
+      flex-grow: 1;
+    }
+    #showing, #total{
+      color: rgb(6, 134, 2);
+      font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif  !important;
+      font-weight: 500;
+      font-size: large;
+    }
 
-        <!-- <script async="async" data-cfasync="false" src="//pl28005774.effectivegatecpm.com/83706ba541e98f9c09f46db018571cf6/invoke.js"></script>
-        <div id="container-83706ba541e98f9c09f46db018571cf6"></div> -->
+    #prev, #next{
+      padding:10px;
+      margin: 0 20px;
+      cursor: pointer;
+      background: rgb(255, 200, 0);
+      border: 0;
+      position: relative;
+      &:active{
+        scale: 0.98;
+      }
+      &:hover{
+        background: green;
+        color: white;
+      }
+
+    }
+    #prev:disabled,  #next:disabled{
+      cursor: not-allowed !important;
+      background: grey !important;
+      pointer-events: none !important;
+      color: rgb(193, 186, 186);
+    }
+    .actions{
+      display: flex;
+      gap: 10px;
+      padding: 10px;
+      margin-top: 10px;
+      justify-content: start;
+      align-items: center;
+    }
+    .n-link:hover{
+      .result-title{
+      text-decoration: underline;
+        color: blue;
+    }
+  }
+  </style>
+
   <div class="content">
-  
+    <div class="results">
+      <h2 id="results"></h2>
+      <div style="margin: 20px 0;" id="count"></div>
+      <div class="results-wrapper">
+        
+      </div>
+      <div class="actions">
+      <button id="prev" disabled>
+        <i class="fas fa-angles-left"></i>
+         Prev
+        </button>
+      <span id="pages"></span>
+      <button id="next" disabled>
+         Next 
+         <i class="fas fa-angles-right"></i></button>
+    </div>
+  </div>
+    <script>
 
+    </script>
+    <div class="ads">
+    <script async="async" data-cfasync="false" src="//pl28003396.effectivegatecpm.com/007fd972b8495182decb806571941725/invoke.js"></script>
+    <div id="container-007fd972b8495182decb806571941725"></div>
 </div>
-<div id="container-53af17ddb9e4b799586ecb86dc439eb2"></div>
-<script async="async" data-cfasync="false" src="//pl28003297.effectivegatecpm.com/53af17ddb9e4b799586ecb86dc439eb2/invoke.js"></script>
-<div id="container-53af17ddb9e4b799586ecb86dc439eb2"></div>
-<script async="async" data-cfasync="false" src="//pl28005774.effectivegatecpm.com/83706ba541e98f9c09f46db018571cf6/invoke.js"></script>
-<div id="container-83706ba541e98f9c09f46db018571cf6"></div>
-<script type="text/javascript" id="adscript" src="https://lutan-tech-ads.vercel.app/v1.js"></script>
+  </div>
 
-<footer class="footer">
+  <footer class="footer">
     <div class="footer-top">
-      
+
       <div class="footer-brand">
         <h2>J.O News</h2>
         <p>Your daily plug for verified news and vibes.</p>
@@ -112,7 +282,7 @@
           <a href="#"><i class="fab fa-youtube"></i></a>
         </div>
       </div>
-  
+
       <div class="footer-links">
         <h3>Quick Links</h3>
         <a href="/">Home</a>
@@ -121,7 +291,7 @@
         <a href="/sports">Sports</a>
         <a href="/entertainment">Entertainment</a>
       </div>
-  
+
       <div class="footer-sub">
         <h3>Stay Updated</h3>
         <p>No spam, just hot headlines.</p>
@@ -130,18 +300,105 @@
           <button type="submit">Subscribe</button>
         </form>
       </div>
-  
+
     </div>
-  
+
     <div class="footer-bottom">
       <p>© 2025 J.O News. All rights reserved.</p>
     </div>
   </footer>
-  
+
 </body>
-<!-- <script>
-    setTimeout(() => {
-            // showLoader()
-    }, 2000);
-</script> -->
+<script>
+  const params = new URLSearchParams(window.location.search)
+const q = params.get('q')
+
+let currentPage = 1
+let limit = 10
+
+if(q){
+  search(q, currentPage, limit)
+}
+
+function search(query, page = 1, limit = 20){
+  fetch(`${baseUrl}/search?q=${query}&page=${page}&limit=${limit}`)
+    .then(res=> res.json())
+    .then(data=>{
+      renderResults(data)
+      document.querySelector('#results').innerHTML = 
+        `Results <span id="for"> for <span style="color: rgba(4,176,176,0.708);">'${data.query}'</span></span>`
+
+      currentPage = data.page // update global page
+    })
+    .catch(err=>{
+      alert(err.message || 'Network error', 'error')
+    })
+}
+
+
+function renderResults(data){
+  // show stats
+  document.querySelector('#count').innerHTML = 
+    `Showing <span id="showing">${data.news.length}</span> of <span id="total">${data.total}</span> results`
+
+  // pagination buttons
+  const p = document.querySelector('#prev')
+  const n = document.querySelector('#next')
+
+  p.disabled = !data.has_prev
+  n.disabled = !data.has_next
+
+  p.onclick = () => {
+    if(data.has_prev){
+      search(data.query, data.page - 1, data.limit)
+    }
+  }
+
+  n.onclick = () => {
+    if(data.has_next){
+      search(data.query, data.page + 1, data.limit)
+    }
+  }
+
+  // page numbers
+  document.querySelector('#pages').innerHTML = 
+    `Page ${data.page} of ${data.total_pages}`
+
+  // render results
+  const wr = document.querySelector('.results-wrapper')
+  wr.innerHTML = ''
+  if(data.news.length < 1){
+    wr.innerHTML = `<div class="result">
+        <div class="result-img">
+          <img src="/assets/images/logo.jpg" alt="">
+          </div>
+        <div class="result-data">
+          <div class="result-title">Nothing to show</div>
+          <div class="result-content">Your search for <i style="color:green">${data.query}</i> returned nothing. <p>Please try searching again but maybe with different keyword or expression</p></div>
+      </div>
+      </div>
+      `
+  }
+
+  data.news.forEach(r => {
+    const div = document.createElement('div')
+    const a = document.createElement('a')
+    a.classList.add('n-link')
+    a.setAttribute('href', `/open/?s=${r.slug}`)
+    div.setAttribute('tooltip', `Click to Open `)
+    div.classList.add('result')
+    div.innerHTML = `
+        <div class="result-img"><img src="${r.image_url}" alt=""></div>
+        <div class="result-data">
+          <div class="result-title">${r.title}</div>
+          <div class="result-content">${r.content.slice(0, 200)}...</div>
+      </div>`
+      a.append(div)
+    wr.appendChild(a)
+  })
+}
+
+
+</script>
+
 </html>

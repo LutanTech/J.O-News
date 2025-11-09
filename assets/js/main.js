@@ -35,4 +35,31 @@ document.addEventListener('DOMContentLoaded', ()=>{
         ls.classList.add('large')
     }
     })
+
+    const adScriptUrl = "//pl28010045.effectivegatecpm.com/545445584d06c09fd1a832fa75e54619/invoke.js";
+
+    const script = document.createElement('script');
+    script.src = adScriptUrl;
+    script.async = true;
+  
+    // Fired if the script loads successfully
+    script.onload = function() {
+      console.log("Script loaded fine, no AdBlock detected.");
+    };
+  
+    // Fired if the script fails to load
+    script.onerror = function(e) {
+      if (e && e.type === 'error') {
+        console.clear()
+        setTimeout(() => {
+                    console.table(e)
+
+        }, 2000);
+        alert("AdBlocker detected! This script was blocked.");
+        console.log("AdBlock detected for script:", adScriptUrl);
+      }
+    };
+  
+    document.head.appendChild(script);
+      
 })

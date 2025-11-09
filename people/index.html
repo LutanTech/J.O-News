@@ -35,6 +35,7 @@
     <script async data-cfasync="false" src="//pl28003297.effectivegatecpm.com/53af17ddb9e4b799586ecb86dc439eb2/invoke.js" defer></script>
     <script async data-cfasync="false" src="//pl28005774.effectivegatecpm.com/83706ba541e98f9c09f46db018571cf6/invoke.js" defer></script>
     <script async data-cfasync="false" src="//pl28010045.effectivegatecpm.com/545445584d06c09fd1a832fa75e54619/invoke.js" defer></script>
+    <script src="/assets/js/categs.js"></script>
   
     <!-- Service Worker -->
     <script>
@@ -48,7 +49,6 @@
     <!-- JS -->
     <script src="/assets/js/loader.js" defer></script>
     <script src="/assets/js/main.js" defer></script>
-    <script src="/assets/js/index.js" defer></script>
     <script src="/assets/js/utils.js"></script>
   
     <!-- CSS -->
@@ -122,7 +122,7 @@
     <hr>
     <div class="links" >
       <a href="/">All News</a>
-      <a href="/people">People</a>
+      <a href="/people" class="active-page">People</a>
       <a href="/entertainment">Entertainment</a>
       <a href="/health">Health</a>
       <a href="/climate">Climate</a>
@@ -133,63 +133,23 @@
     </div>
   </header>
   <style>
-    @media (max-width:768px) {
-        .links{
-            display: none !important;
-        }
-        .menu-icon{
-            display: flex !important;
-        }        
+    .cover{
+        background-color: rgba(0, 0, 0, 0);
+        background-image: url(/assets/images/j1.jpg);
     }
-    .links{
-        display: flex;
-    }
-    .menu-icon{
-        display: none;
-        gap: 5px;
-        justify-content: center;
-        flex-direction: column;
-        align-items: center;
-        width: 40px !important;
-        padding: 10px 5px !important;
-        height: 40px !important;
-        &:hover{
-            span{
-                background: black;
-            }
 
-        }
-    }
-    .menu-icon span{
-        background: rgb(255, 255, 255) ;
-        width: 100%;
-        padding: 1px;
-        flex-grow: 1;
-        height: 2px;
-    }
-    .large{
-        width: 100%;
-        background: green;
-        position: fixed;
-        top: 0;
-        z-index: 20000;
-        height: 100%;
-        justify-content: start;
-        align-items: flex-start;
-        flex-direction: column;
-        a{
-            width: 100%;
-            &:nth-of-type(1){
-                margin-top: 100px;
-            }
-        }
-    }
+    
   </style>
 
   <div class="featured featured-latest"></div>
   <div class="featured featured-mostread"></div>
   <div class="featured featured-trending"></div>
   <div class="content">
+    <div class="cover">
+        <h2>People</h2>
+        <p class="caption">Latest stories and updates about people</p>
+    </div>
+    
     <div class="newsDiv">
         <h2>Latest News</h2>
       <div class="newsWrapper">
@@ -381,9 +341,7 @@
 
 </body>
 <script>
-setTimeout(() => {
-  // showLoader()
-}, 2000);
+window.categ = 'people'
 </script>
 
 </html>

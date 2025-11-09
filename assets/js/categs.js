@@ -1,7 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
-
-
-    // -------------------- Utility Functions --------------------
+document.addEventListener('DOMContentLoaded', ()=>{
     function timeAgo(date){
         const seconds = Math.floor((new Date() - new Date(date)) / 1000);
         const intervals = [
@@ -19,29 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return 'just now';
     }
-
-    function appendMostV(a, type){
-        if(!a) return;
-        const parent = document.querySelector('.featured');
-        if(!parent) return;
-        const div = document.createElement('div');
-        div.classList.add('featured-news');
-        div.addEventListener('click', ()=>{ window.location.href=`/open/?s=${a.slug}` })
-        div.innerHTML = `
-            <div class="ft-imgDiv">
-                <div class="type">${type.replace('_',' ')}</div>
-                <img id="ft-img" src="${a.image_url || '/assets/images/logo.jpg'}" alt="">
-            </div>
-            <div class="article-data">
-                <div class="article-title">
-                 <span>   ${a.title.length > 100 ? a.title.slice(0,100)+'...' : a.title} </span>
-                 <marquee> ${a.content.slice(0, 100) + '...'}</marquee>
-                </div>
-            </div>
-        `;
-        parent.appendChild(div);
-    }
-
     function ensureAd(container, adKey){
         if(!container || !adKey) return;
 
@@ -77,16 +51,39 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(`Ad script ${adKey} appended to ${container.id || container.className}`);
     }
 
-     const ad = document.createElement('div')
-      ad.innerHTML = `
-<div id="container-545445584d06c09fd1a832fa75e54619"></div>
-     `
+    const ad = document.createElement('div')
+    ad.innerHTML = `
+<div id="container-545445584d06c09fd1a832fa75e54619"></div>`
 
+    fetchNewsByCateg(window.categ)
+    function fetchNewsByCateg(categ){
+        if(categ){
+            const sections = [
+                { url: `${baseUrl}/get_news_filter/${categ}`, container: document.querySelector('.newsWrapper'), key: '1904', type: 'Latest News' },
+                { url: `${baseUrl}/most_read_filter/${categ}`, container: document.querySelector('.mr'), key: 'ec8a', type: 'Most_Read' },
+                { url: `${baseUrl}/trending_filter/${categ}`, container: document.querySelector('.tr'), key: 'a677', type: 'Trending' }
+            ];
+        
+            sections.forEach(s => {
+                if(!s.container) return;
+                fetch(s.url)
+                    .then(res => res.json())
+                    .then(data => {
+                        if(data.error){
+                            console.error(data.error);
+                        } else {
+                            renderNews(s.container, data.news, s.key, s.type);
+                        }
+                    })
+                    .catch(err => console.error('Fetch error:', err));
+            });
+        }
+    }
+    window.fetchNewsByCateg = fetchNewsByCateg
 
     function renderNews(container, news, adKey, type){
-        if(!news || news.length === 0) return;
+        if(!news || news.length === 0){ container.innerHTML = 'Nothing to show'; return;}
 
-        appendMostV(news[0], type);
         container.innerHTML = ``;
 
         // random index for ad placement (never first or last)
@@ -117,7 +114,6 @@ document.addEventListener('DOMContentLoaded', () => {
             a.appendChild(div);
             container.appendChild(a);
 
-            // insert ad div at random index
             if(index === adIndex){
                 const adDiv = document.createElement('div');
                 adDiv.id = "container-83706ba541e98f9c09f46db018571cf6";
@@ -128,26 +124,4 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // -------------------- Fetching Sections --------------------
-    const sections = [
-        { url: `${baseUrl}/get_news`, container: document.querySelector('.newsWrapper'), key: '1904', type: 'Latest News' },
-        { url: `${baseUrl}/most_read`, container: document.querySelector('.mr'), key: 'ec8a', type: 'Most_Read' },
-        { url: `${baseUrl}/trending`, container: document.querySelector('.tr'), key: 'a677', type: 'Trending' }
-    ];
-
-    sections.forEach(s => {
-        if(!s.container) return;
-        fetch(s.url)
-            .then(res => res.json())
-            .then(data => {
-                if(data.error){
-                    console.error(data.error);
-                } else {
-                    renderNews(s.container, data.news, s.key, s.type);
-                }
-            })
-            .catch(err => console.error('Fetch error:', err));
-    });
-    window.renderNews = renderNews
-    window.timeAgo = timeAgo
-});
+})

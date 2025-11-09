@@ -540,6 +540,12 @@ div.querySelector('#copyLink').addEventListener('click', (e) => {
   });
 });
     document.querySelector('.news-wrapper').appendChild(div)
+    const as = document.querySelectorAll('.links a')
+    as.forEach(a=>{
+      if(a.textContent.toLowerCase().trim() == n.categ.toLowerCase()){
+        a.classList.add('active-page')
+      }
+    })
 fetchTags(n.categ, n.sub)
  document.querySelector('title').innerText = `JOMC News : ${n.title}`
           hideLoader()

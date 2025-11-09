@@ -80,23 +80,69 @@ window.safeText = safeText
 document.addEventListener('DOMContentLoaded', ()=>{
     const searchDiv = document.querySelector('.searchDiv')
     const tr = document.querySelector('.search')
+
+    if(searchDiv && tr)
     tr.addEventListener('click', ()=>{
         if(searchDiv){
             searchDiv.classList.toggle('seen')
             searchDiv.classList.toggle('none')
         }
     })
-    searchDiv.querySelector('.closeSearch').addEventListener('click', ()=>{
-        searchDiv.classList.toggle('seen')
-        searchDiv.classList.toggle('none')
-    })
+    if(searchDiv)
+
+    searchDiv.querySelector('.closeSearch').addEventListener('click', () => {
+        const params = new URLSearchParams(window.location.search);
+    
+        // toggle search overlay visibility
+        searchDiv.classList.toggle('seen');
+        searchDiv.classList.toggle('none');
+    
+        // remove "action" from query
+        params.delete('action');
+    
+        // construct the new URL
+        const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+    
+        // update browser URL without reloading
+        window.history.pushState({}, '', newUrl);
+    });
+    
+    if(searchDiv){
     const q = searchDiv.querySelector('#query')
+    if(q){
     const qbtn = searchDiv.querySelector('#searchBtn')
     qbtn.addEventListener('click',()=>{
         if(q.value && q.value != ''){
             window.location.href = `/search/?q=${q.value.trim()}`
         } else if(q.value.trim() == ''){
-            alert('Empty Search Item')
+            alert('Empty Search Item', 'error')
         }
     })
+}
+    }
 })
+setInterval(() => {
+const params = new URLSearchParams(window.location.search)
+const search = params.get('action')
+if(search){
+    const sd = document.querySelector('.searchDiv')
+    sd.classList.remove('none')
+    sd.classList.add('seen')
+}
+}, 1000);
+
+
+function alert(text, type = 'info') {
+    const div = document.createElement('div');
+    div.classList.add('toast', type, 'seen');
+    div.textContent = text;
+    document.body.appendChild(div);
+
+    setTimeout(() => {
+      div.classList.remove('seen');
+      div.classList.add('removing');
+      setTimeout(() => div.remove(), 500);
+    }, 3500);
+  }
+
+  window.alert = alert

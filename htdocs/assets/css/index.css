@@ -30,7 +30,7 @@
   }
   .dets{
     display: flex;
-    font-size: small;
+    font-size: smaller;
     justify-content: start;
     align-items: baseline;
     gap: 10px;

@@ -27,26 +27,31 @@
         display: flex;
         flex-wrap: wrap;
         gap: 20px;
+        justify-content: center;
+        align-items: center;
+        flex-grow: 1;
+
     }
     .inp{
         padding: 10px;
-        border: 1px solid blue;
         flex-grow: 1;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
         min-width: 300px;
+        min-height: 100px;
         max-width: 700px;
-        height: fit-content;
+        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.212);
+        border-radius: 4px;
     }
     .inp input, select{
         padding: 10px;
-        transition: all 0.3s ease-in-out;
+        transition: all 0.1s ease-in-out;
         outline: none;
         border: 0px;
         border-radius: 2px;
         background: #0000;
-        border-bottom: 2px solid rgba(0, 0, 255, 0.589);
+        border: 1px solid rgba(0, 0, 255, 0.121);
         &:focus{
             border: 2px solid rgb(126, 126, 255);
         }
@@ -102,8 +107,23 @@
 .editBtns{
     display: flex;
     gap: 10px;
+    >div{
+      color: white;
+    }
+    >div:nth-of-type(1){
+      background: rgb(2, 2, 141);
+      border: 0;
+    }
+    >div:nth-of-type(2){
+      background: rgb(168, 9, 173);
+      border: 0;
+    }
+    >div:nth-of-type(3){
+      background: rgb(2, 145, 59);
+      border: 0;
+    }
 }
-.hidden{
+.hidden, .none{
   display: none;
 }
 .fixed{
@@ -111,6 +131,10 @@
   background: rgba(0, 0, 0, 0.595);
   z-index: 300;
 }
+.seen{
+  display: flex !important;
+}
+
 </style>
 <body>
     <div class="overlay">
@@ -165,6 +189,9 @@
       <input type="file" name="newImage" id="newImage" accept="image/*" style="display:none;">
       <input type="file" name="newVideo" id="newVideo" accept="video/*" style="display:none;">
     </div>
+      <div class="inp none">
+        <div class="previewImageDiv"></div>
+      </div>
       
         <div class="inp" tooltip="Maximum of 150 characters">
           <label for="title">Enter Title</label>
@@ -184,6 +211,7 @@
             <option value="business">Business</option>
             <option value="sports">Sports</option>
             <option value="world">World</option>
+            <option value="world">Kenya</option>
           </select>
         </div>
   
@@ -196,7 +224,7 @@
         <label>Add to Trending</label>
         <div>
           <label>
-            <input type="radio" name="trending" id="trending" value="true">
+            <input type="checkbox" name="trending" id="trending" value="true">
             Trending?
           </label>
         </div>
@@ -204,16 +232,10 @@
   
       <div class="inp" id="content" style="max-width: 1800px;">
         <label>Content</label>
-        <div id="editable" contenteditable="true">Content Goes Here
-
-        </div>
         <div class="editBtns">
           <div class="addImageBtn" tooltip="Attach an image">
-            <i class="fas fa-paperclip"></i>
+            <i class="fas fa-image"></i>
         </div>
-        <div class="addVideoBtn" tooltip="Attach a video">
-          <i class="fas fa-video"></i>
-      </div>
         
         <div class="previewBtn" tooltip="Preview article">
             <i class="fas fa-eye"></i>
@@ -223,10 +245,13 @@
             <i class="fas fa-bookmark"></i>
         </div>
     </div>
-    <div class="inp">
-  <progress id="bar" value="0" max="100" style="width: 100%;"></progress>
+        <div id="editable" contenteditable="true">Content Goes Here
+
+        </div>
+        
+    <div class="pbar" style="width: fit-content">
+  <progress id="bar"  value="0" max="100" style="width: 100%; min-width: 300px;"></progress>
   <p id="msg"></p>
-      <div id="videoContainer"></div>
     </div>
             <button type="submit" style="min-width: 300px;" tooltip="Publish">Publish</button>
       </div>
@@ -250,7 +275,29 @@
         document.addEventListener('DOMContentLoaded', ()=>{
             const saved = localStorage.getItem('draft');
             if(saved) editor.innerHTML = saved;
-        
+            const fileInput = document.getElementById("image");
+
+        fileInput.addEventListener('change', () => {
+            const file = fileInput.files[0];
+            if (!file) return; // no file selected
+
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(file); 
+            img.style.maxWidth = "200px"; 
+            img.style.maxHeight = "200px";
+
+            const previewDiv = document.querySelector('.previewImageDiv');
+
+            previewDiv.parentElement.classList.remove('none')
+            previewDiv.parentElement.classList.add('seen')
+
+            setTimeout(() => {
+              previewDiv.innerHTML = '';
+              previewDiv.appendChild(img);    
+            }, 100);
+
+            
+        });
             const form = document.querySelector('.form');
             if(form){
             form.addEventListener('submit', async (e)=>{
@@ -266,11 +313,11 @@
               const file = fileInput.files[0];
 
               // lil validation vibes
-              if(!file) return alert("Add a pic bro 😭");
-              if(!title.value.trim()) return alert("Title missing");
-              if(!categ.value.trim()) return alert("Pick a category first 🤨");
-              if(!sub.value.trim()) return alert("Sub category empty fam");
-              if(!content.innerText.trim()) return alert("Drop some content 👀");
+              if(!file) return alert("Add a pic bro", 'error');
+              if(!title.value.trim()) return alert("Title missing", 'error');
+              if(!categ.value.trim()) return alert("Pick a category first ", 'error');
+              if(!sub.value.trim()) return alert("Sub category empty fam", 'error');
+              if(!content.innerText.trim()) return alert("Drop some content", 'error');
 
               const formData = new FormData();
               formData.append("image", file);
@@ -287,14 +334,14 @@
                 });
 
                 const data = await res.json();
-                if(data.error) return alert(data.error);
+                if(data.error) return alert(data.error, 'error');
 
-                alert("Saved ✅");
+                alert("Post Added", 'success');
                 localStorage.removeItem("draft");
                 form.reset();
 
               } catch (err) {
-                alert("Network error");
+                alert("Network error", 'error');
               }
             });
           }
@@ -328,10 +375,7 @@
         addImageBtn.addEventListener('click', ()=>{
           fileInput.click()
         });
-        vidBtn.addEventListener('click', ()=>{
-          document.querySelector("#newVideo").click()
-        });
-        
+
         fileInput.onchange = () => {
             const file = fileInput.files[0];
             if(!file) return;
@@ -350,13 +394,13 @@
                 uploadCircle.classList.add("hidden");
                 setProgress(0);
                 const data = JSON.parse(xhr.responseText);
-                if(!data.url) return alert("Bruh server said no");
+                if(!data.url) return alert("Server returned an error", 'error');
                 insertImageAtCursor(data.url);
             };
         
             xhr.onerror = () => {
                 uploadCircle.classList.add("hidden");
-                alert("Network L");
+                alert("Failed to send Image for Upload : Network", 'error');
             };
         
             xhr.send(formData);
@@ -370,56 +414,7 @@
         
 
         
-        const bar = document.querySelector("#bar");
-        const msg = document.querySelector("#msg");
-        
-        document.querySelector("#newVideo").addEventListener('input', () => {
-            const file = document.querySelector("#newVideo").files[0];
-            if(!file) return msg.textContent = "Pick a video please";
-            const form = new FormData();
-            form.append("video", file);
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", "https://vidupload.onrender.com/upload");
-        
-            xhr.upload.onprogress = e => {
-                if(e.lengthComputable){
-                    let p = (e.loaded/e.total)*100;
-                    bar.value = p;
-                    bar.style.display = "block";
-                    msg.textContent = `Uploading ${Math.round(p)}%...`;
-                }
-            };
-        
-            xhr.onload = () => {
-                const res = JSON.parse(xhr.responseText);
-                if(res.error) return msg.textContent = "🥲 " + res.error;
-                msg.textContent = `✅ Done!`;
-                bar.style.display = "none";
-        
-                const pollPlayback = () => {
-                    fetch(`https://vidupload.onrender.com/asset/${res.upload_id}`)
-                    .then(r => r.json())
-                    .then(data => {
-                        console.table(data);
-                        if(data.playback_id){
-                            msg.textContent = `🎬 Video ready!`;
-                            insertVideoAtCursor(data.playback_id);
-                        } else {
-                            msg.textContent = `⏳ Processing... status: ${data.status || 'pending'}`;
-                            setTimeout(pollPlayback, 3000);
-                        }
-                    })
-                    .catch(err => msg.textContent = "Error fetching asset status 😔 " + err);
-                };
-        
-                pollPlayback();
-            };
-        
-            xhr.onerror = () => msg.textContent = "Network go brrrr, upload go bye 😔";
-            xhr.send(form);
-        });
-        
-
+ 
 
 // Save cursor in editor, not toolbar
 editor.addEventListener("mouseup", saveCursorPosition);
@@ -458,15 +453,6 @@ function insertImageAtCursor(url){
 }
 
 // Video insertion
-function insertVideoAtCursor(id){
-    const iframe = document.createElement("iframe");
-    iframe.src = `https://player.mux.com/${id}`;
-    iframe.style.cssText = "width:100%; border:none; aspect-ratio:16/9;";
-    iframe.allow = "accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture";
-    iframe.allowFullscreen = true;
-    insertAtCursor(iframe);
-}
-
         </script>
         
 

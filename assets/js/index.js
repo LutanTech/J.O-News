@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if(!parent) return;
         const div = document.createElement('div');
         div.classList.add('featured-news');
+        div.addEventListener('click', ()=>{ window.location.href=`/open/?s=${a.slug}` })
         div.innerHTML = `
             <div class="ft-imgDiv">
                 <div class="type">${type.replace('_',' ')}</div>
@@ -33,7 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div class="article-data">
                 <div class="article-title">
-                    ${a.title.length > 100 ? a.title.slice(0,100)+'...' : a.title}
+                 <span>   ${a.title.length > 100 ? a.title.slice(0,100)+'...' : a.title} </span>
+                 <marquee> ${a.content.slice(0, 100) + '...'}</marquee>
                 </div>
             </div>
         `;
@@ -85,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if(!news || news.length === 0) return;
 
         appendMostV(news[0], type);
-        container.innerHTML = `<h2>${type.replace('_',' ')}</h2><hr> `;
+        container.innerHTML = ``;
 
         // random index for ad placement (never first or last)
         const adIndex = news.length > 2 ? Math.floor(Math.random() * (news.length - 2)) + 1 : 0;
@@ -103,9 +105,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="title"><b>${n.title.length > 50 ? n.title.slice(0,50)+'...' : n.title}</b></div>
                     <div class="context">${parseMarkdown(n.content)}</div>
                     <div class="dets">
-                        <div class="time"><i class="fas fa-clock"></i><span>${timeAgo(n.added)}</span></div>
-                        <div class="category" tooltip="Category"><i class="fas fa-tags"></i><span>${n.categ || 'Unknown'}</span></div>
-                        <div class="verified" tooltip="Verified"><i class="fas fa-check-circle" style="color:blue;"></i></div>
+                        <div class="category" tooltip="Category"><i class="fas fa-tags"></i> <span>${n.categ || 'Unknown'}</span></div>
+                        <div class="time"><i class="fas fa-clock"></i> <span>${timeAgo(n.added)}</span></div>
+
+                        <div class="user" tooltip="Publisher"><i class="fas fa-user" style="color:blue;"></i> By Lutan </div>
                     </div>
                 </div>
             `;
@@ -128,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // -------------------- Fetching Sections --------------------
     const sections = [
         { url: `${baseUrl}/get_news`, container: document.querySelector('.newsWrapper'), key: '1904', type: 'Latest News' },
-        { url: `${baseUrl}/most_read`, container: document.querySelector('.mostRead'), key: 'ec8a', type: 'Most_Read' },
+        { url: `${baseUrl}/most_read`, container: document.querySelector('.mr'), key: 'ec8a', type: 'Most_Read' },
         { url: `${baseUrl}/trending`, container: document.querySelector('.trending'), key: 'a677', type: 'Trending' }
     ];
 

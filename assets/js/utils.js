@@ -228,4 +228,5 @@ window.formatTimehD = formatTimehD
       }
     }
     hideLoader()
+    alert(window.location.href)
   })

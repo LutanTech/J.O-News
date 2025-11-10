@@ -1,5 +1,5 @@
-// const baseUrl = 'http://127.0.0.1:5000'
-const baseUrl = 'https://jomc.pythonanywhere.com'
+const baseUrl = 'http://127.0.0.1:5000'
+// const baseUrl = 'https://jomc.pythonanywhere.com'
 
 
 document.addEventListener('DOMContentLoaded',()=>{
@@ -27,7 +27,7 @@ modeBtn.addEventListener('click', (e)=>{
         document.body.classList.remove('dark')
 
     }
-})
+})                              
 }
 
 })
@@ -167,4 +167,62 @@ function alert(text, type = 'info') {
     }, 5000);
   }
 
+  function formatTime(rtime){
+    const time = new Date(rtime);
+    const options = {
+      weekday: 'long', 
+      hour: '2-digit',
+      day: 'numeric', 
+      month:'short',
+      minute:'2-digit'  
+    };
+    return  time.toLocaleString(undefined, options);
+}
+window.formatTime = formatTime
+
+function formatTimehD(rtime){
+    const time = new Date(rtime);
+    const options = {
+      hour: '2-digit',
+      day: 'numeric',
+      month:'short',
+      minute:'2-digit' ,
+      year:'numeric' 
+    };
+    return  time.toLocaleString(undefined, options);
+}
+window.formatTimehD = formatTimehD
   window.alert = alert
+
+
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const ps = new URLSearchParams(window.location.search)
+    const app = ps.get('app_mode')
+    if(app == 'True'){
+      localStorage.setItem('app_mode', true)
+      const hd = document.querySelector('.header')
+      hd.style.display= 'none'
+      const ft = document.querySelector('.footer')
+      ft.style.display= 'none'
+    } else{
+        if(app == 'False'){
+            localStorage.removeItem('app_mode')
+        }
+      const s_app = localStorage.getItem('app_mode')
+      if(s_app){
+        const hd = document.querySelector('.header')
+        hd.style.display= 'none'
+        const ft = document.querySelector('.footer')
+        ft.style.display= 'none'
+        setTimeout(() => {
+        const iframes = document.querySelectorAll('iframe')
+        console.clear()
+        console.table(iframes)
+        iframes.forEach(i=>{
+          i.setAttribute('style','display:none')
+        })
+      }, 1);
+
+      }
+    }
+  })

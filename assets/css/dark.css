@@ -10,6 +10,9 @@
             background-color: #0000;
         }
     }
+    .dets >div{
+        padding: 0px;
+    }
    h1, h2, h3, h4{
         background: #000;
         color: #fff;

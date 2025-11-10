@@ -32,9 +32,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
   
     <!-- Ads -->
-    <script async data-cfasync="false" src="//pl28003297.effectivegatecpm.com/53af17ddb9e4b799586ecb86dc439eb2/invoke.js" defer></script>
+    <!-- <script async data-cfasync="false" src="//pl28003297.effectivegatecpm.com/53af17ddb9e4b799586ecb86dc439eb2/invoke.js" defer></script>
     <script async data-cfasync="false" src="//pl28005774.effectivegatecpm.com/83706ba541e98f9c09f46db018571cf6/invoke.js" defer></script>
-    <script async data-cfasync="false" src="//pl28010045.effectivegatecpm.com/545445584d06c09fd1a832fa75e54619/invoke.js" defer></script>
+    <script async data-cfasync="false" src="//pl28010045.effectivegatecpm.com/545445584d06c09fd1a832fa75e54619/invoke.js" defer></script> -->
   
     <!-- Service Worker -->
     <script>
@@ -425,13 +425,14 @@ iframe{
         <div class="skeleton tags"></div>
         </div>
       </div>
-      <div class="art-actions">
+      <div class="art-actions" style="flex-direction: column;">
         <div class="tags">
           <h3>Similar Tags</h3>
           <div class="a-tags">
             
           </div>
         </div>
+        <h2>Comments</h2>
       </div>
       </div>
 
@@ -483,7 +484,7 @@ iframe{
   const params = new URLSearchParams(window.location.search)
   const slug = params.get('s')
   if (slug) {
-    // showLoader()
+    showLoader()
     fetch(`${baseUrl}/get/${slug}`)
       .then(res => res.json())
       .then(data => {
@@ -505,7 +506,9 @@ iframe{
         ${n.title}
       </div>
       <hr>
-      <div class="date" style="margin-top: 20px;">5th Nov. 2025 at 3:59 PM</div>
+      <div class="date" style="margin-top: 20px;">
+        ${formatTimehD(n.added)}
+        </div>
       <div class="actions">
       <a href="#copyLink" id="copyLink">
         <div class="action" tooltip="Copy Link">

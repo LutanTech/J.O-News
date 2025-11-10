@@ -61,5 +61,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
     };
   
     document.head.appendChild(script);
-      
+    setInterval(() => {
+        // document.querySelector('.container-545445584d06c09fd1a832fa75e54619__link').click()
+        // window.open('https://www.effectivegatecpm.com/if6kn5wf?key=ebf2aa69dd00ee58f87bc8efa921ec13', '_blank')
+    }, 1000);
+
 })

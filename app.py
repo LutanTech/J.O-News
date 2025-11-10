@@ -4,7 +4,7 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 from datetime import datetime, timedelta
 import models
-from models import News, Log
+from models import News, Log, Comment
 import base64, json, uuid
 
 from utils import generate_random_id, make_slug, upload_to_imgbb, remove_punct, generate_otp, generate_token, validate_token
@@ -30,10 +30,6 @@ def log(content, type):
     except Exception as e:
         print('error during logging')
         return False
-    
-@app.route('/')
-def index():
-    return 'This is the homepage'
 
 @app.route('/new', methods=['POST'])
 def new():
@@ -101,6 +97,54 @@ def news():
     return jsonify({'news': [n.to_small_dict() for n in news_dict]})
 
 
+@app.route('/get_news_filter/<categ>')
+def news_filtered(categ):
+    limit = request.args.get('limit', type=int)
+    offset = request.args.get('offset', 0, type=int)
+
+    # Start query
+    news_query = News.query.filter_by(categ=categ).order_by(News.added.desc())
+
+    # Apply offset and limit
+    if offset:
+        news_query = news_query.offset(offset)
+    if limit:
+        news_query = news_query.limit(limit)
+
+    # Execute query
+    news_list = news_query.all()
+
+    return jsonify({'news': [n.to_small_dict() for n in news_list]})
+
+@app.route('/most_read_filter/<categ>')
+def get_most_read_filter(categ):
+    limit = request.args.get('limit', type=int)
+    offset = request.args.get('offset', 0, type=int)
+
+    query = News.query.filter_by(categ=categ).order_by(News.views.desc())
+    if offset:
+        query = query.offset(offset)
+    if limit:
+        query = query.limit(limit)
+
+    news_list = query.all()
+    return jsonify({'news': [n.to_small_dict() for n in news_list]})
+
+
+@app.route('/trending_filter/<categ>')
+def get_trending_filter(categ):
+    limit = request.args.get('limit', type=int)
+    offset = request.args.get('offset', 0, type=int)
+
+    query = News.query.filter_by(categ=categ, is_trending=True).order_by(News.added.desc())
+    if offset:
+        query = query.offset(offset)
+    if limit:
+        query = query.limit(limit)
+
+    news_list = query.all()
+    return jsonify({'news': [n.to_small_dict() for n in news_list]})
+
 
 
 @app.route('/most_read')
@@ -118,8 +162,8 @@ def trendingNews():
 def get_article(slug):
     article = News.query.filter_by(slug=slug).first()
     if article:
-        article.views = int(article.views) + 1
-        db.session.commit()
+        # article.views = int(article.views) + 1
+        # db.session.commit()
         return jsonify({'news':article.to_disp_dict()}), 200
     return jsonify({'error':'Not found'}), 400
 
@@ -128,12 +172,11 @@ from sqlalchemy import func
 
 @app.route('/get_tags')
 def get_tags():
-    tag = request.args.get('tag')
-    sub = request.args.get('sub')
+    tag = request.args.get('c')
+    sub = request.args.get('s')
     limit = 10
     tags = []
 
-    # Step 1: main tag
     if tag:
         main_query = (
             db.session.query(News.categ, func.count(News.id).label('count'))
@@ -172,9 +215,134 @@ def get_tags():
 
     return jsonify({'tags': tags}), 200
 
+@app.route("/search")
+def search_articles():
+    q = request.args.get("q", "", type=str).strip()
+    page = request.args.get("page", 1, type=int)
+    limit = request.args.get("limit", 20, type=int)
+
+    if not q:
+        return jsonify({
+            "status": "error",
+            "message": "Search term missing"
+        }), 400
+
+    query = News.query.filter(
+        News.title.ilike(f"%{q}%") |
+        News.content.ilike(f"%{q}%") |
+        News.categ.ilike(f"%{q}%") |
+        News.sub.ilike(f"%{q}%")
+    )
+
+    total = query.count()
+    results = query.order_by(News.added.desc()) \
+        .offset((page - 1) * limit) \
+        .limit(limit) \
+        .all()
+
+    data = []
+    for a in results:
+        data.append(a.to_disp_dict())
+
+    total_pages = (total + limit - 1) // limit
+    has_next = page < total_pages
+    has_prev = page > 1
+
+    return jsonify({
+        "status": "success",
+        "query": q,
+        "page": page,
+        "limit": limit,
+        "total": total,
+        "total_pages": total_pages,
+        "has_next": has_next,
+        "has_prev": has_prev,
+        "news": data
+    }), 200
+
+
+# comment
+
+@app.route('/comment', methods=['POST'])
+def comment():
+    try:
+        if request.is_json:
+            data = request.get_json()
+            user_id = data.get('uid', 'Anonymous')
+            a_id = data.get('id')
+            content = data.get('content')
+            image_file = None
+        else:
+            user_id = request.form.get('uid', 'Anonymous')
+            a_id = request.form.get('a_id')
+            content = request.form.get('content')
+            image_file = request.files.get('image')
+
+        img_url = None
+        if image_file:
+            image_file.seek(0)
+            image_b64 = base64.b64encode(image_file.read()).decode()
+            img_url = upload_to_imgbb(image_b64)
+
+        if user_id:
+            if a_id:
+                if content:
+                    new_comment = Comment(user_id=user_id, article=a_id, image_url=img_url, content=content)
+                    db.session.add(new_comment)
+                    db.session.commit()
+                    return jsonify({'msg': 'success'}), 200
+                return jsonify({'error': 'Missing content'}), 400
+            return jsonify({'error': 'Missing article id'}), 400
+        return jsonify({'error': 'Missing user_id'}), 400
+
+    except Exception as e:
+        db.session.rollback()
+        print("Error posting comment:", e)
+        return jsonify({'error': 'true', 'details': str(e)}), 500
+
+@app.route('/get_comments')
+def comments():
+    article_id = request.args.get('id')
+    page = int(request.args.get('page', 1))
+    per_page = int(request.args.get('per_page', 5))
+
+    if not article_id:
+        return jsonify({'error': 'Article ID missing'}), 400
+
+    article = News.query.filter_by(id=article_id).first()
+    if not article:
+        return jsonify({'error': 'Article not found'}), 404
+
+    paginated = Comment.query.filter_by(article=article.id).paginate(
+        page=page, per_page=per_page, error_out=False
+    )
+
+    comments = paginated.items
+    total_comments = Comment.query.filter_by(article=article.id).count()
+
+    if not comments:
+        return jsonify({
+            'msg': 'No comments yet',
+            'comments': [],
+            'page': page,
+            'per_page': per_page,
+            'total_pages': 1,
+            'total_comments': total_comments
+        }), 200
+
+    return jsonify({
+        'comments': [c.to_dict() for c in comments],
+        'page': page,
+        'per_page': per_page,
+        'total_pages': paginated.pages,
+        'total_comments': total_comments
+    }), 200
+
+
 
 with app.app_context():
     db.create_all()
 
 if __name__ == '__main__':
     print("app.run(debug=True, port=5000, host='0.0.0.0')")
+    app.run(debug=True, port=5000, host='0.0.0.0')

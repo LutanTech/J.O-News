@@ -133,8 +133,12 @@ const params = new URLSearchParams(window.location.search)
 const search = params.get('action')
 if(search){
     const sd = document.querySelector('.searchDiv')
-    sd.classList.remove('none')
-    sd.classList.add('seen')
+    setTimeout(() => {
+         sd.classList.remove('none')
+    sd.classList.add('seen')   
+    alert(sd.classList)
+    }, 1000);
+
 }
 }, 1000);
 

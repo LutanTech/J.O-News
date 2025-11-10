@@ -134,7 +134,7 @@ const search = params.get('action')
 if(search){
     const sd = document.querySelector('.searchDiv')
     setTimeout(() => {
-         sd.classList.remove('none')
+    sd.classList.remove('none')
     sd.classList.add('seen')   
     }, 1000);
 
@@ -206,6 +206,7 @@ window.formatTimehD = formatTimehD
       localStorage.setItem('app_mode', true)
       const hd = document.querySelector('.header')
       const sdd = hd.querySelector('.searchDiv')
+      hd.innerHTML =''
        hd.append(sdd)
       const ft = document.querySelector('.footer')
       ft.style.display= 'none'
@@ -218,6 +219,8 @@ window.formatTimehD = formatTimehD
         showLoader()
         const hd = document.querySelector('.header')
         const sdd = hd.querySelector('.searchDiv')
+         hd.innerHTML =''
+
         hd.append(sdd)
         const ft = document.querySelector('.footer')
         ft.style.display= 'none'

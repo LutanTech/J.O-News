@@ -211,6 +211,7 @@ window.formatTimehD = formatTimehD
         }
       const s_app = localStorage.getItem('app_mode')
       if(s_app){
+        showLoader()
         const hd = document.querySelector('.header')
         hd.style.display= 'none'
         const ft = document.querySelector('.footer')
@@ -222,7 +223,7 @@ window.formatTimehD = formatTimehD
         iframes.forEach(i=>{
           i.setAttribute('style','display:none')
         })
-      }, 1);
+      }, 0.0001);
 
       }
     }

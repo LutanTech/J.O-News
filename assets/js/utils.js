@@ -198,6 +198,7 @@ window.formatTimehD = formatTimehD
   document.addEventListener('DOMContentLoaded', ()=>{
     const ps = new URLSearchParams(window.location.search)
     const app = ps.get('app_mode')
+    showLoader()
     if(app == 'True'){
       localStorage.setItem('app_mode', true)
       const hd = document.querySelector('.header')
@@ -225,4 +226,5 @@ window.formatTimehD = formatTimehD
 
       }
     }
+    hideLoader()
   })

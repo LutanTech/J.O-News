@@ -136,7 +136,6 @@ if(search){
     setTimeout(() => {
          sd.classList.remove('none')
     sd.classList.add('seen')   
-    alert(sd.classList)
     }, 1000);
 
 }
@@ -206,7 +205,8 @@ window.formatTimehD = formatTimehD
     if(app == 'True'){
       localStorage.setItem('app_mode', true)
       const hd = document.querySelector('.header')
-      hd.style.display= 'none'
+      const sdd = hd.querySelector('.searchDiv')
+       hd.append(sdd)
       const ft = document.querySelector('.footer')
       ft.style.display= 'none'
     } else{
@@ -217,7 +217,8 @@ window.formatTimehD = formatTimehD
       if(s_app){
         showLoader()
         const hd = document.querySelector('.header')
-        hd.style.display= 'none'
+        const sdd = hd.querySelector('.searchDiv')
+        hd.append(sdd)
         const ft = document.querySelector('.footer')
         ft.style.display= 'none'
         setTimeout(() => {
@@ -232,5 +233,4 @@ window.formatTimehD = formatTimehD
       }
     }
     hideLoader()
-    alert(window.location.href)
   })

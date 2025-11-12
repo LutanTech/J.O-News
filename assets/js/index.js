@@ -47,7 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const existingScript = container.querySelector(`script[data-ad-key="${adKey}"]`);
         if(existingScript){
-            console.log(`Ad script ${adKey} already exists in ${container.id || container.className}`);
             return;
         }
 
@@ -70,11 +69,9 @@ document.addEventListener('DOMContentLoaded', () => {
         script.src = `//www.highperformanceformat.com/${adConfig[adKey].key}/invoke.js`;
         script.dataset.adKey = adKey;
 
-        script.onload = () => console.log(`Ad script ${adKey} loaded successfully in ${container.id || container.className}`);
         script.onerror = () => console.error(`Ad script ${adKey} failed to load in ${container.id || container.className}`);
 
         container.appendChild(script);
-        console.log(`Ad script ${adKey} appended to ${container.id || container.className}`);
     }
 
      const ad = document.createElement('div')
@@ -126,6 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ensureAd(adDiv, adKey);
             }
         });
+        hideLoader()
     }
 
     // -------------------- Fetching Sections --------------------
@@ -137,6 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     sections.forEach(s => {
         if(!s.container) return;
+        showLoader('Updating page...', 'info')
         fetch(s.url)
             .then(res => res.json())
             .then(data => {
@@ -146,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     renderNews(s.container, data.news, s.key, s.type);
                 }
             })
-            .catch(err => console.error('Fetch error:', err));
+            .catch(err => showLoader('Fetch error: '+ err, 'error', 'clear'));
     });
     window.renderNews = renderNews
     window.timeAgo = timeAgo

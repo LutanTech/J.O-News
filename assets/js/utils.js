@@ -1,5 +1,5 @@
-// const baseUrl = 'http://127.0.0.1:5000'
-const baseUrl = 'https://jomc.pythonanywhere.com'
+const baseUrl = 'http://127.0.0.1:50000'
+// const baseUrl = 'https://jomc.pythonanywhere.com'
 
 
 document.addEventListener('DOMContentLoaded',()=>{
@@ -31,6 +31,7 @@ modeBtn.addEventListener('click', (e)=>{
 }
 
 })
+
 
 
 function parseMarkdown(text) {
@@ -133,11 +134,8 @@ const params = new URLSearchParams(window.location.search)
 const search = params.get('action')
 if(search){
     const sd = document.querySelector('.searchDiv')
-    setTimeout(() => {
     sd.classList.remove('none')
     sd.classList.add('seen')   
-    }, 1000);
-
 }
 }, 1000);
 
@@ -149,7 +147,7 @@ function alert(text, type = 'info') {
 
     if (
       msg.includes('unexpected') || 
-      msg.includes('syntax') || 
+      msg.includes('syntax') ||      
       msg.includes('traceback') ||
       msg.includes('internal')
     ) {
@@ -201,7 +199,6 @@ window.formatTimehD = formatTimehD
   document.addEventListener('DOMContentLoaded', ()=>{
     const ps = new URLSearchParams(window.location.search)
     const app = ps.get('app_mode')
-    showLoader()
     if(app == 'True'){
       localStorage.setItem('app_mode', true)
       const hd = document.querySelector('.header')
@@ -216,7 +213,6 @@ window.formatTimehD = formatTimehD
         }
       const s_app = localStorage.getItem('app_mode')
       if(s_app){
-        showLoader()
         const hd = document.querySelector('.header')
         const sdd = hd.querySelector('.searchDiv')
          hd.innerHTML =''
@@ -227,7 +223,6 @@ window.formatTimehD = formatTimehD
         setTimeout(() => {
         const iframes = document.querySelectorAll('iframe')
         console.clear()
-        console.table(iframes)
         iframes.forEach(i=>{
           i.setAttribute('style','display:none')
         })
@@ -236,4 +231,44 @@ window.formatTimehD = formatTimehD
       }
     }
     hideLoader()
+  })
+
+
+  // adblocker
+  async function checkBlock(url) {
+    const testUrl = url + '?check=' + Date.now();
+  
+    // 1: Inline script load check
+    const scriptBlocked = await new Promise(res => {
+      const s = document.createElement('script');
+      s.src = testUrl;
+      s.onload = () => res(false);
+      s.onerror = () => res(true);
+      document.head.appendChild(s);
+      setTimeout(() => res(true), 2000);
+    });
+  
+    // Try to fetch favicon style asset to check network vs extension
+    let networkReachable = true;
+    try {
+      await fetch(url.replace('/invoke.js','/favicon.ico'), {mode:'no-cors'});
+    } catch {
+      networkReachable = false;
+    }
+  
+    let reason = 'unknown';
+    if(scriptBlocked && networkReachable) reason = 'extension';
+    if(scriptBlocked && !networkReachable) reason = 'network';
+    if(!scriptBlocked) reason = 'none';
+  
+    return { blocked: scriptBlocked, reason };
+  }   
+   document.addEventListener('DOMContentLoaded', ()=>{
+
+  setTimeout(() => {
+      checkBlock("https://pl28010045.effectivegatecpm.com/545445584d06c09fd1a832fa75e54619/invoke.js")
+    .then(console.log);
+    
+  }, 5000);
+
   })

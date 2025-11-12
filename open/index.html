@@ -342,7 +342,24 @@ iframe{
   }
 }
   </style>
-  
+  <style>
+    .comment{
+      background: rgba(128, 0, 122, 0.03);
+      padding: 10px;
+      border-bottom: 1px solid #c3c3c347;
+    }
+    .comment .comment-actions{
+      display: flex;
+      gap: 10px;
+      .action{
+        font-size: 1.2em;
+        &:hoveR{
+          color: rgb(0, 255, 0);
+        }
+      }
+
+    }
+  </style>
 
 <body>
 
@@ -432,7 +449,29 @@ iframe{
             
           </div>
         </div>
+        <div class="cmdiv">
         <h2>Comments</h2>
+        <div class="comments">
+          <div class="comment">
+            <div class="comment-title">
+            <div class="comment-img"></div>
+            <div class="comment-user"></div>
+          </div>
+            <div class="comment-text"></div>
+            <div class="comment-actions">
+              <div class="action" tooltip="like"> 
+                <i class="fas fa-thumbs-up"></i> 
+              </div>
+              <div class="action" tooltip="dislike"> 
+                <i class="fas fa-thumbs-down"></i> 
+              </div>
+                <div class="action" tooltip="share"> 
+                <i class="fas fa-share"></i>
+                 </div>
+            </div>
+          </div>
+        </div>
+      </div>
       </div>
       </div>
 
@@ -484,7 +523,7 @@ iframe{
   const params = new URLSearchParams(window.location.search)
   const slug = params.get('s')
   if (slug) {
-    showLoader()
+    // showLoader('Getting latest news...', 'info', 'clear')
     fetch(`${baseUrl}/get/${slug}`)
       .then(res => res.json())
       .then(data => {
@@ -580,6 +619,9 @@ fetchTags(n.categ, n.sub)
           hideLoader()
         }
       })
+      .catch(err=>{
+        showLoader('Failed to load page. Please Check your network connection', 'error', true)
+      })
   }
 
 
@@ -587,7 +629,7 @@ fetchTags(n.categ, n.sub)
 
   function fetchLatestNews(){
     const lNews = document.querySelector('.more')
-        showLoader()
+        showLoader('Updating page..', 'info', 'clear')
         fetch(`${baseUrl}/get_news?limit=16`)
         .then(res=>res.json())
         .then(data=>{
@@ -740,10 +782,6 @@ function fetchTags(categ, sub){
   </footer>
 
 </body>
-<script>
-setTimeout(() => {
-  // showLoader()
-}, 2000);
-</script>
+
 
 </html>

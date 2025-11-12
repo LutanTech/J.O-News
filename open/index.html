@@ -359,6 +359,13 @@ iframe{
       }
 
     }
+    .comment-img img{
+      width: 50px;
+      border: 1px solid #333;
+      border-radius: 50%;
+      padding: 3px;
+      aspect-ratio: 1;
+    }
   </style>
 
 <body>
@@ -448,32 +455,186 @@ iframe{
           <div class="a-tags">
             
           </div>
+          <style>
+            .comment, .comment-actions{
+              position: relative;
+              width: fit-content;
+              min-width: 200px;
+            }
+            .comment-title{
+              display: flex;
+              gap: 10px;
+            }
+            .name{
+              font-weight: 500;
+              font-size: large;
+            }
+            .handle{
+              text-underline-offset: 3px;
+             a{
+              color: rgba(0, 170, 255, 0.759)
+            }
+            }
+            .comment-text{
+              margin: 10px 0;
+            }
+            .comment .actions{
+              background: rgb(223, 232, 223);
+              flex-direction: column;
+              padding: 10px;
+              border: 1px solid rgba(0, 0, 0, 0.27);
+              border-radius: 10px;
+              font-size: small;
+              gap: 0;
+              position: absolute;
+              top: 10px;
+              right: 0;
+              box-shadow: 2px 5px 3px rgba(0, 0, 0, 0.338);
+              z-index: 300000;
+            }
+           .inner{
+              display: flex !important;
+              flex-direction: row !important;
+              width: fit-content;
+              flex-grow: 1;
+              gap: 5px;
+            }
+
+            .comment .actions>div{
+              padding:3px 10px;
+              margin: 0 !important;
+              flex-grow: 1;
+              cursor: pointer;
+              justify-content: center;
+              align-items: center;
+              &:hover{
+                border: 0;
+                background: rgba(61, 58, 58, 0.285);
+                color: white;
+              }
+            }
+            .count{
+              font-size: small;
+              color: rgb(167, 1, 1);
+              text-align: center;
+            }
+            #add-comment{
+              padding: 5px 10px;
+              background: rgb(0, 255, 110);
+              color: #000;
+              text-decoration: none;
+              margin: 10px 0 ;
+              display: flex;
+              justify-content: center;
+              max-width: fit-content;
+              border: 0;
+              align-items: center;
+              
+            }
+            .add-comment{
+              margin: 10px 0;
+              display: flex;
+              gap: 10px ;
+            }
+          </style>
         </div>
         <div class="cmdiv">
         <h2>Comments</h2>
-        <div class="comments">
+
+        <div class="add-comment">
+          <div class="status" style="margin: 20px 0;">
+          <b>Logged In as <span id="status" style="color: lightblue;"><a href="/account"> Lutan </a></span></b>
+        </div>
+          <button title="Add a comment" id="add-comment">Add a comment</button>
+        </div>
+        <div class="comments" id="comments">
           <div class="comment">
             <div class="comment-title">
-            <div class="comment-img"></div>
-            <div class="comment-user"></div>
-          </div>
-            <div class="comment-text"></div>
+              <div class="comment-img">
+                <img src="/assets/icons/tl.jpg" alt="">
+              </div>
+              <div class="comment-user">
+                <div class="name">Lutan</div>
+                <div class="handle"><a href="/user/lutan_254"> @lutan_254</a></div>
+              </div>
+            </div>
+            <div class="comment-text">
+              Tanzania is just becoming like Kenya. Same issues happening to Kenyan GenZs.. #EndTyranny
+            </div>
             <div class="comment-actions">
-              <div class="action" tooltip="like"> 
-                <i class="fas fa-thumbs-up"></i> 
+              <div class="action" tooltip="Like">
+                <i class="fas fa-thumbs-up"></i>
+                <div class="count">323</div>
               </div>
-              <div class="action" tooltip="dislike"> 
-                <i class="fas fa-thumbs-down"></i> 
+              <div class="action" tooltip="Dislike">
+                <i class="fas fa-thumbs-down"></i>
+                <div class="count">2</div>
               </div>
-                <div class="action" tooltip="share"> 
-                <i class="fas fa-share"></i>
-                 </div>
+              <div class="action" id="openActions" tooltip="Actions">
+                <i class="fas fa-ellipsis-v"></i>
+              </div>
+              <div class="actions none">
+                <div class="copy-link">Copy Link</div>
+                <p>
+                  <hr>
+                </p>
+          
+                <div class="inner">
+                  <a
+                    href="https://wa.me/send/?text=Check Out this news article by ${n.user ? n.user : 'Unknown'}%0A ${n.title} %0A${window.location.origin}/comment/?c=${n.slug}">
+                    <div class="share-action" tooltip="Share to whatsapp">
+                      <i class="fab fa-whatsapp"></i>
+                    </div>
+                  </a>
+                  <a href="https://www.facebook.com/sharer/sharer.php?u=${window.location.origin}/comment/?c=${n.slug}">
+                    <div class="share-action" title="share to facebook">
+                      <i class="fab fa-facebook"></i>
+                    </div>
+                  </a>
+                  <a href="https://twitter.com/intent/tweet?url=${window.location.origin}/comment/?c=${n.slug}">
+                    <div class="share-action" title="share to X">
+                      <i class="fab fa-x-twitter"></i>
+                    </div>
+                  </a>
+                  <a href="https://www.instagram.com/?url=${window.location.origin}/comment/?c=${c.slug}">
+                    <div class="share-action" title="share to instagram">
+                      <i class="fab fa-instagram"></i>
+                    </div>
+                  </a>
+                </div>
+              </div>
+          
             </div>
           </div>
-        </div>
-      </div>
-      </div>
-      </div>
+          </div>
+          </div>
+          </div>
+          </div>
+            <script>
+            document.addEventListener('DOMContentLoaded', () => {
+              const actions = document.querySelector('.comment .actions');
+              const elip = document.querySelector('#openActions');
+
+              if (elip && actions) {
+                elip.addEventListener('click', (e) => {
+                  e.stopPropagation();
+                  actions.classList.toggle('none');
+                  actions.classList.toggle('flex');
+                });
+
+                document.addEventListener('click', (e) => {
+                  const clickedOutside =
+                    !actions.contains(e.target) && !elip.contains(e.target);
+
+                  if (clickedOutside && actions.classList.contains('flex')) {
+                    actions.classList.add('none');
+                    actions.classList.remove('flex');
+                  }
+                });
+              }
+            });
+
+            </script>
 
   <div class="more">
     <div class="skeleton news">

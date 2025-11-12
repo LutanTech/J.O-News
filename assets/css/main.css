@@ -385,14 +385,109 @@ font-size: .9rem;
 opacity: .7;
 }
 
-/* Tooltip Base */
-[tooltip] {
+/* title Base */
+[title] {
+    position: relative;
+  }
+  
+  /* default (bottom) */
+  [title]:hover::after {
+    content: attr(title);
+    text-transform: capitalize;
+    position: absolute;
+    background: #111;
+    color: #fff;
+    padding: 6px 10px;
+    font-size: 13px;
+    border-radius: 5px;
+    white-space: nowrap;
+    z-index: 999;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity .2s ease;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0px 0px 10px white !important;
+
+  }
+
+  .f{
+    text-transform: capitalize !important;
+  }
+  
+  [title]:hover::before {
+    content: "";
+    position: absolute;
+    border: 6px solid transparent;
+    border-top-color: #111;
+    z-index: 999;
+    opacity: 1;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%) rotate(180deg);
+  }
+  
+  /* hidden default */
+  [title]::after,
+  [title]::before {
+    opacity: 0;
+    height: fit-content;
+  }
+  
+  /* top */
+  [title-pos="top"]:hover::after {
+    bottom: auto;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  [title-pos="top"]:hover::before {
+    bottom: auto;
+    top: -12px;
+    border-bottom-color: #111;
+    border-top-color: transparent;
+    transform: translateX(-50%);
+  }
+  
+  /* right */
+  [title-pos="right"]:hover::after {
+    top: 50%;
+    left: calc(100% + 10px);
+    bottom: auto;
+    transform: translateY(-50%);
+  }
+  [title-pos="right"]:hover::before {
+    top: 50%;
+    left: 100%;
+    border-left-color: #111;
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+    transform: translateY(-50%);
+  }
+  
+  /* left */
+  [title-pos="left"]:hover::after {
+    top: 50%;
+    left: auto;
+    right: calc(100% + 10px);
+    transform: translateY(-50%);
+  }
+  [title-pos="left"]:hover::before {
+    top: 50%;
+    right: 100%;
+    border-right-color: #111;
+    transform: translateY(-50%);
+  }
+  
+  [tooltip] {
     position: relative;
   }
   
   /* default (bottom) */
   [tooltip]:hover::after {
     content: attr(tooltip);
+    text-transform: capitalize;
     position: absolute;
     background: #111;
     color: #fff;
@@ -698,4 +793,10 @@ opacity: .7;
 .active-page{
     background: red;
     color: black !important;
+}
+button{
+    cursor: pointer !important;
+    &:active{
+        scale: 0.98 !important;
+    }
 }

@@ -281,10 +281,10 @@ def comment():
                 db.session.add(new_comment)
                 db.session.commit()
                 return jsonify({'message': '✔'}), 200
-             return jsonify({'error': 'Missing content'}), 400
-          return jsonify({'error': 'Missing article id'}), 400
+             return jsonify({'error': 'Missing comment text'}), 400
+          return jsonify({'error': 'Missing data in request'}), 400
         return jsonify({'error': 'Invalid user. Please login before commenting'}), 400
-    return jsonify({'error': 'Missing user_id'}), 400
+    return jsonify({'error': 'Missing data. Please login before commenting'}), 400
 
 
 @app.route('/get_comments')

@@ -145,7 +145,6 @@ class Comment(db.Model):
     id = db.Column(db.String, primary_key=True, default=lambda: generate_random_id(10))
     user_id = db.Column(db.String(10), db.ForeignKey('user.id'), nullable=False)
     at = db.Column(db.DateTime, default=lambda: datetime.utcnow() + timedelta(hours=3))
-    image_url = db.Column(db.String(500), nullable=True)
     content = db.Column(db.Text, nullable=False)
     article = db.Column(db.String(10), db.ForeignKey('news.id'), nullable=False)
     dislikes = db.Column(db.Integer, default=0)
@@ -157,10 +156,9 @@ class Comment(db.Model):
         return {
             "id": self.id,
             "a_id": self.article,
-            "user": user,
+            "user": user if user else 'None',
             "user_id": self.user_id,
             "content": self.content,
-            "img_url": self.image_url,
             "at": self.at.isoformat(), 
             'likes':self.likes,
             'dislikes':self.dislikes

@@ -341,8 +341,6 @@ iframe{
     width: 100%;
   }
 }
-  </style>
-  <style>
     .comment{
       background: rgba(128, 0, 122, 0.03);
       padding: 10px;
@@ -365,6 +363,17 @@ iframe{
       border-radius: 50%;
       padding: 3px;
       aspect-ratio: 1;
+    }
+    .loginBtn{
+      padding: 10px;
+    background: #03d003;
+    color: white;
+    border: 0;
+    }
+    #openActions{
+      position: absolute;
+    right: 10px;
+    top:10px;
     }
   </style>
 
@@ -488,6 +497,7 @@ iframe{
               gap: 0;
               position: absolute;
               top: 10px;
+              right: 20px;
               box-shadow: 2px 5px 3px rgba(0, 0, 0, 0.338);
               z-index: 300000;
             }
@@ -595,7 +605,6 @@ iframe{
           </style>
         </div>
         <div class="cmdiv">
-        <h2>Comments</h2>
 
         <div class="add-comment">
           <div class="status" style="margin: 20px 0;">
@@ -611,6 +620,9 @@ iframe{
            
           </script>
         </div>
+        <h2 style="margin: 10px 0;">Comments</h2>
+        <hr style="margin: 10px 0;">
+
         <div class="comments" id="comments">
           </div>
           </div>
@@ -778,7 +790,12 @@ fetchTags(n.categ, n.sub)
         alert(data.error, 'error')
       } else{
         const cs = data.comments.reverse()
-        alert(cs.length)
+        if(cs.length < 1){
+          document.querySelector('.comments').innerHTML = 'No Comments yet';
+          return
+        }
+        document.querySelector('.comments').innerHTML = '';
+        
         cs.forEach(c=>{
           const div = document.createElement('div')
           div.classList.add('comment')
@@ -790,22 +807,8 @@ fetchTags(n.categ, n.sub)
               <div class="comment-user">
                 <div class="name">${c.user}</div>
                 <div class="handle"><a href="/user/?u=${c.user}"> @${c.user}</a></div>
-              </div>
-            </div>
-            <div class="comment-text">
-              ${parseMarkdown(c.content)}
-            </div>
-            <div class="comment-actions">
-              <div class="action" tooltip="Like">
-                <i class="fas fa-thumbs-up"></i>
-                <div class="count">${c.likes || 0}</div>
-              </div>
-              <div class="action" tooltip="Dislike">
-                <i class="fas fa-thumbs-down"></i>
-                <div class="count">${c.dislikes || 0 }</div>
-              </div>
-              <div class="action" id="openActions" tooltip="Actions">
-                <i class="fas fa-ellipsis-v"></i>
+                <div class="action" id="openActions" tooltip="Actions">
+                <i class="fas fa-ellipsis-v" style="font-size:small"></i>
               </div>
               <div class="actions none">
                 <div class="copy-link" onclick="copy('${window.origin}/comment/?c=${c.id}')">Copy Link</div>
@@ -837,6 +840,23 @@ fetchTags(n.categ, n.sub)
                   </a>
                 </div>
               </div>
+              </div>
+            </div>
+            <div class="comment-text">
+              ${parseMarkdown(c.content)}
+            </div>
+            <div class="comment-actions">
+              <div class="action" tooltip="Like">
+                <i class="fas fa-thumbs-up"></i>
+                <div class="count">${c.likes || 0}</div>
+              </div>
+              <div class="action" tooltip="Dislike">
+                <i class="fas fa-thumbs-down"></i>
+                <div class="count">${c.dislikes || 0 }</div>
+              </div>
+              </div>
+              
+              
           
             </div>
           `
@@ -982,14 +1002,22 @@ function fetchTags(categ, sub){
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
+             const draft = sessionStorage.getItem('draft')
               const co = document.querySelector('#comment-input')
+              if(draft){
+                co.value = draft
+              }
               const send = document.querySelector('.send')
               co.addEventListener('input', (e)=>{
               var val = co.value.trim().length
               const p = document.querySelector('.progress')
               if(p){
                 p.value = (parseInt(val) / 500) * 100
-              }
+                alert(p.value)
+              } 
+              sessionStorage.setItem('draft', co.value.trim()
+
+              )})
               co.addEventListener('keydown', (e)=>{
                 if(e.key == 'Enter'){
                   e.preventDefault()
@@ -1005,8 +1033,8 @@ document.addEventListener('DOMContentLoaded',()=>{
                   return
                 }
               })
-              })
-          function sendComment(val) {
+             
+    function sendComment(val) {
               send.disabled = true;
               const uid = localStorage.getItem('uid');
               
@@ -1032,6 +1060,7 @@ document.addEventListener('DOMContentLoaded',()=>{
                     else{
                     alert(data.message);
                     send.disabled = false;
+                    sessionStorage.removeItem('draft')
                     }
                   })
                   .catch(err => {
@@ -1039,7 +1068,8 @@ document.addEventListener('DOMContentLoaded',()=>{
                     send.disabled = false;
                   });
               } else {
-                alert('Not Logged in', 'error');
+                alert('You are not Logged in. Please Login to comment', 'error');
+                document.querySelector('.add-comment').innerHTML = `<button class="loginBtn" onclick="window.location.href='/login'"> Login to Comment</button>`
                 send.disabled = false;
               }
             }

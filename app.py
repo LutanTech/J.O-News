@@ -4,7 +4,7 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 from datetime import datetime, timedelta
 import models
-from models import News, Log, Comment
+from models import News, Log, Comment, User
 import base64, json, uuid
 
 from utils import generate_random_id, make_slug, upload_to_imgbb, remove_punct, generate_otp, generate_token, validate_token
@@ -273,14 +273,17 @@ def comment():
     content = data.get('content')
 
     if user_id:
-        if a_id:
-            if content:
+        user = User.query.filter_by(id=user_id).first()
+        if user:
+          if a_id:
+             if content:
                 new_comment = Comment(user_id=user_id, article=a_id, content=content)
                 db.session.add(new_comment)
                 db.session.commit()
                 return jsonify({'message': '✔'}), 200
-            return jsonify({'error': 'Missing content'}), 400
-        return jsonify({'error': 'Missing article id'}), 400
+             return jsonify({'error': 'Missing content'}), 400
+          return jsonify({'error': 'Missing article id'}), 400
+        return jsonify({'error': 'Invalid user. Please login before commenting'}), 400
     return jsonify({'error': 'Missing user_id'}), 400
 
 

@@ -148,13 +148,20 @@ class Comment(db.Model):
     image_url = db.Column(db.String(500), nullable=True)
     content = db.Column(db.Text, nullable=False)
     article = db.Column(db.String(10), db.ForeignKey('news.id'), nullable=False)
+    dislikes = db.Column(db.Integer, default=0)
+    likes = db.Column(db.Integer, default=0)
+
 
     def to_dict(self):
+        user = User.query.filter_by(id=self.user_id).first()
         return {
             "id": self.id,
             "a_id": self.article,
-            "user": self.user_id,
+            "user": user,
+            "user_id": self.user_id,
             "content": self.content,
             "img_url": self.image_url,
-            "at": self.at.isoformat()
+            "at": self.at.isoformat(), 
+            'likes':self.likes,
+            'dislikes':self.dislikes
         }

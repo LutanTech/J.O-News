@@ -147,34 +147,33 @@ if(search){
 
 
 function alert(text, type = 'info') {
-    const div = document.createElement('div');
-    div.classList.add('toast', type, 'seen');
-    let msg = String(text).toLowerCase();
+  let div = document.querySelector('.toast') || document.createElement('div');
+  
+  div.className = ''; // reset classes
+  div.classList.add('toast', type, 'seen');
 
-    if (
-      msg.includes('unexpected') || 
-      msg.includes('syntax') ||      
-      msg.includes('traceback') ||
-      msg.includes('internal')
-    ) {
-      text = 'Server not yet configured, please contact support';
-     div.classList.add('error')
-     div.classList.remove('info')
+  let msg = String(text).toLowerCase();
 
-    }
-
-    
-    div.textContent = text;
-    
-      
-    document.body.appendChild(div);
-
-    setTimeout(() => {
-      div.classList.remove('seen');
-      div.classList.add('removing');
-      setTimeout(() => div.remove(), 500);
-    }, 5000);
+  if (
+    msg.includes('unexpected') || 
+    msg.includes('syntax') ||      
+    msg.includes('traceback') ||
+    msg.includes('internal')
+  ) {
+    text = 'Server not yet configured, please contact support';
+    div.classList.add('error');
   }
+
+  div.textContent = text;
+  document.body.appendChild(div);
+
+  setTimeout(() => {
+    div.classList.remove('seen');
+    div.classList.add('removing');
+    setTimeout(() => div.remove(), 500);
+  }, 5000);
+}
+
 
   function formatTime(rtime){
     const time = new Date(rtime);

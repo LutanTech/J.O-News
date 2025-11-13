@@ -1,5 +1,5 @@
-// const baseUrl = 'http://127.0.0.1:50000'
-const baseUrl = 'https://jomc.pythonanywhere.com'
+const baseUrl = 'http://127.0.1.1:50000'
+// const baseUrl = 'https://jomc.pythonanywhere.com'
 
 
 document.addEventListener('DOMContentLoaded',()=>{
@@ -32,7 +32,13 @@ modeBtn.addEventListener('click', (e)=>{
 
 })
 
-
+function copy(text){
+  if(text){
+    navigator.clipboard.writeText(String(text));
+    alert('Copied', 'success')
+  }
+}
+window.copy = copy
 
 function parseMarkdown(text) {
     if(text){
@@ -152,12 +158,14 @@ function alert(text, type = 'info') {
       msg.includes('internal')
     ) {
       text = 'Server not yet configured, please contact support';
+     div.classList.add('error')
+     div.classList.remove('info')
+
     }
 
     
     div.textContent = text;
     
-      div.textContent = text;
       
     document.body.appendChild(div);
 
@@ -270,5 +278,6 @@ window.formatTimehD = formatTimehD
     .then(console.log);
     
   }, 5000);
+  window.uid = localStorage.getItem('uid')
 
   })

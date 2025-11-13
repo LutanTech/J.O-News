@@ -265,40 +265,24 @@ def search_articles():
 
 @app.route('/comment', methods=['POST'])
 def comment():
-    try:
-        if request.is_json:
-            data = request.get_json()
-            user_id = data.get('uid', 'Anonymous')
-            a_id = data.get('id')
-            content = data.get('content')
-            image_file = None
-        else:
-            user_id = request.form.get('uid', 'Anonymous')
-            a_id = request.form.get('a_id')
-            content = request.form.get('content')
-            image_file = request.files.get('image')
+    data = request.get_json()
+    print(data)
+    user_id = data.get('uid', 'Anonymous')
+    a_id = data.get('c_id')
+    print(data.get('c_id'))
+    content = data.get('content')
 
-        img_url = None
-        if image_file:
-            image_file.seek(0)
-            image_b64 = base64.b64encode(image_file.read()).decode()
-            img_url = upload_to_imgbb(image_b64)
+    if user_id:
+        if a_id:
+            if content:
+                new_comment = Comment(user_id=user_id, article=a_id, content=content)
+                db.session.add(new_comment)
+                db.session.commit()
+                return jsonify({'message': '✔'}), 200
+            return jsonify({'error': 'Missing content'}), 400
+        return jsonify({'error': 'Missing article id'}), 400
+    return jsonify({'error': 'Missing user_id'}), 400
 
-        if user_id:
-            if a_id:
-                if content:
-                    new_comment = Comment(user_id=user_id, article=a_id, image_url=img_url, content=content)
-                    db.session.add(new_comment)
-                    db.session.commit()
-                    return jsonify({'msg': 'success'}), 200
-                return jsonify({'error': 'Missing content'}), 400
-            return jsonify({'error': 'Missing article id'}), 400
-        return jsonify({'error': 'Missing user_id'}), 400
-
-    except Exception as e:
-        db.session.rollback()
-        print("Error posting comment:", e)
-        return jsonify({'error': 'true', 'details': str(e)}), 500
 
 @app.route('/get_comments')
 def comments():

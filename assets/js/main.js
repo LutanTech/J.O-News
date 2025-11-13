@@ -26,6 +26,8 @@ mc.addEventListener('click', ()=>{
 })
 document.addEventListener('DOMContentLoaded', ()=>{
     window.addEventListener('resize',()=>{
+        if(ls){
+
     const ls = document.querySelector('.links')
     if(window.innerWidth > 768){
         ls.classList.remove('large')
@@ -34,6 +36,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
     if(window.innerWidth < 768){
         ls.classList.add('large')
     }
+}
     })
 
     // const adScriptUrl = "//pl28010045.effectivegatecpm.com/545445584d06c09fd1a832fa75e54619/invoke.js";

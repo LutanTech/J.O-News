@@ -675,6 +675,7 @@ opacity: .7;
   
   .toast.error {
     background: rgb(253, 170, 170);
+    color: rgb(0, 0, 0) !important;
   }
   
   .toast.info {

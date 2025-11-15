@@ -85,5 +85,15 @@ document.addEventListener('DOMContentLoaded', ()=>{
     } else {
         ics.appendChild(div); 
     }
-    
+    const header = document.querySelector('.header');
+
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 50) {
+    header.style.background = '#059405'; // color when scrolled
+    header.style.color = '#fff';
+  } else {
+    header.style.background = '#ffffff'; // original
+    header.style.color = '#333';
+  }
+});
 })

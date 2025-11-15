@@ -6,3 +6,5 @@ requests
 python_dotenv
 gunicorn
 psycopg2_binary
+Flask-Mail
+itsdangerous

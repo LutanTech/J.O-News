@@ -69,7 +69,6 @@
  }
  .icons>div{
      padding: 10px;
-     border: 1px solid;
      width: fit-content;
      height: fit-content;
      margin: auto;
@@ -79,6 +78,7 @@
      &:hover{
          background: rgb(255, 255, 255);
          color: black;
+         box-shadow: 2px 3px 10px black;
      }
      &:active{
          scale: 0.97;
@@ -268,15 +268,17 @@ marquee{
 
 .n-link:hover .title {
     text-decoration: underline;
-}
+}  
 
 .n-link:hover .time {
     text-decoration: none !important;
 }
-
-.news-content-image{
+ 
+.news-content-image{ 
     width: 95% !important;
     margin: 20px auto;
+    max-height: 300px !important;
+    object-fit: cover;
 }
 
 .title{

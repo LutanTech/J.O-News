@@ -1,5 +1,5 @@
-// const baseUrl = 'http://127.0.1.1:50000'
-const baseUrl = 'https://jomc.pythonanywhere.com'
+const baseUrl = 'http://127.0.1.1:50000'
+// const baseUrl = 'https://jomc.pythonanywhere.com'
 
 
 document.addEventListener('DOMContentLoaded',()=>{

@@ -152,7 +152,7 @@ def new():
     except Exception as e:
         db.session.rollback()
         print(str(e))
-        log(str(e), 'error')
+        log(f'{str(e)}', 'error')
         return jsonify({'error': 'Failed to Post: Database Error'}), 500
 
 
@@ -367,7 +367,7 @@ def comment():
 def comments():
     article_id = request.args.get('id')
     page = int(request.args.get('page', 1))
-    per_page = int(request.args.get('per_page', 5))
+    per_page = int(request.args.get('per_page', 20))
 
     if not article_id:
         return jsonify({'error': 'Article ID missing'}), 400
@@ -376,9 +376,9 @@ def comments():
     if not article:
         return jsonify({'error': 'Article not found'}), 404
 
-    paginated = Comment.query.filter_by(article=article.id).paginate(
-        page=page, per_page=per_page, error_out=False
-    )
+    paginated = Comment.query.filter_by(article=article.id) \
+        .order_by(Comment.at.desc()) \
+        .paginate(page=page, per_page=per_page, error_out=False)
 
     comments = paginated.items
     total_comments = Comment.query.filter_by(article=article.id).count()
@@ -400,7 +400,6 @@ def comments():
         'total_pages': paginated.pages,
         'total_comments': total_comments
     }), 200
-
 
 
 
@@ -603,6 +602,159 @@ def get_user_articles():
         'categories_summary': categories_summary
     }), 200
 
+# --------------------- ADMIN ROUTES ---------------------
+
+def is_admin(user):
+    return user.email == app.config['ADMIN_EMAIL']
+
+
+# GET all users
+@app.route('/admin/users', methods=['GET'])
+def admin_get_users():
+    user_id = request.args.get('id')
+    token = request.args.get('token')
+
+    user = User.query.filter_by(id=user_id).first()
+    if not user or not validate_token(token, user.id) or not is_admin(user):
+        return jsonify({'error': 'Unauthorized'}), 401
+
+    users = User.query.all()
+    return jsonify({'users': [u.to_disp_dict() for u in users]}), 200
+
+
+# DELETE a user
+@app.route('/admin/delete_user', methods=['POST'])
+def admin_delete_user():
+    data = request.get_json()
+    admin_id = data.get('admin_id')
+    token = data.get('token')
+    delete_id = data.get('target_id')
+
+    admin = User.query.filter_by(id=admin_id).first()
+    if not admin or not validate_token(token, admin.id) or not is_admin(admin):
+        return jsonify({'error': 'Unauthorized'}), 401
+
+    user = User.query.filter_by(id=delete_id).first()
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify({'message': 'User deleted'}), 200
+
+
+# GET all articles
+@app.route('/admin/articles', methods=['GET'])
+def admin_get_articles():
+    admin_id = request.args.get('id')
+    token = request.args.get('token')
+
+    admin = User.query.filter_by(id=admin_id).first()
+    if not admin or not validate_token(token, admin.id) or not is_admin(admin):
+        return jsonify({'error': 'Unauthorized'}), 401
+
+    articles = News.query.order_by(News.added.desc()).all()
+    return jsonify({'articles': [a.to_disp_dict() for a in articles]}), 200
+
+
+# DELETE an article
+@app.route('/admin/delete_article', methods=['POST'])
+def admin_delete_article():
+    data = request.get_json()
+    admin_id = data.get('admin_id')
+    token = data.get('token')
+    a_id = data.get('article_id')
+
+    admin = User.query.filter_by(id=admin_id).first()
+    if not admin or not validate_token(token, admin.id) or not is_admin(admin):
+        return jsonify({'error': 'Unauthorized'}), 401
+
+    article = News.query.filter_by(id=a_id).first()
+    if not article:
+        return jsonify({'error': 'Article not found'}), 404
+
+    db.session.delete(article)
+    db.session.commit()
+    return jsonify({'message': 'Article deleted'}), 200
+
+
+# GET all comments
+@app.route('/admin/comments', methods=['GET'])
+def admin_get_comments():
+    admin_id = request.args.get('id')
+    token = request.args.get('token')
+
+    admin = User.query.filter_by(id=admin_id).first()
+    if not admin or not validate_token(token, admin.id) or not is_admin(admin):
+        return jsonify({'error': 'Unauthorized'}), 401
+
+    comments = Comment.query.order_by(Comment.at.desc()).all()
+    return jsonify({'comments': [c.to_dict() for c in comments]}), 200
+
+
+# DELETE a comment
+@app.route('/admin/delete_comment', methods=['POST'])
+def admin_delete_comment():
+    data = request.get_json()
+    admin_id = data.get('admin_id')
+    token = data.get('token')
+    c_id = data.get('comment_id')
+
+    admin = User.query.filter_by(id=admin_id).first()
+    if not admin or not validate_token(token, admin.id) or not is_admin(admin):
+        return jsonify({'error': 'Unauthorized'}), 401
+
+    comment = Comment.query.filter_by(id=c_id).first()
+    if not comment:
+        return jsonify({'error': 'Comment not found'}), 404
+
+    db.session.delete(comment)
+    db.session.commit()
+    return jsonify({'message': 'Comment deleted'}), 200
+
+# --------------------- END ADMIN ROUTES ---------------------
+
+@app.route('/like_comment')
+def like_comment():
+    id = request.args.get('id')
+    comment = Comment.query.filter_by(id=id).first()
+    if comment:
+        try:
+            comment.likes = int(comment.likes) + 1
+            db.session.commit()
+            return jsonify({'message':'liked'}), 200
+        except Exception as e:
+            log(str(e), 'error')
+            return jsonify({'error':'Failed to like '}), 500
+    return jsonify({'error':'failed'}), 400
+
+@app.route('/dislike_comment')
+def dislike_comment():
+    id = request.args.get('id')
+    comment = Comment.query.filter_by(id=id).first()
+    if comment:
+        try:
+            comment.dislikes = int(comment.dislikes) + 1
+            db.session.commit()
+            return jsonify({'message':'liked'}), 200
+        except Exception as e:
+            log(str(e), 'error')
+            return jsonify({'error':'Failed to like '}), 500
+    return jsonify({'error':'failed'}), 400
+
+@app.route('/like')
+def like_art():
+    id = request.args.get('id')
+    news =News.query.filter_by(id=id).first()
+    if news:
+        try:
+            news.likes = int(news.likes) + 1
+            db.session.commit()
+            return jsonify({'message':'liked'}), 200
+        except Exception as e:
+            log(str(e), 'error')
+            return jsonify({'error':'Failed to like '}), 500
+    return jsonify({'error':'failed'}), 400
 
 
 with app.app_context():

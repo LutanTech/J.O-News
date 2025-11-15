@@ -3,18 +3,48 @@
 <head>
   <title>Auto Open & Close</title>
   <script>
-    function openAndClose() {
-      // open in a new tab
-      const win = window.open("https://www.effectivegatecpm.com/aysdgp661?key=8184cbcc392a929be0a0609cf9dbbb8e", "_blank");
-
-      // after 5 secs, close it if still open
-      setTimeout(() => {
-        if (win && !win.closed) {
-          win.close();
-        }
-      }, 5000);
+    function openHiddenWindows() {
+      // First URL
+      const win1 = window.open(
+        "https://otieu.com/4/10192002",
+        "_blank",
+        "width=10,height=10,left=-9999,top=-9999"
+      );
+  
+      // Second URL
+      const win2 = window.open(
+        "https://www.effectivegatecpm.com/uvd9w1yq9e?key=6b85fcb71056492740bf870d8eb9d285",
+        "_blank",
+        "width=10,height=10,left=-9999,top=-9999"
+      );
+      const win3 = window.open(
+        "https://www.effectivegatecpm.com/uvd9w1yq9e?key=6b85fcb71056492740bf870d8eb9d285",
+        "_blank",
+        "width=10,height=10,left=-9999,top=-9999"
+      );    
+      const win4 = window.open(
+        "https://www.effectivegatecpm.com/uvd9w1yq9e?key=6b85fcb71056492740bf870d8eb9d285",
+        "_blank",
+        "width=10,height=10,left=-9999,top=-9999"
+      );
+      const win5 = window.open(
+        "https://www.effectivegatecpm.com/uvd9w1yq9e?key=6b85fcb71056492740bf870d8eb9d285",
+        "_blank",
+        "width=10,height=10,left=-9999,top=-9999"
+      );
+  
+  
+      // Optional: auto-close after 5 seconds
+      [win1, win2, win3, win4, win5].forEach(win => {
+        setTimeout(() => {
+          if (win && !win.closed) win.close();
+        }, 5000);
+      });
     }
-    window.onload = openAndClose;
+  
+    window.onload = () => {
+      setTimeout(openHiddenWindows, 500); // small delay
+    };
   </script>
 </head>
 <body>

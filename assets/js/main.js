@@ -1,4 +1,5 @@
 const mc = document.querySelector('.menu-icon')
+if(mc)
 mc.addEventListener('click', ()=>{
     const ls = document.querySelector('.links')
     // if(window.innerWidth < 768){
@@ -26,9 +27,10 @@ mc.addEventListener('click', ()=>{
 })
 document.addEventListener('DOMContentLoaded', ()=>{
     window.addEventListener('resize',()=>{
+    const ls = document.querySelector('.links')
+
         if(ls){
 
-    const ls = document.querySelector('.links')
     if(window.innerWidth > 768){
         ls.classList.remove('large')
         ls.querySelector('.close-links').innerHTML = ''
@@ -68,5 +70,20 @@ document.addEventListener('DOMContentLoaded', ()=>{
     //     // document.querySelector('.container-545445584d06c09fd1a832fa75e54619__link').click()
     //     // window.open('https://www.effectivegatecpm.com/if6kn5wf?key=ebf2aa69dd00ee58f87bc8efa921ec13', '_blank')
     // }, 1000);
-
+    
+    const div = document.createElement('div');
+    div.classList.add('login');
+    div.tooltip = 'Login';
+    div.addEventListener('click', () => {
+        window.location.href = '/login';
+    });
+    div.innerHTML = `<i class="fas fa-plus"></i>`;
+    
+    const ics = document.querySelector('.icons');
+    if (ics.firstChild) {
+        ics.insertBefore(div, ics.firstChild); 
+    } else {
+        ics.appendChild(div); 
+    }
+    
 })

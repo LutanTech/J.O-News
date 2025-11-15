@@ -68,16 +68,46 @@
   </div>
 </div>
 <script>
-const btn=document.getElementById("btn");
-const t=document.getElementById("t");
-const sp=document.getElementById("sp");
-btn.onclick=()=>{
-  t.textContent="Checking...";
-  sp.style.display="block";
-  btn.disabled=true;
-  setTimeout(()=>location.reload(),1000);
-};
-if(navigator.onLine){window.location.href="/"}
-</script>
+  const btn = document.getElementById("btn");
+  const t = document.getElementById("t");
+  const sp = document.getElementById("sp");
+  
+  // get stored retries
+  let retries = parseInt(localStorage.getItem("retries")) || 0;
+  
+  // button click
+  btn.onclick = () => {
+    t.textContent = "Checking...";
+    sp.style.display = "block";
+    btn.disabled = true;
+  
+    if (retries < 3) {
+      localStorage.setItem("retries", retries + 1);
+      setTimeout(() => location.reload(), 1000);
+    } else {
+      console.log("Max retries reached, waiting for network.");
+    }
+  };
+  
+  // page load logic
+  document.addEventListener("DOMContentLoaded", () => {
+  
+    // if online AND before redirecting, reset retries
+    if (navigator.onLine) {
+      console.log("Online detected, resetting retries.");
+      localStorage.setItem("retries", 0);      // RESET HERE
+      window.location.href = "/";
+      return;
+    }
+  
+    // if offline + retries >= 3, stop reload spam
+    if (retries >= 3) {
+      console.log("Max retries reached, offline, chill.");
+      return;
+    }
+  
+  });
+  </script>
+  
 </body>
 </html>

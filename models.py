@@ -96,8 +96,10 @@ class News(db.Model):
     views = db.Column(db.Integer, default=0)
     likes = db.Column(db.Integer, default=0)
     shares = db.Column(db.Integer, default=0)
+    user_id = db.Column(db.String(10), db.ForeignKey('user.id'), nullable=True)
 
     def to_dict(self):
+        user = User.query.filter_by(id=self.user_id).first()
         return {
             "id": self.id,
             "title": self.title,
@@ -106,8 +108,10 @@ class News(db.Model):
             "is_trending": self.is_trending,
             "content": self.content,
             "shares": self.shares,
+            "slug": self.slug,
             "likes": self.likes,
             "views": self.views,
+            "user": user.username if user else 'Unknown',
             "image_url": self.image_url,
             "added": self.added.isoformat(),
         }
@@ -123,6 +127,7 @@ class News(db.Model):
         }
 
     def to_disp_dict(self):
+        user = User.query.filter_by(id=self.user_id).first()
         return {
             "id": self.id,
             "title": self.title,
@@ -133,7 +138,11 @@ class News(db.Model):
             "shares": self.shares,
             "likes": self.likes,
             "views": self.views,
-            "added": self.added.isoformat()
+            "added": self.added.isoformat(),
+            "slug":self.slug,
+            "user": user.username if user else 'Unknown',
+
+
         }
 
 class Log(db.Model):
@@ -156,10 +165,17 @@ class Comment(db.Model):
         return {
             "id": self.id,
             "a_id": self.article,
-            "user": user if user else 'None',
+            "user": user.username if user else 'None',
             "user_id": self.user_id,
             "content": self.content,
             "at": self.at.isoformat(), 
             'likes':self.likes,
             'dislikes':self.dislikes
         }
+
+
+class OTP(db.Model):
+    id = db.Column(db.String(6), primary_key=True, default=lambda: generate_random_id(10))
+    email = db.Column(db.String(255), nullable=False, unique=True)
+    generated = db.Column(db.DateTime, default=lambda: datetime.utcnow() + timedelta(hours=3))
+    otp = db.Column(db.String(6), nullable=False)

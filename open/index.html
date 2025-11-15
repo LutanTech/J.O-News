@@ -195,6 +195,7 @@ iframe{
       flex-direction: row !important;
       justify-content: start;
       align-items: start;
+      font-size: small;
     }
   
     @media (max-width:500px) {
@@ -204,7 +205,7 @@ iframe{
           width: 100%;
           max-width: none !important;
           object-fit: cover;
-          max-height: 200px;
+          max-height: 100px !important;
         }
       }
     }
@@ -474,6 +475,7 @@ iframe{
               display: flex;
               gap: 10px;
             }
+
             .name{
               font-weight: 500;
               font-size: large;
@@ -601,17 +603,77 @@ iframe{
               pointer-events: none;
               cursor: not-allowed;
              }
+             .comment-actions{
+              display: flex;
+              gap: 10px;
+              >div{
+              padding: 5px 20px;
+              border-radius: 10px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              font-family: Arial, Helvetica, sans-serif;
+              &:active{
+                scale: 1 !important;
+                i{
+                  color: rgba(41, 39, 39, 0.481);
+                  scale: 1.5;
+                  opacity: 0.2;
+                  transition: all 0s ease-in-out;
+                }
+              }
+             
+              }
+              .count{
+                border-left: 1px solid black ;
+                padding-left: 10px;
+              }
+              i{
+                padding-right: 20px;
+                color: rgba(0, 0, 0, 0.712);
+                font-size: 1.2em;
+                position: relative;
+                &:active{
+                  color: red;
+                  scale: 1.5;
+                  opacity: 0.2;
+                  transition: all 0s ease-in-out;
+                  &:after{
+                    position: absolute;
+                    top: 0;
+                    content: '';
+                    color: black;
+                    scale: 2;
+                    padding: 10px;
+                    width: 30px;
+                    aspect-ratio: 1;
+                  }
+                }
+              }
 
+            }
+            @media (min-width:500px) {
+              .-news .image img{
+               width: 200px !important;
+               max-height: 100px !important;
+              }
+              .image{
+                width: fit-content !important;
+              }
+              
+            }
           </style>
         </div>
         <div class="cmdiv">
 
-        <div class="add-comment">
+        <div class="add-comment" id="comment-section">
           <div class="status" style="margin: 20px 0;">
-          <b>Logged In as <span id="status" style="color: lightblue;"><a href="/account"> Lutan </a></span></b>
+          <b>Not logged in</b>
         </div>
         <div style="width: 100%; display: flex; flex-direction: column; gap: 10px; position: relative;">
-          <button title="Add a comment" id="add-comment">Add a comment</button>
+          <!-- <button disabled title="Add a comment" id="add-comment">Add a comment</button> -->
+           <h3>Add a comment</h3>
+           <hr>
           <textarea rows="6" type="text" name="comment" id="comment-input" maxLength="500" placeholder="Type your comment here"></textarea>
           <button class="send">Send</button>
           <progress title="Word Count" class="progress" value="0" max="100">  </progress>
@@ -628,7 +690,9 @@ iframe{
           </div>
           </div>
           </div>
+
   <div class="more">
+    
     <div class="skeleton news">
       <div class="image"></div>
       <div class="details">
@@ -671,8 +735,81 @@ iframe{
     <div id="container-007fd972b8495182decb806571941725"></div>
   </div>
 </div>
+<style>
+  .login-overlay{
+    background: #0101016c;
+    width:100%;
+    position: fixed;
+    top:0;
+    right: 0;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .login-inner{
+    flex-direction: column;
+    gap: 10px;
+    background: white;
+    padding: 20px;
+    border-radius: 3px;
+    width: 90%;
+    max-width: 300px;
+    display: flex;
+  }
+  #lbtn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    background: rgb(104, 212, 104);
+    color: white;
+    border: 0;
+  }
+  *:disabled{
+    background: rgba(172, 169, 169, 0.266) !important;
+    cursor: not-allowed;
+    user-select: none;
+    color: rgba(128, 128, 128, 0.403) !important;
+  }
 
+</style>
+<div class="login-overlay none">
+  <div class="login-inner">
+    <h4>Please Login to comment</h4>
+    <button id="lbtn" onclick="window.location.href='/login'">Login</button>
+  </div>
+
+</div>
   <script>
+    
+    document.addEventListener('DOMContentLoaded', async () => {
+  // const adb = document.querySelector('#add-comment');
+  const sb = document.querySelector('.send');
+  const ci = document.querySelector('#comment-input');
+  const st = document.querySelector('.status');
+
+  // disable everything by default
+  // adb.disabled = true;
+  ci.disabled = true;
+  sb.disabled = true;
+
+  const res = await pingAccount();
+
+  if (res === '✔') {
+    // adb.disabled = false;
+    ci.disabled = false;
+    sb.disabled = false;
+    st.innerHTML = `
+      <b>Logged in as <span id="status" style="color: lightblue;">
+      <a href="/account"> ${localStorage.getItem('usn') || window.id} </a></span></b>
+    `;
+  } else {
+    st.innerHTML = `
+      <b>Not Logged in <a href="/login">Login to comment </a></b>
+    `;
+  }
+});
 
   const params = new URLSearchParams(window.location.search)
   const slug = params.get('s')
@@ -899,7 +1036,8 @@ fetchTags(n.categ, n.sub)
                 showMessage(data.error, 'error')
             } else{
                 const news = data.news
-                lNews.innerHTML = ''
+  
+                lNews.innerHTML = '<h3 style="margin-left:20px;">More News</h3> <hr>'
 
                 if(news){
                     news.forEach(n => {
@@ -1013,7 +1151,6 @@ document.addEventListener('DOMContentLoaded',()=>{
               const p = document.querySelector('.progress')
               if(p){
                 p.value = (parseInt(val) / 500) * 100
-                alert(p.value)
               } 
               sessionStorage.setItem('draft', co.value.trim()
 
@@ -1068,14 +1205,27 @@ document.addEventListener('DOMContentLoaded',()=>{
                     send.disabled = false;
                   });
               } else {
-                alert('You are not Logged in. Please Login to comment', 'error');
                 document.querySelector('.add-comment').innerHTML = `<button class="loginBtn" onclick="window.location.href='/login'"> Login to Comment</button>`
+                const lbtnn = document.querySelector('#lbtn')
+                lbtnn.setAttribute('onclick', `window.location.href='${window.location.origin}/login/?next=${window.location.href}&focus=comment-section'`)
                 send.disabled = false;
+                 const lo = document.querySelector('.login-overlay')
+                 lo.classList.toggle('none')
+                 lo.classList.toggle('flex')
               }
             }
 
             })
-
+  document.addEventListener('DOMContentLoaded',()=>{
+    const lo = document.querySelector('.login-overlay')
+    const loi = document.querySelector('.login-inner')
+    lo.addEventListener('click', (e)=>{
+      if(e.target == lo && e.target != loi && !loi.contains(e.target)){
+        lo.classList.toggle('none')
+        lo.classList.toggle('flex')
+      }
+    })
+  })
         
 
             </script>

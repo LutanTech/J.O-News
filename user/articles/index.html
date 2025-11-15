@@ -41,6 +41,7 @@
     <script src="/assets/js/loader.js" defer></script>
     <script src="/assets/js/main.js" defer></script>
     <script src="/assets/js/utils.js"></script>
+    <script src="/assets/js/arts.js"> </script>
   
     <!-- CSS -->
     <link rel="stylesheet" href="/assets/css/loader.css">
@@ -122,6 +123,70 @@
       <a href="/world">World</a>
     </div>
   </header>
+  <div class="content" style="flex-direction: column;">
+<link rel="stylesheet" href="/assets/css/arts.css">
+    
+    <h2>User Categories</h2>
+    <hr>
+    <div class="user-categs">
+      <div class="categ sk" title="Loading...">
+        <div class="text"> </div>
+        <div class="count"></div>
+       </div>
+       <div class="categ sk">
+        <div class="text"></div>
+        <div class="count"></div>
+       </div>
+       <div class="categ sk">
+        <div class="text"> </div>
+        <div class="count"></div>
+       </div>
+
+    </div>
+    <div class="filtered" style="width: 100%;">
+      <h2 style="margin: 10px 0;">Filter</h2>
+      <i style="color: red; font-family: Arial, Helvetica, sans-serif; margin: 10px 0;">* Max range 3 Months</i>
+      <hr style="margin: 20px 0;">
+      <div class="filters">
+        <div title="Start Date">
+        <label for="from">From:</label> <p style="margin: 5px;"></p>
+        <input type="date" id="from" title="Start Date">
+        </div>
+        <div title="Date">
+        <label for="to">To:</label><p style="margin: 5px;"></p>
+        <input type="date" id="to">
+        </div>
+    <div title="Choose Category to filter">
+      <label for="category"> Category</label><p style="margin: 5px;"></p>
+        <select name="category" id="category">
+          <option value=""> All </option>
+        </select>
+        </div>
+        <div style="justify-self: center; align-self: center; margin-top: 20px;" >
+    
+        <button id="applyFiltersBtn">Apply Filters</button>
+        </div>
+      </div>
+      <h2 style="margin: 10px 0;">Articles</h2>
+      <p style="margin: 20px 0;" class="total"></p>
+    <hr>
+      <div class="articles-div">
+        
+      </div>
+      <div class="page-actions">
+        <button disabled class="prev pg-btn" title="Previous page" title-pos="right"> <i class="fas fa-angles-left"></i> Prev</button>
+        <button disabled class="next pg-btn" title="Next Page"> <i class="fas fa-angles-right"></i> Next</button>
+
+      </div>
+    </div>
+    
+  </div>
+
+ <!-- Your filter UI -->
+
+
+
+
   
 
   <footer class="footer">

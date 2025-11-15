@@ -1,5 +1,5 @@
-// const baseUrl = 'http://127.0.1.1:50000'
-const baseUrl = 'https://jomc.pythonanywhere.com'
+const baseUrl = 'http://127.0.1.1:50000'
+// const baseUrl = 'https://jomc.pythonanywhere.com'
 
 
 document.addEventListener('DOMContentLoaded',()=>{
@@ -163,6 +163,12 @@ function alert(text, type = 'info') {
     text = 'Server not yet configured, please contact support';
     div.classList.add('error');
   }
+  if (
+    msg.includes('failed to fetch') 
+  ) {
+    text = 'Failed to Communicate to server. Please make sure you have an active internet connection or contact support';
+    div.classList.add('error');
+  }
 
   div.textContent = text;
   document.body.appendChild(div);
@@ -280,3 +286,39 @@ window.formatTimehD = formatTimehD
   window.uid = localStorage.getItem('uid')
 
   })
+  window.id = localStorage.getItem('uid')
+  window.token = localStorage.getItem('token')
+
+  async function pingAccount() {
+    if (!window.id || !window.token) {
+      console.warn('not logged');
+      return '❌';
+    }
+  
+    try {
+      const res = await fetch(`${baseUrl}/ping/account?id=${window.id}&token=${window.token}`);
+      const data = await res.json();
+  
+      if (data.error) {
+        swal(data.error || 'An error occured', 'error'); // assuming you use SweetAlert
+        localStorage.clear();
+        return '❌';
+      }
+  
+      const user = data.user;
+  
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('uid', user.id);
+      localStorage.setItem('usn', user.username);
+      localStorage.setItem('token', data.token || window.token);
+      localStorage.setItem('lastPing', new Date().toISOString());
+  
+      return '✔';
+  
+    } catch (err) {
+      swal(err.message, 'error');
+      return '❌';
+    }
+  }
+  
+window.pingAccount =pingAccount

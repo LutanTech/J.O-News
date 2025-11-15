@@ -1,0 +1,126 @@
+body{
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+.form{
+    display: flex;
+}
+.inputs{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    width: 100%;
+    flex-grow: 1;
+
+}
+.inp{
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.212);
+    border-radius: 4px;
+    padding: 10px;
+    flex: 1 1 300px;
+    flex-grow: 1;
+}
+.inp input, select{
+    padding: 10px;
+    transition: all 0.1s ease-in-out;
+    outline: none;
+    border: 0px;
+    border-radius: 2px;
+    width: 100%;
+    background: #0000;
+    border: 2px solid rgb(123, 210, 251);
+    &:focus{
+        border: 2px solid rgb(126, 126, 255);
+    }
+
+}
+#editable{
+    outline: none;
+    padding: 10px;
+    border: 1px solid #949393;
+    border-radius: 5px;
+    min-height: 200px;
+    width: 100%;
+    min-width: 100%;
+    &:focus-within{
+        border: 2px solid rgba(0, 0, 255, 0.519);
+    }
+}
+#content{
+    flex: 1 1 100%;
+}
+
+.addImageBtn, .draftBtn, .previewBtn, .addVideoBtn{
+    padding: 10px;
+    border: 1px solid blue;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    aspect-ratio: 1;
+    max-height: fit-content;
+    position: sticky;
+    top: 0;
+    cursor: pointer;
+ }
+
+ #content{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+    justify-content: space-between;
+ }
+ button[type='submit']{
+    padding:10px;
+    border-radius: 40px;
+    background: rgb(0, 174, 0);
+    border: 0;
+    cursor: pointer;
+    &:active{
+        scale: 0.97;
+        background: #000;
+        color: #fff;
+    }
+ }
+.editBtns{
+display: flex;
+gap: 10px;
+>div{
+  color: white;
+}
+>div:nth-of-type(1){
+  background: rgb(2, 2, 141);
+  border: 0;
+}
+>div:nth-of-type(2){
+  background: rgb(168, 9, 173);
+  border: 0;
+}
+>div:nth-of-type(3){
+  background: rgb(2, 145, 59);
+  border: 0;
+}
+}
+.hidden, .none{
+display: none;
+}
+.fixed{
+position: fixed;
+background: rgba(0, 0, 0, 0.595);
+z-index: 300;
+}
+.seen{
+display: flex !important;
+}
+label{
+    margin-bottom: 10px;
+}

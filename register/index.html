@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>JOMC News | Login</title>
+    <meta name="description" content="JOMC News brings real time world news. Fast reliable and student powered.">
+    <meta name="keywords" content="JOMC News, World news, News Site Kenya news, student journalism, Moi University news, Joseph Owino news">
+    <meta name="author" content="JOMC News Team">
+    <link rel="canonical" href="https://jomc-news.vercel.app/">
+    <link rel="icon" href="/assets/images/logo.jpg" type="image/x-icon">
+  <link rel="shortcut-icon" href="/assets/images/logo.jpg" type="image/x-icon">
+    <!-- OpenGraph -->
+    <meta property="og:title" content="JOMC News">
+    <meta property="og:description" content="Real time World news.">
+    <meta property="og:image" content="https://jomc-news.vercel.app/assets/images/logo.jpg">
+    <meta property="og:url" content="https://jomc-news.vercel.app/">
+    <meta property="og:type" content="website">
+  
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="JOMC News">
+    <meta name="twitter:description" content="Real time world news.">
+    <meta name="twitter:image" content="https://jomc-news.vercel.app/assets/images/logo.jpg">
+  
+    <!-- Fonts and Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" preconnect>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
+  
+    <!-- Ads -->
+    <script async data-cfasync="false" src="//pl28003297.effectivegatecpm.com/53af17ddb9e4b799586ecb86dc439eb2/invoke.js" defer></script>
+    <script async data-cfasync="false" src="//pl28005774.effectivegatecpm.com/83706ba541e98f9c09f46db018571cf6/invoke.js" defer></script>
+    <script async data-cfasync="false" src="//pl28010045.effectivegatecpm.com/545445584d06c09fd1a832fa75e54619/invoke.js" defer></script>
+  
+    <!-- Service Worker -->
+        <!-- JS -->
+    <script src="/assets/js/loader.js" defer></script>
+    <script src="/assets/js/main.js" defer></script>
+    <script src="/assets/js/utils.js"></script>
+  
+    <!-- CSS -->
+    <link rel="stylesheet" href="/assets/css/loader.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/dark.css">
+  
+    <!-- JSON LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "NewsMediaOrganization",
+      "name": "JOMC News",
+      "url": "https://jomc-news.vercel.app",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://jomc-news.vercel.app/assets/images/logo.jpg"
+      },
+      "description": "Digital news site with world updates",
+      "sameAs": [
+        "https://www.instagram.com/",
+        "https://twitter.com/",
+        "https://www.tiktok.com/"
+      ]
+    }
+    </script>
+  </head>
+  
+
+<body>
+
+  <div class="overlay">
+    <div class="loader"></div>
+  </div>
+  <header class="header">
+    <div class="l090-ic">
+      <div class="logo-name">
+        <a href="/" style="text-decoration: none;">
+          <img src="/assets/images/logo.jpg" width="70">
+        </a>
+      </div>
+      <style>
+
+      </style>
+
+      <div class="searchDiv none">
+        <button class="closeSearch">&times;</button>
+        <input type="search" name="query" id="query" placeholder="Enter your query">
+        <button type="button" id="searchBtn">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+      <div class="icons">
+        <div class="modes">
+          <i class="fas fa-moon"></i>
+        </div>
+        <div class="help">
+          <i class="fas fa-info-circle"></i>
+        </div>
+        <div class="search">
+          <i class="fas fa-search"></i>
+        </div>
+        <div class="menu-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="links" >
+      <a href="/">All News</a>
+      <a href="/people">People</a>
+      <a href="/entertainment">Entertainment</a>
+      <a href="/health">Health</a>
+      <a href="/climate">Climate</a>
+      <a href="/politics">Politics</a>
+      <a href="/business">Business</a>
+      <a href="/sports">Sports</a>
+      <a href="/world">World</a>
+    </div>
+  </header>
+ 
+  <div class="content">
+    <style>
+        /* From Uiverse.io by vinodjangid07 */ 
+.form_main {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(255, 255, 255);
+  padding: 30px 30px 30px 30px;
+  box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.299);
+  position: relative;
+  overflow: hidden;
+}
+
+.form_main::before {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 300px;
+  background-color: rgb(255, 0, 0);
+  transform: rotate(45deg);
+  left: -250px;
+  bottom: 30px;
+  z-index: 1;
+  border-radius: 30px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.082);
+}
+
+.heading {
+  font-size: 2em;
+  color: #2e2e2e;
+  font-weight: 700;
+  margin: 5px 0 10px 0;
+  z-index: 2;
+}
+
+.inputContainer {
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 3px;
+}
+
+.inputField {
+  width: 100%;
+  height: 30px;
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.118);
+  margin: 10px 0;
+  color: black;
+  font-size: .8em;
+  font-weight: 500;
+  box-sizing: border-box;
+  padding:20px 30px;
+}
+
+.inputField:focus {
+  outline: none;
+  border-bottom: 2px solid rgb(1, 126, 124);
+}
+
+.inputField::placeholder {
+  color: rgb(80, 80, 80);
+  font-size: 1em;
+  font-weight: 500;
+}
+
+#button {
+  z-index: 2;
+  position: relative;
+  width: 100%;
+  border: none;
+  background-color: rgb(5, 217, 44);
+  height: 30px;
+  color: white;
+  font-size: .8em;
+  font-weight: 500;
+  letter-spacing: 1px;
+  margin: 10px;
+  cursor: pointer;
+}
+
+#button:hover {
+  background-color:rgb(108, 1, 1);
+}
+
+.forgotLink {
+  z-index: 2;
+  font-size: .7em;
+  font-weight: 500;
+  color: rgb(44, 24, 128);
+  text-decoration: none;
+  padding: 8px 15px;
+  border-radius: 20px;
+}
+.login-container{
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+}
+.signupDiv{
+    display: flex;
+    flex-wrap: nowrap;
+    z-index: 34;
+    width: 100% ;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    hr{
+        padding: 0px;
+        height: 1px;
+        background-color: black;
+        background: black;
+        border: 0;
+    }
+}
+.disabled{
+  background: grey !important;
+  background-color: grey !important;
+  color: lightcyan !important;
+  cursor: not-allowed !important;
+
+}
+    </style>
+    
+    <div class="login-container">
+        <!-- From Uiverse.io by vinodjangid07 --> 
+<form action="" class="form_main">
+    <p class="heading">Register</p>
+    <div class="inputContainer">
+        <svg class="inputIcon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#2e2e2e" viewBox="0 0 16 16">
+        <path d="M13.106 7.222c0-2.967-2.249-5.032-5.482-5.032-3.35 0-5.646 2.318-5.646 5.702 0 3.493 2.235 5.708 5.762 5.708.862 0 1.689-.123 2.304-.335v-.862c-.43.199-1.354.328-2.29.328-2.926 0-4.813-1.88-4.813-4.798 0-2.844 1.921-4.881 4.594-4.881 2.735 0 4.608 1.688 4.608 4.156 0 1.682-.554 2.769-1.416 2.769-.492 0-.772-.28-.772-.76V5.206H8.923v.834h-.11c-.266-.595-.881-.964-1.6-.964-1.4 0-2.378 1.162-2.378 2.823 0 1.737.957 2.906 2.379 2.906.8 0 1.415-.39 1.709-1.087h.11c.081.67.703 1.148 1.503 1.148 1.572 0 2.57-1.415 2.57-3.643zm-7.177.704c0-1.197.54-1.907 1.456-1.907.93 0 1.524.738 1.524 1.907S8.308 9.84 7.371 9.84c-.895 0-1.442-.725-1.442-1.914z"></path>
+        </svg>
+    <input type="email" class="inputField" id="email" placeholder="Email" name="email" required>
+    </div>
+
+
+    <div class="inputContainer">
+        <svg class="inputIcon" width="16px" height="16px" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M0 0h48v48H0z" fill="none"></path> <g id="Shopicon"> <path d="M33.843,26.914L24,36l-9.843-9.086C8.674,30.421,5,36.749,5,44h38C43,36.749,39.326,30.421,33.843,26.914z"></path> <path d="M24,28c3.55,0,6.729-1.55,8.926-4C34.831,21.876,36,19.078,36,16c0-6.627-5.373-12-12-12S12,9.373,12,16 c0,3.078,1.169,5.876,3.074,8C17.271,26.45,20.45,28,24,28z"></path> </g> </g></svg>
+    <input type="text" maxLength="10" class="inputField" id="username" placeholder="Username" name="username" required autocomplete="off">
+    </div>
+
+
+    
+    <div class="inputContainer">
+        <svg class="inputIcon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#2e2e2e" viewBox="0 0 16 16">
+        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"></path>
+        </svg>
+        <input type="password" class="inputField" name="password" id="password" placeholder="Password" required autocomplete="off">
+    </div>
+
+    <div class="inputContainer">
+        <svg class="inputIcon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#2e2e2e" viewBox="0 0 16 16">
+        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"></path>
+        </svg>
+        <input type="password" class="inputField" name="cpassword" id="cpassword" placeholder="Confirm Password" required autocomplete="off">
+    </div>
+
+    
+    <div class="inputContainer">
+        <svg fill="#000000" class="inputIcon" width="16" height="16px" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="OTP"> <path d="M458.4741,112H265V62.41A31.3815,31.3815,0,0,0,233.5879,31H62.4077A31.3806,31.3806,0,0,0,31,62.41V449.59A31.4379,31.4379,0,0,0,62.4077,481h171.18A31.4388,31.4388,0,0,0,265,449.59V292H458.4771A22.5231,22.5231,0,0,0,481,269.4771V134.5259A22.5257,22.5257,0,0,0,458.4741,112ZM125.5,50.08h45a11.25,11.25,0,0,1,0,22.5h-45a11.25,11.25,0,0,1,0-22.5Zm44.9956,411.7651h-45a11.25,11.25,0,1,1,0-22.5h45a11.25,11.25,0,0,1,0,22.5ZM245.1982,420.25H50.7974V91.75H245.1982V112H125.3149A22.3149,22.3149,0,0,0,103,134.3149V269.6641A22.3357,22.3357,0,0,0,125.3359,292H166v36.1489a11.1221,11.1221,0,0,0,18.9868,7.8643L229,292h16.1982Zm-24.39-210.06a11.3086,11.3086,0,0,1,4.14,15.39,11.198,11.198,0,0,1-15.39,4.14L195.25,221.44V238a11.25,11.25,0,0,1-22.5,0V221.44L158.437,229.72a11.198,11.198,0,0,1-15.39-4.14,11.3164,11.3164,0,0,1,4.14-15.39L161.5,202l-14.313-8.28a11.2689,11.2689,0,0,1,11.25-19.5293L172.75,182.47V166a11.25,11.25,0,0,1,22.5,0v16.47l14.3086-8.2793a11.2689,11.2689,0,0,1,11.25,19.5293L206.5,202Zm108,0a11.3086,11.3086,0,0,1,4.14,15.39,11.198,11.198,0,0,1-15.39,4.14L303.25,221.44V238a11.25,11.25,0,0,1-22.5,0V221.44L266.437,229.72a11.198,11.198,0,0,1-15.39-4.14,11.3164,11.3164,0,0,1,4.14-15.39L269.5,202l-14.313-8.28a11.2689,11.2689,0,0,1,11.25-19.5293L280.75,182.47V166a11.25,11.25,0,0,1,22.5,0v16.47l14.3086-8.2793a11.2689,11.2689,0,0,1,11.25,19.5293L314.5,202Zm108,0a11.3086,11.3086,0,0,1,4.14,15.39,11.198,11.198,0,0,1-15.39,4.14L411.25,221.44V238a11.25,11.25,0,0,1-22.5,0V221.44L374.437,229.72a11.198,11.198,0,0,1-15.39-4.14,11.3164,11.3164,0,0,1,4.14-15.39L377.5,202l-14.313-8.28a11.2689,11.2689,0,0,1,11.25-19.5293L388.75,182.47V166a11.25,11.25,0,0,1,22.5,0v16.47l14.3086-8.2793a11.2689,11.2689,0,0,1,11.25,19.5293L422.5,202Z"></path> </g> </g></svg>
+        <input type="text" maxlength="6" class="inputField" name="otp" id="otp" placeholder="Enter OTP" required autocomplete="off">
+        <button type="button" href="#requestOTP" id="req_otp"> Request</button>
+    </div>
+              
+           
+<button id="button">Register</button>
+    <div class="signupDiv">
+    <hr style="width: 100%; margin: 10px 0;">
+    <span class="span"> Or </span>
+    <hr style="width: 100%;">
+
+</div> 
+<div style="display: flex ; gap: 10px; justify-content: center; align-items: center; font-weight: 500; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; z-index: 34; font-size: small;">Already have a  account? 
+<a style="margin: 10px 0; z-index: 345; font-size: small;" href="/login">Login</a>
+</div>
+</form>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('.form_main');
+    const btn = form.querySelector('#button');
+    const emailInp = form.querySelector('#email');
+    const userInp = form.querySelector('#username');
+    const passInp = form.querySelector('#password');
+    const cpassInp = form.querySelector('#cpassword');
+    const otpInp = form.querySelector('#otp');
+    const reqOtp = document.querySelector('#req_otp');
+    const status = localStorage.getItem('status')
+
+    const cooldown = 3 * 60 * 1000; // 3 minutes
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    function showNote(msg) {
+        let note = document.createElement('div');
+        note.textContent = msg;
+        note.style.position = 'relative';
+        note.style.padding = '10px 15px';
+        note.style.background = '#111';
+        note.style.color = 'white';
+        note.style.borderRadius = '6px';
+        note.style.zIndex = '99999';
+        note.style.fontSize = '14px';
+        document.querySelector('.form_main').appendChild(note);
+        setTimeout(() => note.remove(), 2500);
+    }
+
+    function btnState(load) {
+        if (load) {
+            btn.classList.add('disabled');
+            btn.textContent = 'Loading...';
+        } else {
+            btn.classList.remove('disabled');
+            btn.textContent = 'Register';
+        }
+    }
+
+    function getRemaining() {
+        const lastReq = parseInt(localStorage.getItem('lastRequest')) || 0;
+        return lastReq + cooldown - Date.now();
+    }
+
+    function startCooldown() {
+        let left = Math.ceil(getRemaining() / 1000);
+        reqOtp.disabled = true;
+        reqOtp.textContent = `${left}s`;
+
+        const timer = setInterval(() => {
+            left = Math.ceil(getRemaining() / 1000);
+            if (left > 0) {
+                reqOtp.textContent = `${left}s`;
+            } else {
+                reqOtp.textContent = 'Request';
+                reqOtp.disabled = false;
+                clearInterval(timer);
+            }
+        }, 1000);
+    }
+
+    // Check cooldown on page load
+    if (getRemaining() > 0 && status != 'failed') {
+        startCooldown();
+        showNote(`Please wait before requesting a new OTP`);
+    }
+
+    // OTP request click
+    reqOtp.addEventListener('click', () => {
+        const remaining = getRemaining();
+        if (remaining > 0 && status != 'failed') {
+            showNote(`Please wait ${Math.ceil(remaining / 1000)}s before requesting a new OTP`);
+            return;
+        }
+
+        const email = emailInp.value.trim();
+        if (!emailRegex.test(email)) {
+            showNote('Invalid email address');
+            return;
+        }
+        function upStatus(state){
+        localStorage.setItem('status', state)
+        }
+
+        // start cooldown regardless of server response
+        localStorage.setItem('lastRequest', Date.now());
+        startCooldown();
+        upStatus('pending')
+        fetch(`${baseUrl}/send-otp`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email:email })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success){
+                showNote('OTP sent')
+                upStatus('sent')
+            }
+            else {
+                showNote(data.message || 'OTP request failed')
+                upStatus('failed')
+                localStorage.removeItem('lastRequest')
+
+            }
+        })
+        .catch(() => {
+            showNote('Server error, OTP request failed')
+            upStatus('failed')
+            localStorage.removeItem('lastRequest')
+
+
+        });
+
+    });
+
+    // Form submit
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        btnState(true);
+
+        const email = emailInp.value.trim();
+        const username = userInp.value.trim();
+        const pass = passInp.value.trim();
+        const cpass = cpassInp.value.trim();
+        const otp = otpInp.value.trim();
+
+        if (!emailRegex.test(email)) return showNote('Invalid email'), btnState(false);
+        if (pass.length < 6) return showNote('Password must be at least 6 characters'), btnState(false);
+        if (pass !== cpass) return showNote('Passwords do not match'), btnState(false);
+        if (otp.length !== 6) return showNote('OTP must be 6 digits'), btnState(false);
+
+        fetch(`${baseUrl}/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, username, password: pass, otp })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                showNote('Registration successful');
+                setTimeout(() => window.location.href = '/login', 800);
+            } else {
+                showNote(data.message || 'Registration failed');
+            }
+        })
+        .catch(() => showNote('Server error'))
+        .finally(() => btnState(false));
+    });
+});
+    </script>
+    
+
+    </div>
+
+  </div>
+
+  <footer class="footer">
+    <div class="footer-top">
+
+      <div class="footer-brand">
+        <h2>J.O News</h2>
+        <p>Your daily plug for verified news and vibes.</p>
+        <div class="socials">
+          <a href="#"><i class="fab fa-facebook"></i></a>
+          <a href="#"><i class="fab fa-x-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-links">
+        <h3>Quick Links</h3>
+        <a href="/">Home</a>
+        <a href="/world">World</a>
+        <a href="/business">Business</a>
+        <a href="/sports">Sports</a>
+        <a href="/entertainment">Entertainment</a>
+      </div>
+
+      <div class="footer-sub">
+        <h3>Stay Updated</h3>
+        <p>No spam, just hot headlines.</p>
+        <form class="sub-form">
+          <input type="email" placeholder="Enter your email">
+          <button type="submit">Subscribe</button>
+        </form>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2025 J.O News. All rights reserved.</p>
+    </div>
+  </footer>
+
+</body>
+<script>
+setTimeout(() => {
+  // showLoader()
+}, 2000);
+</script>
+
+</html>

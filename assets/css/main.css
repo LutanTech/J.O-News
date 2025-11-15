@@ -133,6 +133,10 @@
        width: 90%;
     }
 }
+header{
+  background: #ffffff;
+  border: 0 !important;
+}
 .content {
 display: flex;
 flex-wrap: wrap;
@@ -800,4 +804,9 @@ button{
     &:active{
         scale: 0.98 !important;
     }
+}
+*::selection{
+  background: rgb(3, 169, 3) !important;
+  color: white !important;
+  padding: 10px !important;
 }

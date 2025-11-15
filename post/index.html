@@ -8,134 +8,17 @@
         <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" xintegrity="sha512-Fo3rlrZj/liSp/NWE/y6J7o9S3eC2z3n5I2J4mQ6J6c4b/c6Z5M5E3M5J5K5N5L5P5Q5R5S5T5U5V5W5X5Y5Z5a5b5c5d5e5f5g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
-    <script src="/assets/js/loader.js"></script>
-    <script src="/assets/js/utils.js"></script>
-    <script src="/assets/js/main.js"></script>
+    <script src="/assets/js/loader.js" defer></script>
+    <script src="/assets/js/utils.js" defer></script>
+    <script src="/assets/js/main.js" defer></script>
+    <script src="/assets/js/db.js"></script>
+    <script src="/assets/js/post.js" defer></script>
         <link rel="stylesheet" href="/assets/css/loader.css">
         <link rel="stylesheet" href="/assets/css/main.css">
         <link rel="stylesheet" href="/assets/css/dark.css">
         <title>JO News || Home</title>
     </head> 
-<style>
-    body{
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    .form{
-        display: flex;
-    }
-    .inputs{
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-        justify-content: center;
-        align-items: center;
-        flex-grow: 1;
-
-    }
-    .inp{
-        padding: 10px;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        min-width: 300px;
-        min-height: 100px;
-        max-width: 700px;
-        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.212);
-        border-radius: 4px;
-    }
-    .inp input, select{
-        padding: 10px;
-        transition: all 0.1s ease-in-out;
-        outline: none;
-        border: 0px;
-        border-radius: 2px;
-        background: #0000;
-        border: 1px solid rgba(0, 0, 255, 0.121);
-        &:focus{
-            border: 2px solid rgb(126, 126, 255);
-        }
-
-    }
-    #editable{
-        outline: none;
-        padding: 10px;
-        border: 1px solid #949393;
-        border-radius: 5px;
-        min-height: 200px;
-        width: 100%;
-        &:focus-within{
-            border: 2px solid rgba(0, 0, 255, 0.519);
-        }
-    }
-
-    .addImageBtn, .draftBtn, .previewBtn, .addVideoBtn{
-        padding: 10px;
-        border: 1px solid blue;
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 40px;
-        aspect-ratio: 1;
-        max-height: fit-content;
-        position: sticky;
-        top: 0;
-        cursor: pointer;
-     }
-    
-     #content{
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 10px;
-        width: 100%;
-        justify-content: space-between;
-     }
-     button[type='submit']{
-        padding:10px;
-        border-radius: 40px;
-        background: rgb(0, 174, 0);
-        border: 0;
-        cursor: pointer;
-        &:active{
-            scale: 0.97;
-            background: #000;
-            color: #fff;
-        }
-     }
-.editBtns{
-    display: flex;
-    gap: 10px;
-    >div{
-      color: white;
-    }
-    >div:nth-of-type(1){
-      background: rgb(2, 2, 141);
-      border: 0;
-    }
-    >div:nth-of-type(2){
-      background: rgb(168, 9, 173);
-      border: 0;
-    }
-    >div:nth-of-type(3){
-      background: rgb(2, 145, 59);
-      border: 0;
-    }
-}
-.hidden, .none{
-  display: none;
-}
-.fixed{
-  position: fixed;
-  background: rgba(0, 0, 0, 0.595);
-  z-index: 300;
-}
-.seen{
-  display: flex !important;
-}
-
-</style>
+<link rel="stylesheet" href="/assets/css/post.css">
 <body>
     <div class="overlay">
       <div class="loader"></div>
@@ -152,9 +35,15 @@
         <div class="help"  tooltip="Help">
         <i class="fas fa-info-circle"></i>
         </div>
-    <div class="search" tooltip="Search">
-        <i class="fas fa-search"></i>
+        <div class="search" tooltip="Search">
+          <i class="fas fa-search"></i>
+      </div>
+      <div class="menu-icon">
+        <span></span>
+        <span></span>
+        <span></span>
     </div>
+
     </div>
 </div>
     <hr>
@@ -185,6 +74,7 @@
     <form class="publishForm form">
       <div class="inputs">
       <div class="inp">
+        <label for="image">Choose Overall Image</label>
       <input type="file" name="image" id="image" accept="image/*">
       <input type="file" name="newImage" id="newImage" accept="image/*" style="display:none;">
       <input type="file" name="newVideo" id="newVideo" accept="video/*" style="display:none;">
@@ -202,7 +92,7 @@
           <label for="category">Enter Main Category</label>
           <select name="category" id="category">
             <option value="">Choose</option>
-            <option value="all">All</option>
+          
             <option value="people">People</option>
             <option value="entertainment">Entertainment</option>
             <option value="health">Health</option>
@@ -211,21 +101,26 @@
             <option value="business">Business</option>
             <option value="sports">Sports</option>
             <option value="world">World</option>
-            <option value="world">Kenya</option>
+            <option value="kenya">Kenya</option>
           </select>
-        </div>
+          
+
+          </div>
+  
   
       <div class="inp">
-        <label for="sub">Enter Small Category</label>
-        <input type="text" name="sub" id="sub">
+        <label for="sub">Enter Sub Category</label>
+        <select name="sub" id="sub" disabled>
+          <option value="">Select sub category</option>
+        </select>
       </div>
   
       <div class="inp">
         <label>Add to Trending</label>
         <div>
           <label>
-            <input type="checkbox" name="trending" id="trending" value="true">
-            Trending?
+            <input type="checkbox" name="trending" id="trending" value="true" style="width: fit-content;">
+            Trending
           </label>
         </div>
       </div>
@@ -256,201 +151,7 @@
             <button type="submit" style="min-width: 300px;" tooltip="Publish">Publish</button>
       </div>
       <script>
-        const editor = document.getElementById("editable");
-        const imgBtn = document.querySelector(".addImageBtn");
-        const prevBtn = document.querySelector(".previewBtn");
-        const vidBtn = document.querySelector(".addVideoBtn");
-        const saveBtn = document.querySelector(".draftBtn");
         
-        editor.addEventListener("input", () => {
-            localStorage.setItem('draft', editor.innerHTML);
-        });
-        
-        editor.addEventListener("paste", function(e) {
-          e.preventDefault();
-          const text = e.clipboardData.getData("text/plain");
-          const saved = localStorage.setItem('draft', text)
-          document.execCommand("insertText", false, text);
-        });
-        document.addEventListener('DOMContentLoaded', ()=>{
-            const saved = localStorage.getItem('draft');
-            if(saved) editor.innerHTML = saved;
-            const fileInput = document.getElementById("image");
-
-        fileInput.addEventListener('change', () => {
-            const file = fileInput.files[0];
-            if (!file) return; // no file selected
-
-            const img = document.createElement('img');
-            img.src = URL.createObjectURL(file); 
-            img.style.maxWidth = "200px"; 
-            img.style.maxHeight = "200px";
-
-            const previewDiv = document.querySelector('.previewImageDiv');
-
-            previewDiv.parentElement.classList.remove('none')
-            previewDiv.parentElement.classList.add('seen')
-
-            setTimeout(() => {
-              previewDiv.innerHTML = '';
-              previewDiv.appendChild(img);    
-            }, 100);
-
-            
-        });
-            const form = document.querySelector('.form');
-            if(form){
-            form.addEventListener('submit', async (e)=>{
-              e.preventDefault();
-
-              const title = form.querySelector('#title');
-              const categ = form.querySelector('#category');
-              const sub = form.querySelector('#sub');
-              const content = form.querySelector('#editable');
-              const trending = document.querySelector('#trending').checked;
-
-              const fileInput = document.getElementById("image");
-              const file = fileInput.files[0];
-
-              // lil validation vibes
-              if(!file) return alert("Add a pic bro", 'error');
-              if(!title.value.trim()) return alert("Title missing", 'error');
-              if(!categ.value.trim()) return alert("Pick a category first ", 'error');
-              if(!sub.value.trim()) return alert("Sub category empty fam", 'error');
-              if(!content.innerText.trim()) return alert("Drop some content", 'error');
-
-              const formData = new FormData();
-              formData.append("image", file);
-              formData.append("title", title.value);
-              formData.append("categ", categ.value);
-              formData.append("sub", sub.value);
-              formData.append("trending", trending);
-              formData.append("content", content.innerHTML);
-
-              try {
-                const res = await fetch(`${baseUrl}/new`, {
-                  method: 'POST',
-                  body: formData
-                });
-
-                const data = await res.json();
-                if(data.error) return alert(data.error, 'error');
-
-                alert("Post Added", 'success');
-                localStorage.removeItem("draft");
-                form.reset();
-
-              } catch (err) {
-                alert("Network error", 'error');
-              }
-            });
-          }
-
-        });
-        
-        let savedRange = null;
-        editor.addEventListener("mouseup", saveCursorPosition);
-        editor.addEventListener("keyup", saveCursorPosition);
-        
-        function saveCursorPosition() {
-            const sel = window.getSelection();
-            if(sel.rangeCount) savedRange = sel.getRangeAt(0);
-        }
-        // editor.addEventListener('keydown', (e)=>{
-        //   console.log(e)
-        //   if(e.key == 'Control'){
-        //     e.preventDefault()
-        //    editor.addEventListener('keydown', (e)=>{
-        //     if(e.key == 'V'){
-        //       e.preventDefault()
-        //       fileInput.click()
-        //     }
-        //    })
-
-        //   }
-        // })
-        
-        const fileInput = document.getElementById("newImage");
-        const addImageBtn = imgBtn;
-        addImageBtn.addEventListener('click', ()=>{
-          fileInput.click()
-        });
-
-        fileInput.onchange = () => {
-            const file = fileInput.files[0];
-            if(!file) return;
-            const formData = new FormData();
-            formData.append("image", file);
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", `https://vidupload.onrender.com/upload-image`);
-            uploadCircle.classList.remove("hidden");
-            setProgress(0);
-        
-            xhr.upload.onprogress = e => {
-                if(e.lengthComputable) setProgress((e.loaded/e.total)*100);
-            };
-        
-            xhr.onload = () => {
-                uploadCircle.classList.add("hidden");
-                setProgress(0);
-                const data = JSON.parse(xhr.responseText);
-                if(!data.url) return alert("Server returned an error", 'error');
-                insertImageAtCursor(data.url);
-            };
-        
-            xhr.onerror = () => {
-                uploadCircle.classList.add("hidden");
-                alert("Failed to send Image for Upload : Network", 'error');
-            };
-        
-            xhr.send(formData);
-            fileInput.value = "";
-        };
-        
-        function setProgress(percent){
-            const offset = 163 - (percent/100)*163;
-            circleProgress.style.strokeDashoffset = offset;
-        }
-        
-
-        
- 
-
-// Save cursor in editor, not toolbar
-editor.addEventListener("mouseup", saveCursorPosition);
-editor.addEventListener("keyup", saveCursorPosition);
-
-function saveCursorPosition() {
-    const sel = window.getSelection();
-    if(sel.rangeCount > 0) {
-        const range = sel.getRangeAt(0);
-        if(editor.contains(range.commonAncestorContainer)) {
-            savedRange = range.cloneRange();
-        }
-    }
-}
-
-function insertAtCursor(node){
-    if(!savedRange) {
-        editor.appendChild(node); // fallback
-        return;
-    }
-    const sel = window.getSelection();
-    const range = savedRange.cloneRange();
-    range.deleteContents();
-    range.insertNode(node);
-    range.collapse(false);
-    sel.removeAllRanges();
-    sel.addRange(range);
-}
-
-// Image insertion
-function insertImageAtCursor(url){
-    const img = document.createElement("img");
-    img.src = url;
-    img.style.maxWidth = "100%";
-    insertAtCursor(img);
-}
 
 // Video insertion
         </script>

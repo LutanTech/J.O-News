@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>JOMC News | World Updates, Hot Headlines, Breaking Stories</title>
+    <meta name="description" content="JOMC News brings real time world news. Fast reliable and student powered.">
+    <meta name="keywords" content="JOMC News, World news, News Site Kenya news, student journalism, Moi University news, Joseph Owino news">
+    <meta name="author" content="JOMC News Team">
+    <link rel="canonical" href="https://jomc-news.vercel.app/">
+    <link rel="icon" href="/assets/images/logo.jpg" type="image/x-icon">
+  <link rel="shortcut-icon" href="/assets/images/logo.jpg" type="image/x-icon">
+    <!-- OpenGraph -->
+    <meta property="og:title" content="JOMC News">
+    <meta property="og:description" content="Real time World news.">
+    <meta property="og:image" content="https://jomc-news.vercel.app/assets/images/logo.jpg">
+    <meta property="og:url" content="https://jomc-news.vercel.app/">
+    <meta property="og:type" content="website">
+  
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="JOMC News">
+    <meta name="twitter:description" content="Real time world news.">
+    <meta name="twitter:image" content="https://jomc-news.vercel.app/assets/images/logo.jpg">
+  
+    <!-- Fonts and Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" preconnect>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
+  
+    <!-- Ads -->
+    <script async data-cfasync="false" src="//pl28003297.effectivegatecpm.com/53af17ddb9e4b799586ecb86dc439eb2/invoke.js" defer></script>
+    <script async data-cfasync="false" src="//pl28005774.effectivegatecpm.com/83706ba541e98f9c09f46db018571cf6/invoke.js" defer></script>
+    <script async data-cfasync="false" src="//pl28010045.effectivegatecpm.com/545445584d06c09fd1a832fa75e54619/invoke.js" defer></script>
+  
+    <!-- Service Worker -->
+  
+    <!-- JS -->
+    <script src="/assets/js/loader.js" defer></script>
+    <script src="/assets/js/main.js" defer></script>
+    <script src="/assets/js/utils.js"></script>
+  
+    <!-- CSS -->
+    <link rel="stylesheet" href="/assets/css/loader.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/dark.css">
+  
+    <!-- JSON LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "NewsMediaOrganization",
+      "name": "JOMC News",
+      "url": "https://jomc-news.vercel.app",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://jomc-news.vercel.app/assets/images/logo.jpg"
+      },
+      "description": "Digital news site with world updates",
+      "sameAs": [
+        "https://www.instagram.com/",
+        "https://twitter.com/",
+        "https://www.tiktok.com/"
+      ]
+    }
+    </script>
+  </head>
+  
+
+<body>
+
+  <div class="overlay">
+    <div class="loader"></div>
+  </div>
+  <header class="header">
+    <div class="l090-ic">
+      <div class="logo-name">
+        <a href="/" style="text-decoration: none;">
+          <img src="/assets/images/logo.jpg" width="70">
+        </a>
+      </div>
+      <style>
+
+      </style>
+
+      <div class="searchDiv none">
+        <button class="closeSearch">&times;</button>
+        <input type="search" name="query" id="query" placeholder="Enter your query">
+        <button type="button" id="searchBtn">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+      <div class="icons">
+        <div class="modes">
+          <i class="fas fa-moon"></i>
+        </div>
+        <div class="help">
+          <i class="fas fa-info-circle"></i>
+        </div>
+        <div class="search">
+          <i class="fas fa-search"></i>
+        </div>
+        <div class="menu-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="links" >
+      <a href="/">All News</a>
+      <a href="/people">People</a>
+      <a href="/entertainment">Entertainment</a>
+      <a href="/health">Health</a>
+      <a href="/climate">Climate</a>
+      <a href="/politics">Politics</a>
+      <a href="/business">Business</a>
+      <a href="/sports">Sports</a>
+      <a href="/world">World</a>
+    </div>
+  </header>
+
+  <style>
+    .user-data{
+        display: flex;
+        width: 100%;
+        font-size: large !important;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+
+    }
+    .profile{
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        width: 100%;
+        >div{
+            padding: 10px;
+            max-width: none !important;
+        }
+    }
+    .userdets{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        flex-grow: 1;
+        color: blue;
+        b, h4, h2, h3{
+          color: black;
+        }
+        div{
+          display: flex;
+          b{
+            margin-right: 3px;
+          }
+        }
+        div i{
+            color: grey;
+            margin-right:5px;
+        }
+    }
+    .facebook i:nth-of-type(1){
+        color: rgb(0, 170, 255);
+        font-size: 2em;
+    }
+    .ig i:nth-of-type(1){
+        color: magenta;
+        font-size: 2em;
+
+    }
+    .x i:nth-of-type(1){
+        font-size: 2em;
+    }
+    .tiktok i:nth-of-type(1) {
+    background: linear-gradient(to right, black,black, red, red);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 2em;
+    /* important */
+}
+.openArticles, .post{
+  padding: 10px;
+  border: 0;
+  background: #00ff15;
+  color:black;
+
+}
+
+    .pp{
+        width: 100px;
+        aspect-ratio: 1;
+        padding: 5px;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.415);
+        border-radius: 50%;
+        object-fit: cover;
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        max-height: 100px;
+
+    }
+    .socials-div{
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        font-family: Arial, Helvetica, sans-serif;
+        div a{
+            color: rgb(0, 191, 255);
+        }
+
+
+    }
+    .loader{
+      max-width: 100px;
+      max-height: 100px;
+      background: #0000;
+      margin: auto;
+    }
+    .skeleton{
+      width: 100% !important;
+      min-width: none !important;
+      max-width: 800px !important;
+      flex-direction: column;
+      background: white;
+      justify-content: center;
+      align-items: center;
+      *{
+      background: white;
+      }
+    }
+    .loaders{
+      margin: 20px auto;
+      display: flex;
+      padding: 2px;
+      gap: 5px;
+      text-align: center;
+      justify-content: center;
+      align-items: center;
+      width: fit-content;
+
+    }
+    .loaders .span{
+      background: rgb(0, 0, 0);
+      border-radius: 50%;
+      width: 10px;
+      height: 10px;
+      flex-grow: 0;
+      padding: 2px;
+      margin-bottom: 10px;
+      animation: bounce 1s linear infinite;
+      position: relative;
+      z-index: 200;
+      &::after{
+        width: 1px;
+        background: linear-gradient(to bottom, red , red, black, black);
+        height: 50px;
+        padding: 1px;
+        position: absolute;
+        bottom: 0;
+        left: 30%;
+        right: 0;
+        content: '';
+        z-index: -1;
+      }
+    }
+    @keyframes bounce {
+      50%{
+        transform: translateY(-30px);
+      }      
+    }
+    .span:nth-child(1){
+      animation-delay: 0s;
+    }
+    .span:nth-child(2){
+      animation-delay: 0.2s;
+    }
+    .span:nth-child(3){
+      animation-delay: 0.4s;
+    }
+    .span:nth-child(4){
+      animation-delay: 0.6s
+    }
+    .ltext{
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-end;
+    }
+    *[contenteditable]{
+      min-width: 100px;
+      padding:2px  10px;
+      background: grey;
+      color: white !important;
+      text-decoration: none !important;
+      outline: none;
+      max-width: 400px !important;
+      word-break: break-all;
+      }
+  </style>
+<div class="content">
+    <div class="user-data">
+      <div class="skeleton">
+        <div class="loader"></div>
+        <div class="ltext">
+        <div class="loaders">
+          <div class="span"></div>
+        <div class="span"></div>
+        <div class="span"></div>
+        <div class="span"></div>
+      </div>
+      
+    </div>
+    Loading Account...
+       </div>
+
+        </div>
+        <button class="openArticles" onclick="window.location.href='/user/articles'">
+          Open Your Articles
+        </button>
+        <button class="post" onclick="window.location.href='/post'">
+          Post a new article
+        </button>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', ()=>{
+        const user = JSON.parse(localStorage.getItem('user'))
+        if(user){
+            const token = localStorage.getItem('token')
+            if(token){
+               alert('Validating Account....', 'info')
+               fetch(`${baseUrl}/ping/account?id=${user.id}&token=${token}`)
+               .then(res=>res.json())
+               .then(data=>{
+                if(data.error){
+                    alert(data.error, 'error')
+                } else{
+                    console.table(data)
+                    alert('Account valid', 'success')
+                    const user = data.user
+                    localStorage.setItem('user', JSON.stringify(user))
+                    window.id = user.id
+                    window.token = token
+                    document.querySelector('.user-data').innerHTML = `
+                        <div class="profile">
+            <div class="pp" style="background-image: url(${user.pic})">
+            </div>
+            <div class="userdets">
+                <h2>Account Details</h2>
+                <hr>
+                <div class="username"> <i class="fas fa-at"></i> <b>Username:</b>  ${user.username}</div>
+                <div class="email"> <i class="fas fa-envelope"></i><b> Email:</b> <a href="mailto:${user.email}" target="_blank"> ${user.email}</a></div>
+                <div class="id">
+                    <i class="fas fa-ticket"></i> <b>ID:</b>
+                    ${user.id}
+                    <i onlick="copy('${user.id}')" class="fas fa-copy"></i>
+                </div>
+                <div class="joined"> <i class="fas fa-clock"></i> <b>Joined:</b> ${user.joined.replace('GMT', '')}</div>
+                <div class="verified">
+                     <i class="fas fa-check-circle"></i><b> Verified:</b>
+                ${user.verified? 'Verified':'Not Verified'}</div>
+
+                <div class="location">
+                    <i class="fas fa-map-pin"></i> <b>Location:</b>
+                    ${user.location ? user.location : 'Not Yet added'}
+                </div>
+                <div class="phone">
+                    <i class="fas fa-phone"></i><b> Phone:</b>
+                    ${user.phone ? user.phone : 'Not Yet Added' } <i style="margin-left:10px; color:#0f0; cursor:pointer" class="fas fa-pen" onclick="edit(this.parentElement)"></i>
+                </div>
+                    </div>
+                
+            <div class="socials-div">
+                <h2>Social Accounts</h2>
+                <hr>
+                <div class="facebook">
+                <i class="fab fa-facebook"></i>
+               <a href="${user.fb ? user.fb : '?#NoLink'}" target="_blank" > ${user.fb ? user.fb : 'Not yet added'}</a>    
+                        <i style="margin-left:10px; color:#0f0; cursor:pointer" class="fas fa-pen" onclick="edit(this.parentElement)"></i>
+               </div>
+               <div class="x">
+                <i class="fab fa-x-twitter"></i>
+                <a href="${user.x ? user.x : '?#NoLink'}" target="_blank" > ${user.x ? user.x : 'Not yet added'}</a>                
+                <i style="margin-left:10px; color:#0f0; cursor:pointer" class="fas fa-pen" onclick="edit(this.parentElement)"></i>
+               </div>
+               <div class="ig">
+                <i class="fab fa-instagram"></i>
+                <a href="${user.ig ? user.ig : '?NoLink'}" target="_blank" > ${user.ig ? user.ig: 'Not yet added'}</a>                <i style="margin-left:10px; color:#0f0; cursor:pointer" class="fas fa-pen" onclick="edit(this.parentElement)"></i>
+               </div>
+               <div class="tiktok">
+                <i class="fab fa-tiktok"></i>
+                <a href="${user.tiktok ? user.tiktok : '?NoLink'}" target="_blank" > ${user.tiktok ? user.tiktok : 'Not yet added'}</a>
+                <i style="margin-left:10px; color:#0f0; cursor:pointer" class="fas fa-pen" onclick="edit(this.parentElement)"></i>
+               </div>
+            </div>
+           </div>
+
+                    `
+                }
+               })
+               .catch(err=>{
+                alert(err.message || 'Netwwork error', 'error')
+               })
+           
+        } }  else{
+                alert('Please login again', 'info')
+                localStorage.clear()
+                setTimeout(() => {
+                window.location.href = '/login'
+                }, 2000);
+            }
+
+    })
+    function edit(elem){
+
+      const el = elem.querySelector('a')
+      el.toggleAttribute('contenteditable', true)
+      el.focus()
+      el.addEventListener('blur', (e)=>{
+        e.stopImmediatePropagation()
+
+        const cont = confirm('Are You sure you want to change?')
+        if(cont){
+        el.removeAttribute('contenteditable')
+        el.href = el.textContent
+        const new_url = el.textContent
+        const i = document.createElement('i')
+        i.className = 'fas fa-spinner fa-spin'
+        elem.appendChild(i)
+        fetch(`${baseUrl}/update?id=${window.id}&token=${window.token}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type':'application/json'
+          }, body: JSON.stringify({link:new_url, target:el.parentElement.getAttribute('class')})
+        })
+          .then(res=>res.json())
+          .then(data=>{
+            alert(data.error? data.error : data.message)
+            elem.removeChild(i)
+
+          })
+        .catch(err=>{
+          alert('Network error', 'error')
+          elem.removeChild(i)
+
+        })
+      } else{
+      return
+    }
+      })
+    
+
+
+    }
+</script>
+
+  <footer class="footer">
+    <div class="footer-top">
+
+      <div class="footer-brand">
+        <h2>J.O News</h2>
+        <p>Your daily plug for verified news and vibes.</p>
+        <div class="socials">
+          <a href="#"><i class="fab fa-facebook"></i></a>
+          <a href="#"><i class="fab fa-x-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-links">
+        <h3>Quick Links</h3>
+        <a href="/">Home</a>
+        <a href="/world">World</a>
+        <a href="/business">Business</a>
+        <a href="/sports">Sports</a>
+        <a href="/entertainment">Entertainment</a>
+      </div>
+
+      <div class="footer-sub">
+        <h3>Stay Updated</h3>
+        <p>No spam, just hot headlines.</p>
+        <form class="sub-form">
+          <input type="email" placeholder="Enter your email">
+          <button type="submit">Subscribe</button>
+        </form>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2025 J.O News. All rights reserved.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

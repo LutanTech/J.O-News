@@ -117,13 +117,17 @@ class News(db.Model):
         }
 
     def to_small_dict(self):
+        user = User.query.filter_by(id=self.user_id).first()
         return {
             "id": self.id,
             "title": self.title,
             "content": self.content or "",
             "image_url": self.image_url,
             "added": self.added.isoformat(),
-            "slug":self.slug
+            "slug":self.slug,
+            "user": user.username if user else 'Unknown',
+            "categ": self.categ,
+            "sub": self.sub,
         }
 
     def to_disp_dict(self):

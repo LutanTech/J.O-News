@@ -145,7 +145,6 @@ const editor = document.getElementById("editable");
     
  
 
-// Save cursor in editor, not toolbar
 editor.addEventListener("mouseup", saveCursorPosition);
 editor.addEventListener("keyup", saveCursorPosition);
 
@@ -161,7 +160,7 @@ function saveCursorPosition() {
 
 function insertAtCursor(node){
     if(!savedRange) {
-        editor.appendChild(node); // fallback
+        editor.appendChild(node); 
         return;
     }
     const sel = window.getSelection();
@@ -173,7 +172,6 @@ function insertAtCursor(node){
     sel.addRange(range);
 }
 
-// Image insertion
 function insertImageAtCursor(url){
     const img = document.createElement("img");
     img.src = url;

@@ -1,324 +1,155 @@
-// const baseUrl = 'http://127.0.1.1:50000'
-const baseUrl = 'https://jomc.pythonanywhere.com'
+const baseUrl = "https://jomc.pythonanywhere.com";
 
-
-document.addEventListener('DOMContentLoaded',()=>{
-    const mode = localStorage.getItem('mode')
-    if(mode == 'dark'){
-        document.body.classList.add('dark')
-    } else{
-        document.body.classList.remove('dark')
-    }
-
-const modeBtn = document.querySelector('.modes')
-if(modeBtn){
-modeBtn.addEventListener('click', (e)=>{
-    console.log(modeBtn.innerHTML)
-    const moon = '<i class="fas fa-moon"></i>'
-    const sun = '<i class="fas fa-sun"></i>'
-    if(modeBtn.innerHTML.trim() == moon){
-        modeBtn.innerHTML = sun
-        localStorage.setItem('mode', 'dark')
-        document.body.classList.add('dark')
-
-    } else{
-        modeBtn.innerHTML = moon
-        localStorage.setItem('mode', 'light')
-        document.body.classList.remove('dark')
-
-    }
-})                              
+function copy(e) {
+  e && (navigator.clipboard.writeText(String(e)), alert("Copied", "success"))
 }
 
-})
+function parseMarkdown(e) {
+  return e ? e = (e = (e = (e = (e = (e = (e = (e = (e = (e = e.replace(/^# (.*)$/gm, "<h1>$1</h1>")).replace(/^## (.*)$/gm,
+      "<h2 style='font-size:large; font-weight:600'>$1</h2>")).replace(/^### (.*)$/gm, "<h3>$1</h3>")).replace(/^#### (.*)$/gm, "<h4>$1</h4>"))
+    .replace(/^---$/gm, "<hr>")).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")).replace(/(^|[^*])\*(?!\*)([^*]+)\*(?!\*)/g, "$1<em>$2</em>")).replace(
+    /(^|\n)(\* .+(\n\* .+)*)/g, ((e, t, o) => `${t}<ul>${o.trim().split("\n").map((e=>`<li>${e.replace(/^\* /,"")}</li>`)).join("\n")}</ul>`))).replace(
+    /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')).replace(/(^|[^"'>])((https?:\/\/)[^\s<]+)/g, ((
+    e, t, o) => `${t}<a href="${o}" target="_blank" rel="noopener noreferrer">${o}</a>`)) : "No Description Provided"
+}
 
-function copy(text){
-  if(text){
-    navigator.clipboard.writeText(String(text));
-    alert('Copied', 'success')
+function safeText(e) {
+  const t = document.createElement("div");
+  try {
+    t.innerHTML = e
+  } catch (e) {
+    console.warn("HTML parse error:", e)
   }
-}
-window.copy = copy
-
-function parseMarkdown(text) {
-    if(text){
-text = text.replace(/^# (.*)$/gm, "<h1>$1</h1>");
-text = text.replace(/^## (.*)$/gm, "<h2 style='font-size:large; font-weight:600'>$1</h2>");
-text = text.replace(/^### (.*)$/gm, "<h3>$1</h3>");
-text = text.replace(/^#### (.*)$/gm, "<h4>$1</h4>");
-text = text.replace(/^---$/gm, "<hr>");
-text = text.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
-text = text.replace(/(^|[^*])\*(?!\*)([^*]+)\*(?!\*)/g, "$1<em>$2</em>");
-// Lists
-text = text.replace(/(^|\n)(\* .+(\n\* .+)*)/g, (match, p1, p2) => {
-const items = p2.trim().split('\n').map(line => `<li>${line.replace(/^\* /, '')}</li>`)
-.join(
-  '\n');
-return `${p1}<ul>${items}</ul>`;
-});
-// Links
-text = text.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
-'<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
-// Raw URLs
-text = text.replace(/(^|[^"'>])((https?:\/\/)[^\s<]+)/g, (m, prefix, url) =>
-`${prefix}<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`);
-return text;
-} else{
-return 'No Description Provided'
-}
-  }
-
-  function safeText(html) {
-    const temp = document.createElement('div');
-    
-    try {
-        temp.innerHTML = html; // browser tries fixing broken tags
-    } catch (e) {
-        console.warn("HTML parse error:", e);
-    }
-
-    return temp.textContent || ""; 
+  return t.textContent || ""
 }
 
-window.parseMarkdown = parseMarkdown
-window.baseUrl = baseUrl
-window.safeText = safeText
+function alert(e, t = "info") {
+  let o = document.querySelector(".toast") || document.createElement("div");
+  o.className = "", o.classList.add("toast", t, "seen");
+  let n = String(e).toLowerCase();
+  (n.includes("unexpected") || n.includes("syntax") || n.includes("traceback") || n.includes("internal")) && (e =
+    "Server not yet configured, please contact support", o.classList.add("error")), n.includes("failed to fetch") && (e =
+      "Failed to Communicate to server. Please make sure you have an active internet connection or contact support", o.classList.add("error")), o.textContent =
+    e, document.body.appendChild(o), setTimeout((() => {
+      o.classList.remove("seen"), o.classList.add("removing"), setTimeout((() => o.remove()), 500)
+    }), 5e3)
+}
 
-document.addEventListener('DOMContentLoaded', ()=>{
-    const searchDiv = document.querySelector('.searchDiv')
-    const tr = document.querySelector('.search')
+function formatTime(e) {
+  return new Date(e).toLocaleString(void 0, {
+    weekday: "long",
+    hour: "2-digit",
+    day: "numeric",
+    month: "short",
+    minute: "2-digit"
+  })
+}
 
-    if(searchDiv && tr)
-    tr.addEventListener('click', ()=>{
-        if(searchDiv){
-            searchDiv.classList.toggle('seen')
-            searchDiv.classList.toggle('none')
-        }
+function formatTimehD(e) {
+  return new Date(e).toLocaleString(void 0, {
+    hour: "2-digit",
+    day: "numeric",
+    month: "short",
+    minute: "2-digit",
+    year: "numeric"
+  })
+}
+async function checkBlock(e) {
+  const t = e + "?check=" + Date.now(),
+    o = await new Promise((e => {
+      const o = document.createElement("script");
+      o.src = t, o.onload = () => e(!1), o.onerror = () => e(!0), document.head.appendChild(o), setTimeout((() => e(!0)), 2e3)
+    }));
+  let n = !0;
+  try {
+    await fetch(e.replace("/invoke.js", "/favicon.ico"), {
+      mode: "no-cors"
     })
-    if(searchDiv)
-
-    searchDiv.querySelector('.closeSearch').addEventListener('click', () => {
-        const params = new URLSearchParams(window.location.search);
-    
-        searchDiv.classList.toggle('seen');
-        searchDiv.classList.toggle('none');
-    
-        params.delete('action');
-    
-        const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
-    
-        window.history.pushState({}, '', newUrl);
-    });
-    
-    if(searchDiv){
-    const q = searchDiv.querySelector('#query')
-    if(q){
-    const qbtn = searchDiv.querySelector('#searchBtn')
-    q.addEventListener('keydown', (e)=>{
-        if(e.key== 'Enter'){
-            if(q.value && q.value != ''){
-
-                window.location.href = `/search/?q=${q.value.trim()}`
-            } else if(q.value.trim() == ''){
-                alert('Empty Search Item', 'error')
-            }
-        }
-    })
-    qbtn.addEventListener('click',()=>{
-        if(q.value && q.value != ''){
-
-            window.location.href = `/search/?q=${q.value.trim()}`
-        } else if(q.value.trim() == ''){
-            alert('Empty Search Item', 'error')
-        }
-    })
-}
-    }
-})
-setInterval(() => {
-const params = new URLSearchParams(window.location.search)
-const search = params.get('action')
-if(search){
-    const sd = document.querySelector('.searchDiv')
-    sd.classList.remove('none')
-    sd.classList.add('seen')   
-}
-}, 1000);
-
-
-function alert(text, type = 'info') {
-  let div = document.querySelector('.toast') || document.createElement('div');
-  
-  div.className = ''; // reset classes
-  div.classList.add('toast', type, 'seen');
-
-  let msg = String(text).toLowerCase();
-
-  if (
-    msg.includes('unexpected') || 
-    msg.includes('syntax') ||      
-    msg.includes('traceback') ||
-    msg.includes('internal')
-  ) {
-    text = 'Server not yet configured, please contact support';
-    div.classList.add('error');
+  } catch {
+    n = !1
   }
-  if (
-    msg.includes('failed to fetch') 
-  ) {
-    text = 'Failed to Communicate to server. Please make sure you have an active internet connection or contact support';
-    div.classList.add('error');
+  let r = "unknown";
+  return o && n && (r = "extension"), o && !n && (r = "network"), o || (r = "none"), {
+    blocked: o,
+    reason: r
   }
-
-  div.textContent = text;
-  document.body.appendChild(div);
-
-  setTimeout(() => {
-    div.classList.remove('seen');
-    div.classList.add('removing');
-    setTimeout(() => div.remove(), 500);
-  }, 5000);
 }
-
-
-  function formatTime(rtime){
-    const time = new Date(rtime);
-    const options = {
-      weekday: 'long', 
-      hour: '2-digit',
-      day: 'numeric', 
-      month:'short',
-      minute:'2-digit'  
-    };
-    return  time.toLocaleString(undefined, options);
+async function pingAccount() {
+  if (!window.id || !window.token) return console.warn("not logged"), "❌";
+  try {
+    const e = await fetch(`${baseUrl}/ping/account?id=${window.id}&token=${window.token}`),
+      t = await e.json();
+    if (t.error) return alert(t.error || "An error occured", "error"), localStorage.clear(), "❌";
+    const o = t.user;
+    return localStorage.setItem("user", JSON.stringify(o)), localStorage.setItem("uid", o.id), localStorage.setItem("usn", o.username), localStorage.setItem(
+      "token", t.token || window.token), localStorage.setItem("lastPing", (new Date).toISOString()), "✔"
+  } catch (e) {
+    return alert(e.message, "error"), "❌"
+  }
 }
-window.formatTime = formatTime
-
-function formatTimehD(rtime){
-    const time = new Date(rtime);
-    const options = {
-      hour: '2-digit',
-      day: 'numeric',
-      month:'short',
-      minute:'2-digit' ,
-      year:'numeric' 
-    };
-    return  time.toLocaleString(undefined, options);
-}
-window.formatTimehD = formatTimehD
-  window.alert = alert
-
-
-  document.addEventListener('DOMContentLoaded', ()=>{
-    const ps = new URLSearchParams(window.location.search)
-    const app = ps.get('app_mode')
-    if(app == 'True'){
-      localStorage.setItem('app_mode', true)
-      const hd = document.querySelector('.header')
-      const sdd = hd.querySelector('.searchDiv')
-      hd.innerHTML =''
-       hd.append(sdd)
-      const ft = document.querySelector('.footer')
-      ft.style.display= 'none'
-    } else{
-        if(app == 'False'){
-            localStorage.removeItem('app_mode')
-        }
-      const s_app = localStorage.getItem('app_mode')
-      if(s_app){
-        const hd = document.querySelector('.header')
-        const sdd = hd.querySelector('.searchDiv')
-         hd.innerHTML =''
-
-        hd.append(sdd)
-        const ft = document.querySelector('.footer')
-        ft.style.display= 'none'
-        setTimeout(() => {
-        const iframes = document.querySelectorAll('iframe')
-        console.clear()
-        iframes.forEach(i=>{
-          i.setAttribute('style','display:none')
-        })
-      }, 0.0001);
-
+document.addEventListener("DOMContentLoaded", (() => {
+  "dark" == localStorage.getItem("mode") ? document.body.classList.add("dark") : document.body.classList.remove("dark");
+  const e = document.querySelector(".modes");
+  e && e.addEventListener("click", (t => {
+    console.log(e.innerHTML);
+    const o = '<i class="fas fa-moon"></i>';
+    e.innerHTML.trim() == o ? (e.innerHTML = '<i class="fas fa-sun"></i>', localStorage.setItem("mode", "dark"), document.body.classList.add(
+      "dark")) : (e.innerHTML = o, localStorage.setItem("mode", "light"), document.body.classList.remove("dark"))
+  }))
+})), window.copy = copy, window.parseMarkdown = parseMarkdown, window.baseUrl = baseUrl, window.safeText = safeText, document.addEventListener(
+  "DOMContentLoaded", (() => {
+    const e = document.querySelector(".searchDiv"),
+      t = document.querySelector(".search");
+    if (e && t && t.addEventListener("click", (() => {
+        e && (e.classList.toggle("seen"), e.classList.toggle("none"))
+      })), e && e.querySelector(".closeSearch").addEventListener("click", (() => {
+        const t = new URLSearchParams(window.location.search);
+        e.classList.toggle("seen"), e.classList.toggle("none"), t.delete("action");
+        const o = window.location.pathname + (t.toString() ? "?" + t.toString() : "");
+        window.history.pushState({}, "", o)
+      })), e) {
+      const t = e.querySelector("#query");
+      if (t) {
+        const o = e.querySelector("#searchBtn");
+        t.addEventListener("keydown", (e => {
+          "Enter" == e.key && (t.value && "" != t.value ? window.location.href = `/search/?q=${t.value.trim()}` : "" == t.value.trim() && alert(
+            "Empty Search Item", "error"))
+        })), o.addEventListener("click", (() => {
+          t.value && "" != t.value ? window.location.href = `/search/?q=${t.value.trim()}` : "" == t.value.trim() && alert("Empty Search Item",
+            "error")
+        }))
       }
     }
-    hideLoader()
-  })
-
-
-  // adblocker
-  async function checkBlock(url) {
-    const testUrl = url + '?check=' + Date.now();
-  
-    // 1: Inline script load check
-    const scriptBlocked = await new Promise(res => {
-      const s = document.createElement('script');
-      s.src = testUrl;
-      s.onload = () => res(false);
-      s.onerror = () => res(true);
-      document.head.appendChild(s);
-      setTimeout(() => res(true), 2000);
-    });
-  
-    // Try to fetch favicon style asset to check network vs extension
-    let networkReachable = true;
-    try {
-      await fetch(url.replace('/invoke.js','/favicon.ico'), {mode:'no-cors'});
-    } catch {
-      networkReachable = false;
-    }
-  
-    let reason = 'unknown';
-    if(scriptBlocked && networkReachable) reason = 'extension';
-    if(scriptBlocked && !networkReachable) reason = 'network';
-    if(!scriptBlocked) reason = 'none';
-  
-    return { blocked: scriptBlocked, reason };
-  }   
-   document.addEventListener('DOMContentLoaded', ()=>{
-
-  setTimeout(() => {
-      checkBlock("https://pl28010045.effectivegatecpm.com/545445584d06c09fd1a832fa75e54619/invoke.js")
-    .then(console.log);
-    
-  }, 5000);
-  window.uid = localStorage.getItem('uid')
-
-  })
-  window.id = localStorage.getItem('uid')
-  window.token = localStorage.getItem('token')
-
-  async function pingAccount() {
-    if (!window.id || !window.token) {
-      console.warn('not logged');
-      return '❌';
-    }
-  
-    try {
-      const res = await fetch(`${baseUrl}/ping/account?id=${window.id}&token=${window.token}`);
-      const data = await res.json();
-  
-      if (data.error) {
-        swal(data.error || 'An error occured', 'error'); // assuming you use SweetAlert
-        localStorage.clear();
-        return '❌';
-      }
-  
-      const user = data.user;
-  
-      localStorage.setItem('user', JSON.stringify(user));
-      localStorage.setItem('uid', user.id);
-      localStorage.setItem('usn', user.username);
-      localStorage.setItem('token', data.token || window.token);
-      localStorage.setItem('lastPing', new Date().toISOString());
-  
-      return '✔';
-  
-    } catch (err) {
-      swal(err.message, 'error');
-      return '❌';
+  })), setInterval((() => {
+  if (new URLSearchParams(window.location.search).get("action")) {
+    const e = document.querySelector(".searchDiv");
+    e.classList.remove("none"), e.classList.add("seen")
+  }
+}), 1e3), window.formatTime = formatTime, window.formatTimehD = formatTimehD, window.alert = alert, document.addEventListener("DOMContentLoaded", (() => {
+  const e = new URLSearchParams(window.location.search).get("app_mode");
+  if ("True" == e) {
+    localStorage.setItem("app_mode", !0);
+    const e = document.querySelector(".header"),
+      t = e.querySelector(".searchDiv");
+    e.innerHTML = "", e.append(t);
+    document.querySelector(".footer").style.display = "none"
+  } else {
+    "False" == e && localStorage.removeItem("app_mode");
+    if (localStorage.getItem("app_mode")) {
+      const e = document.querySelector(".header"),
+        t = e.querySelector(".searchDiv");
+      e.innerHTML = "", e.append(t);
+      document.querySelector(".footer").style.display = "none", setTimeout((() => {
+        const e = document.querySelectorAll("iframe");
+        console.clear(), e.forEach((e => {
+          e.setAttribute("style", "display:none")
+        }))
+      }), 1e-4)
     }
   }
-  
-window.pingAccount =pingAccount
+  hideLoader()
+})), document.addEventListener("DOMContentLoaded", (() => {
+  setTimeout((() => {
+    checkBlock("https://pl28010045.effectivegatecpm.com/545445584d06c09fd1a832fa75e54619/invoke.js").then(console.log)
+  }), 5e3), window.uid = localStorage.getItem("uid")
+})), window.id = localStorage.getItem("uid"), window.token = localStorage.getItem("token"), window.pingAccount = pingAccount;

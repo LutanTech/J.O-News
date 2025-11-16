@@ -367,7 +367,7 @@ def comment():
 def comments():
     article_id = request.args.get('id')
     page = int(request.args.get('page', 1))
-    per_page = int(request.args.get('per_page', 20))
+    per_page = int(request.args.get('per_page', 10))
 
     if not article_id:
         return jsonify({'error': 'Article ID missing'}), 400

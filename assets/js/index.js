@@ -104,8 +104,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="dets">
                         <div class="category" tooltip="Category"><i class="fas fa-tags"></i> <span>${n.categ || 'Unknown'}</span></div>
                         <div class="time"><i class="fas fa-clock"></i> <span>${timeAgo(n.added)}</span></div>
-
-                        <div class="user" tooltip="Publisher"><i class="fas fa-user" ></i> By Lutan </div>
+                        ${n.user ? `
+                        <div class="user" tooltip="Publisher"><i class="fas fa-user" ></i> By ${n.user} </div>` : ''}
                     </div>
                 </div>
             `;
@@ -132,10 +132,10 @@ document.addEventListener('DOMContentLoaded', () => {
         { url: `${baseUrl}/most_read`, container: document.querySelector('.mr'), key: 'ec8a', type: 'Most_Read' },
         { url: `${baseUrl}/trending`, container: document.querySelector('.tr'), key: 'a677', type: 'Trending' }
     ];
-
+   initNews()
+   async function  initNews(){
     sections.forEach(s => {
         if(!s.container) return;
-        showLoader('Updating page...', 'info')
         fetch(s.url)
             .then(res => res.json())
             .then(data => {
@@ -145,8 +145,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     renderNews(s.container, data.news, s.key, s.type);
                 }
             })
-            .catch(err => showLoader('Fetch error: '+ err, 'error', 'clear'));
+            .catch(err => showLoader(`<div style="display:flex; flex-direction:column; gap:10px; justify-content:center; align-items:center">Failed to get news.<p> Make sure you have an active internet connection or contact <a style="color:blue" href="/support"> support</a> if issue persists <p></p><b title="Retry"><i  class="fas fa-refresh" onclick="window.location.reload()" style="color:black; margin:auto; font-size:2em; cursor:pointer"></i></b></div>`, 'error', 'clear'));
     });
+}
     window.renderNews = renderNews
     window.timeAgo = timeAgo
 });

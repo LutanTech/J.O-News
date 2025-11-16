@@ -277,17 +277,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   fetchLatestNews()
 
   function fetchLatestNews() {
-    const lNews = document.querySelector('.more')
+    const lNews = document.querySelector('.more-news')
     showLoader('Updating page..', 'info', 'clear')
-    fetch(`${baseUrl}/get_news?limit=16`)
+    fetch(`${baseUrl}/get_news?limit=10`)
       .then(res => res.json())
       .then(data => {
         if (data.error) {
           showMessage(data.error, 'error')
         } else {
           const news = data.news
-
-          lNews.innerHTML = '<h3 style="margin-left:20px;">More News</h3> <hr>'
+          lNews.innerHTML = ` `
 
           if (news) {
             news.forEach(n => {
@@ -316,8 +315,56 @@ document.addEventListener('DOMContentLoaded', async () => {
           }
         }
       })
+      setTimeout(() => {
+              checkHeight()
+      }, 10);
   }
 
+  function checkHeight() {
+    const ar = document.querySelector('.newsDivL');
+    const mr = document.querySelector('.more');
+    const ad = document.querySelector('.rAd');
+    console.log(ar.scrollHeight)
+    console.log(mr.scrollHeight)
+    console.log(ad.scrollHeight)
+  
+    if (window.innerWidth <= 800) return;
+  
+    // create template divs
+    const d1 = document.createElement('div');
+    d1.className = 'ad-box';
+    d1.innerHTML = `<div id="container-13fdf8ad24893c5d942c794a939dcc09"></div>`;
+  
+    const d2 = document.createElement('div');
+    d2.className = 'ad-box2';
+    d2.innerHTML = `<div id="container-18e3e8231793e50a8fb517029604e76d"></div>`;
+  
+    // helper to append clone
+    function appendAdDiv(target, div) {
+      const clone = div.cloneNode(true);
+      target.appendChild(clone);
+    }
+  
+    if (ar.scrollHeight > mr.scrollHeight) {
+      appendAdDiv(mr, d1); // pass the actual div, not a string
+    }
+  
+    if (mr.scrollHeight > ad.scrollHeight) {
+      appendAdDiv(ad, d2); // pass the actual div
+    }
+  
+    let safety = 20; // prevent infinite loops
+    while (ad.scrollHeight < ar.scrollHeight && safety > 0) {
+      appendAdDiv(ad, d2);
+      safety--;
+    }
+    console.log(ar.scrollHeight)
+    console.log(mr.scrollHeight)
+    console.log(ad.scrollHeight)
+  }
+  
+  
+  
   let synth = window.speechSynthesis;
   let utter;
   let isSpeaking = false;

@@ -2,7 +2,7 @@ const OFFLINE_URL = "/offline/index.html";
 
 self.addEventListener("install", e => {
   e.waitUntil(
-    caches.open("v8").then(cache => cache.add(OFFLINE_URL))
+    caches.open("v9").then(cache => cache.add(OFFLINE_URL))
   );
 });
 

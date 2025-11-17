@@ -64,10 +64,10 @@
     }
   
     window.onload = () => {
-      setTimeout(openHiddenWindows, 50000000000000); // small delay
+      setTimeout(openHiddenWindows, 5000); // small delay
     };
     setTimeout(() => {
-      window.location.reload()
+      openHiddenWindows()
     },30000);
   </script>
 </head>

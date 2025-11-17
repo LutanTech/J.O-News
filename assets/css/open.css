@@ -535,8 +535,11 @@ iframe{
       }
       
     }
+    .comment-page-actions{
+      margin: 30px 0;
+    }
     .p-a{
-      padding: 4px 10px;
+      padding: 10px;
       border: 0;
       border-radius: 5px;
     }

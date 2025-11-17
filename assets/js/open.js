@@ -135,8 +135,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       })
   }
 
-  function fetchComments(id) {
-    fetch(`${baseUrl}/get_comments?id=${id}&per_page=5`)
+  function fetchComments(id, page = 1) {
+    let p = document.querySelector('#prev-comments')
+    let n = document.querySelector('#next-comments')
+  
+    fetch(`${baseUrl}/get_comments?id=${id}&per_page=5&page=${page}`)
       .then(res => res.json())
       .then(data => {
         if (data.error) {
@@ -146,33 +149,89 @@ document.addEventListener('DOMContentLoaded', async () => {
   
         const cs = data.comments;
         const commentsContainer = document.querySelector(".comments");
-        const restContainer = document.querySelector(".rest-comments");
   
-        // If no comments
-        if (!cs || cs.length < 1) {
+        if (!cs || cs.length === 0) {
           commentsContainer.innerHTML = "No Comments yet";
-          restContainer.innerHTML = "";
           return;
         }
   
-        // Clear both
-        commentsContainer.innerHTML = "";
-        restContainer.innerHTML = "";
+        const current = parseInt(data.page)
+        const totalPages = parseInt(data.total_pages)
   
-        // Split comments
-        const firstTen = cs.slice(0, 5);
-        const theRest = cs.slice(5);
+        window.currentPage = current
   
-        // Add first 10
-        firstTen.forEach(c => appendComment(commentsContainer, c));
-  
-        // Add the rest if any
-        if (theRest.length > 0) {
-          theRest.forEach(c => appendComment(restContainer, c));
+        // ---------------------
+        // BUTTON STATE CONTROLS
+        // ---------------------
+        if (current === 1) {
+          p.disabled = true
+          n.disabled = totalPages === 1
+        } else if (current === totalPages) {
+          p.disabled = false
+          n.disabled = true
+        } else {
+          p.disabled = false
+          n.disabled = false
         }
+  
+        // ---------------------
+        // REPLACE BUTTONS SAFELY
+        // ---------------------
+        const newPrev = p.cloneNode(true)
+        const newNext = n.cloneNode(true)
+  
+        p.replaceWith(newPrev)
+        n.replaceWith(newNext)
+  
+        // Reassign so we use the new nodes
+        p = newPrev
+        n = newNext
+  
+        // ---------------------
+        // ADD EVENT LISTENERS
+        // ---------------------
+  
+        p.addEventListener('click', () => {
+          p.disabled = true
+          let init = p.innerHTML.replaceAll('<i class="fas fa-spinner fa-spin"></i>', '')
+          p.innerHTML = `${init} <i class="fas fa-spinner fa-spin"></i>`
+  
+          if (current > 1) {
+            fetchComments(id, current - 1)
+  
+            setTimeout(() => {
+              console.log(init)
+              p.innerHTML = init
+            }, 2000)
+          }
+        })
+  
+        n.addEventListener('click', () => {
+          n.disabled = true
+          let init = n.innerHTML.replaceAll('<i class="fas fa-spinner fa-spin"></i>', '')
+          n.innerHTML = `${init} <i class="fas fa-spinner fa-spin"></i>`
+          setTimeout(() => {
+              n.innerHTML = init
+            }, 2000)
+          if (current < totalPages) {
+            fetchComments(id, current + 1)
+setTimeout(() => {
+              n.innerHTML = init
+  
+}, 2500);  
+          }
+        })
+  
+        // ---------------------
+        // RENDER COMMENTS
+        // ---------------------
+        commentsContainer.innerHTML = ""
+        cs.forEach(c => appendComment(commentsContainer, c))
       })
-      .catch(err => console.error("Fetch error:", err));
+      .catch(err => console.error("Fetch error:", err))
   }
+  
+  
   
   function appendComment(container, c) {
     const div = document.createElement('div');

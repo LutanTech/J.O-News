@@ -125,190 +125,246 @@
   </header>
 
   <style>
-    .content{
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-    }
-    .user-data{
-        display: flex;
-        width: 100%;
-        font-size: large !important;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-        height:100%;
-        margin: 0;
-    }
-    
-    .profile{
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        width: 100%;
-        >div{
-            padding: 10px;
-            max-width: none !important;
-        }
-    }
-    .userdets{
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        flex-grow: 1;
-        color: blue;
-        b, h4, h2, h3{
-          color: black;
-        }
-        div{
-          display: flex;
-          b{
-            margin-right: 3px;
-          }
-        }
-        div i{
-            color: grey;
-            margin-right:5px;
-        }
-    }
-    .facebook i:nth-of-type(1){
-        color: rgb(0, 170, 255);
-        font-size: 2em;
-    }
-    .ig i:nth-of-type(1){
-        color: magenta;
-        font-size: 2em;
+  /* New .profile UI styles */
+  .content {
+   display: flex;
+   flex-direction: column;
+   justify-content: flex-start;
+   align-items: center;
+   padding: 20px;
+   width: 100%;
+  }
 
-    }
-    .x i:nth-of-type(1){
-        font-size: 2em;
-    }
-    .tiktok i:nth-of-type(1) {
-    background: linear-gradient(to right, black,black, red, red);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-size: 2em;
-    /* important */
-}
-.openArticles, .post{
-  padding: 10px;
-  border: 0;
-  background: #00ff15;
-  color:black;
+  .user-data {
+   display: flex;
+   justify-content: center;
+   align-items: flex-start;
+   width: 100%;
+   font-size: 1.1em;
+   font-family: 'Inter', sans-serif; /* Using a modern font */
+   margin: 0 auto;
+   max-width: 900px;
+  }
 
-}
+  .profile-card {
+   display: flex;
+   flex-direction: column;
+   width: 100%;
+   background: #fdfdff;
+   border-radius: 12px;
+   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+   overflow: hidden;
+   padding: 20px;
+   gap: 20px;
+   color: #333;
+  }
 
-    .pp{
-        width: 100px;
-        aspect-ratio: 1;
-        padding: 5px;
-        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.415);
-        border-radius: 50%;
-        object-fit: cover;
-        background-position: center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        max-height: 100px;
+  .profile-header {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   text-align: center;
+   padding-bottom: 15px;
+   border-bottom: 1px solid #eee;
+  }
 
-    }
-    .socials-div{
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        font-family: Arial, Helvetica, sans-serif;
-        div a{
-            color: rgb(0, 191, 255);
-        }
+  .pp {
+   width: 120px;
+   height: 120px;
+   border: 3px solid #00c853;
+   border-radius: 50%;
+   object-fit: cover;
+   margin-bottom: 10px;
+   background-size: cover;
+   background-position: center;
+  }
+
+  .profile-header h2 {
+   font-size: 1.8em;
+   font-weight: 700;
+   color: #333;
+  }
+
+  .profile-header h4 {
+   font-size: 1em;
+   font-weight: 400;
+   color: #666;
+  }
+
+  .details-grid {
+   display: grid;
+   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+   gap: 10px 20px;
+   padding-bottom: 15px;
+  }
+
+  .socials-list {
+   border-top: 1px solid #eee;
+   padding-top: 15px;
+   display: flex;
+   flex-direction: column;
+   gap: 10px;
+  }
+  .socials-list h3 {
+   font-size: 1.5em;
+   color: #222;
+  }
+
+  .detail-item, .social-item {
+   display: flex;
+   align-items: center;
+   padding: 5px 0;
+   font-size: 0.95em;
+   color: #555;
+   flex-wrap: wrap; /* Ensure elements wrap on small screens */
+  }
+
+  .detail-item i, .social-item i:nth-of-type(1) {
+   color: #00c853; /* Accent icon color */
+   margin-right: 10px;
+   width: 20px;
+   text-align: center;
+  }
+
+  .detail-item b, .social-item b {
+   color: #222;
+   font-weight: 600;
+   margin-right: 5px;
+   min-width: 50px;
+  }
+
+  .detail-value {
+   color: #007bff;
+   word-break: break-all;
+   cursor: pointer;
+   text-decoration: none;
+  }
+  .detail-value:not(a) {
+   color: #555;
+   cursor: default;
+  }
+
+  /* Specific social icon colors */
+  .facebook i:nth-of-type(1) { color: #1877f2; }
+  .ig i:nth-of-type(1) { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .x i:nth-of-type(1) { color: #000; }
+  .tiktok i:nth-of-type(1) { background: linear-gradient(to right, black, black, red, red); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+  .edit-icon {
+   margin-left: 10px;
+   color: #00c853 !important; /* Green accent */
+   cursor: pointer;
+  }
+
+  .copy-icon {
+   margin-left: 10px;
+   color: #007bff !important;
+   cursor: pointer;
+  }
+
+  /* Overriding contenteditable style */
+  *[contenteditable] {
+   background: #ffebee;
+   color: #d32f2f !important;
+   outline: 1px solid #d32f2f;
+   border-radius: 4px;
+   padding: 2px 5px;
+  }
+
+  .openArticles, .post {
+   margin-top: 20px;
+   padding: 10px 20px;
+   border: none;
+   border-radius: 8px;
+   background: #00c853; /* Updated button color */
+   color: white;
+   font-weight: bold;
+   cursor: pointer;
+   transition: background 0.3s;
+  }
+  .openArticles:hover, .post:hover {
+   background: #009624;
+  }
 
 
-    }
-    .loader{
-      max-width: 100px;
-      max-height: 100px;
-      background: #0000;
-      margin: auto;
-    }
-    .skeleton{
-      width: 100% !important;
-      min-width: none !important;
-      max-width: 800px !important;
-      flex-direction: column;
-      background: white;
-      justify-content: center;
-      align-items: center;
-      *{
-      background: white;
-      }
-    }
-    .loaders{
-      margin: 20px auto;
-      display: flex;
-      padding: 2px;
-      gap: 5px;
-      text-align: center;
-      justify-content: center;
-      align-items: center;
-      width: fit-content;
+  
+  /* Keeping existing loading/skeleton styles for pre-auth state */
+  .loader{
+   max-width: 100px;
+   max-height: 100px;
+   background: #0000;
+   margin: auto;
+  }
+  .skeleton{
+   width: 100% !important;
+   min-width: none !important;
+   max-width: 800px !important;
+   flex-direction: column;
+   background: white;
+   justify-content: center;
+   align-items: center;
+   *{
+   background: white;
+   }
+  }
+  .loaders{
+   margin: 20px auto;
+   display: flex;
+   padding: 2px;
+   gap: 5px;
+   text-align: center;
+   justify-content: center;
+   align-items: center;
+   width: fit-content;
 
-    }
-    .loaders .span{
-      background: rgb(0, 0, 0);
-      border-radius: 50%;
-      width: 10px;
-      height: 10px;
-      flex-grow: 0;
-      padding: 2px;
-      margin-bottom: 10px;
-      animation: bounce 1s linear infinite;
-      position: relative;
-      z-index: 200;
-      &::after{
-        width: 1px;
-        background: linear-gradient(to bottom, red , red, black, black);
-        height: 50px;
-        padding: 1px;
-        position: absolute;
-        bottom: 0;
-        left: 30%;
-        right: 0;
-        content: '';
-        z-index: -1;
-      }
-    }
-    @keyframes bounce {
-      50%{
-        transform: translateY(-30px);
-      }      
-    }
-    .span:nth-child(1){
-      animation-delay: 0s;
-    }
-    .span:nth-child(2){
-      animation-delay: 0.2s;
-    }
-    .span:nth-child(3){
-      animation-delay: 0.4s;
-    }
-    .span:nth-child(4){
-      animation-delay: 0.6s
-    }
-    .ltext{
-      display: flex;
-      justify-content: flex-end;
-      align-items: flex-end;
-    }
-    *[contenteditable]{
-      min-width: 100px;
-      padding:2px  10px;
-      background: grey;
-      color: white !important;
-      text-decoration: none !important;
-      outline: none;
-      max-width: 400px !important;
-      word-break: break-all;
-      }
-      body{
-        justify-content: flex-start;
-      }
-
+  }
+  .loaders .span{
+   background: rgb(0, 0, 0);
+   border-radius: 50%;
+   width: 10px;
+   height: 10px;
+   flex-grow: 0;
+   padding: 2px;
+   margin-bottom: 10px;
+   animation: bounce 1s linear infinite;
+   position: relative;
+   z-index: 200;
+   &::after{
+    width: 1px;
+    background: linear-gradient(to bottom, red , red, black, black);
+    height: 50px;
+    padding: 1px;
+    position: absolute;
+    bottom: 0;
+    left: 30%;
+    right: 0;
+    content: '';
+    z-index: -1;
+   }
+  }
+  @keyframes bounce {
+   50%{
+    transform: translateY(-30px);
+   }    
+  }
+  .span:nth-child(1){
+   animation-delay: 0s;
+  }
+  .span:nth-child(2){
+   animation-delay: 0.2s;
+  }
+  .span:nth-child(3){
+   animation-delay: 0.4s;
+  }
+  .span:nth-child(4){
+   animation-delay: 0.6s
+  }
+  .ltext{
+   display: flex;
+   justify-content: flex-end;
+   align-items: flex-end;
+  }
+  
   </style>
 <div class="content">
     <div class="user-data">
@@ -354,59 +410,65 @@
                     window.id = user.id
                     window.token = token
                     document.querySelector('.user-data').innerHTML = `
-                        <div class="profile">
-            <div class="pp" style="background-image: url(${user.pic})">
-            </div>
-            <div class="userdets">
-                <h2>Account Details</h2>
-                <hr>
-                <div class="username"> <i class="fas fa-at"></i> <b>Username:</b>  ${user.username}</div>
-                <div class="email"> <i class="fas fa-envelope"></i><b> Email:</b> <a href="mailto:${user.email}" target="_blank"> ${user.email}</a></div>
-                <div class="id">
-                    <i class="fas fa-ticket"></i> <b>ID:</b>
-                    ${user.id}
-                    <i onlick="copy('${user.id}')" class="fas fa-copy"></i>
-                </div>
-                <div class="joined"> <i class="fas fa-clock"></i> <b>Joined:</b> ${user.joined.replace('GMT', '')}</div>
-                <div class="verified">
-                     <i class="fas fa-check-circle"></i><b> Verified:</b>
-                ${user.verified? 'Verified':'Not Verified'}</div>
-
-                <div class="location">
-                    <i class="fas fa-map-pin"></i> <b>Location:</b>
-                    ${user.location ? user.location : 'Not Yet added'}
-                </div>
-                <div class="phone">
-                    <i class="fas fa-phone"></i><b> Phone:</b>
-                    ${user.phone ? user.phone : 'Not Yet Added' } <i style="margin-left:10px; color:#0f0; cursor:pointer" class="fas fa-pen" onclick="edit(this.parentElement)"></i>
-                </div>
+                        <div class="profile-card">
+                        <div class="profile-header">
+                            <div class="pp" style="background-image: url(${user.pic || 'https://placehold.co/120x120/546E7A/FFFFFF?text=P'})"></div>
+                            <h2>${user.username}</h2>
+                            <h4>Account Overview</h4>
+                        </div>
+                        <div class="details-grid">
+                            <div class="detail-item username">
+                                <i class="fas fa-at"></i> <b>Username:</b> <span class="detail-value">${user.username}</span>
+                            </div>
+                            <div class="detail-item email">
+                                <i class="fas fa-envelope"></i> <b>Email:</b> <a href="mailto:${user.email}" target="_blank" class="detail-value">${user.email}</a>
+                            </div>
+                            <div class="detail-item id">
+                                <i class="fas fa-ticket"></i> <b>ID:</b>
+                                <span class="detail-value">${user.id}</span>
+                                <i onclick="copy('${user.id}')" class="fas fa-copy copy-icon"></i>
+                            </div>
+                            <div class="detail-item joined">
+                                <i class="fas fa-clock"></i> <b>Joined:</b> <span class="detail-value">${user.joined.replace('GMT', '')}</span>
+                            </div>
+                            <div class="detail-item verified">
+                                <i class="fas fa-check-circle"></i> <b>Status:</b> <span class="detail-value">${user.verified ? 'Verified' : 'Not Verified'}</span>
+                            </div>
+                            <div class="detail-item location">
+                                <i class="fas fa-map-pin"></i> <b>Location:</b>
+                                <span class="detail-value">${user.location ? user.location : 'Not Yet added'}</span>
+                            </div>
+                            <div class="detail-item phone">
+                                <i class="fas fa-phone"></i> <b>Phone:</b>
+                                <a class="detail-value" href="tel:${user.phone ? user.phone : '#'}">${user.phone ? user.phone : 'Not Yet Added'}</a>
+                                <i class="fas fa-pen edit-icon" onclick="edit(this.parentElement)"></i>
+                            </div>
+                        </div>
+                    
+                        <div class="socials-list">
+                            <h3>Social Accounts</h3>
+                            <div class="social-item facebook">
+                                <i class="fab fa-facebook"></i> <b>Facebook:</b>
+                                <a href="${user.fb ? user.fb : '?#NoLink'}" target="_blank" class="detail-value">${user.fb ? user.fb : 'Not yet added'}</a>
+                                <i class="fas fa-pen edit-icon" onclick="edit(this.parentElement)"></i>
+                            </div>
+                            <div class="social-item x">
+                                <i class="fab fa-x-twitter"></i> <b>X (Twitter):</b>
+                                <a href="${user.x ? user.x : '?#NoLink'}" target="_blank" class="detail-value">${user.x ? user.x : 'Not yet added'}</a>
+                                <i class="fas fa-pen edit-icon" onclick="edit(this.parentElement)"></i>
+                            </div>
+                            <div class="social-item ig">
+                                <i class="fab fa-instagram"></i> <b>Instagram:</b>
+                                <a href="${user.ig ? user.ig : '?NoLink'}" target="_blank" class="detail-value">${user.ig ? user.ig : 'Not yet added'}</a>
+                                <i class="fas fa-pen edit-icon" onclick="edit(this.parentElement)"></i>
+                            </div>
+                            <div class="social-item tiktok">
+                                <i class="fab fa-tiktok"></i> <b>TikTok:</b>
+                                <a href="${user.tiktok ? user.tiktok : '?NoLink'}" target="_blank" class="detail-value">${user.tiktok ? user.tiktok : 'Not yet added'}</a>
+                                <i class="fas fa-pen edit-icon" onclick="edit(this.parentElement)"></i>
+                            </div>
+                        </div>
                     </div>
-                
-            <div class="socials-div">
-                <h2>Social Accounts</h2>
-                <hr>
-                <div class="facebook">
-                <i class="fab fa-facebook"></i>
-               <a href="${user.fb ? user.fb : '?#NoLink'}" target="_blank" > ${user.fb ? user.fb : 'Not yet added'}</a>    
-                        <i style="margin-left:10px; color:#0f0; cursor:pointer" class="fas fa-pen" onclick="edit(this.parentElement)"></i>
-               </div>
-               <div class="x">
-                <i class="fab fa-x-twitter"></i>
-                <a href="${user.x ? user.x : '?#NoLink'}" target="_blank" > ${user.x ? user.x : 'Not yet added'}</a>                
-                <i style="margin-left:10px; color:#0f0; cursor:pointer" class="fas fa-pen" onclick="edit(this.parentElement)"></i>
-               </div>
-               <div class="ig">
-                <i class="fab fa-instagram"></i>
-                <a href="${user.ig ? user.ig : '?NoLink'}" target="_blank" > ${user.ig ? user.ig: 'Not yet added'}</a>                <i style="margin-left:10px; color:#0f0; cursor:pointer" class="fas fa-pen" onclick="edit(this.parentElement)"></i>
-               </div>
-               <div class="tiktok">
-                <i class="fab fa-tiktok"></i>
-                <a href="${user.tiktok ? user.tiktok : '?NoLink'}" target="_blank" > ${user.tiktok ? user.tiktok : 'Not yet added'}</a>
-                <i style="margin-left:10px; color:#0f0; cursor:pointer" class="fas fa-pen" onclick="edit(this.parentElement)"></i>
-               </div>
-            </div>
-           </div>
-
                     `
                 }
                })
@@ -443,7 +505,7 @@
           method: 'POST',
           headers: {
             'Content-Type':'application/json'
-          }, body: JSON.stringify({link:new_url, target:el.parentElement.getAttribute('class')})
+          }, body: JSON.stringify({link:new_url, target:el.parentElement.getAttribute('class').replace('social-item ', '')})
         })
           .then(res=>res.json())
           .then(data=>{

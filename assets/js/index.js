@@ -34,8 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div class="article-data">
                 <div class="article-title">
-                 <span>   ${a.title.length > 100 ? a.title.slice(0,100)+'...' : a.title} </span>
-                 <marquee> ${a.content.slice(0, 100) + '...'}</marquee>
+                 <span class="art-data-t">   ${a.title.length > 100 ? a.title.slice(0,100)+'...' : a.title} </span> <a style="color:aqua" href="/open/?s=${a.slug}"> Read more</a>
+                 <div id="art-data-cnt"> ${a.content.slice(0, 350) + '...'}</div>
                 </div>
             </div>
         `;

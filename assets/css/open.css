@@ -535,3 +535,8 @@ iframe{
       }
       
     }
+    .p-a{
+      padding: 4px 10px;
+      border: 0;
+      border-radius: 5px;
+    }

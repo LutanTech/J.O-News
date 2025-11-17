@@ -85,15 +85,25 @@ document.addEventListener('DOMContentLoaded', ()=>{
     } else {
         ics.appendChild(div); 
     }
-    const header = document.querySelector('.header');
+    const up = document.querySelector('.uptop');
 
-window.addEventListener('scroll', () => {
-  if (window.scrollY > 50) {
-    header.style.background = '#059405'; // color when scrolled
-    header.style.color = '#fff';
-  } else {
-    header.style.background = '#ffffff'; // original
-    header.style.color = '#333';
-  }
-});
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > window.innerHeight - 300 && up) {
+        up.classList.add('flex');
+        up.classList.remove('none');
+      } else {
+        up.classList.add('none');
+        up.classList.remove('flex');
+      }
+    });
+    
+    if (up) {
+      up.addEventListener('click', () => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+    }
+    
 })

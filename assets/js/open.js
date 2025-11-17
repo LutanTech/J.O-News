@@ -98,9 +98,10 @@ document.addEventListener('DOMContentLoaded', async () => {
            </div>
            <div id="news-content">
              <img class="news-content-image" src="${n.image_url ? n.image_url : '/assets/images/logo.jpg'}">
-             <div class="article-text">
-             ${parseMarkdown(n.content)}
-             </div>
+            <div class="article-text">
+              ${parseMarkdown(n.content)}
+            </div>
+
      </div>
            
              `
@@ -135,7 +136,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   function fetchComments(id) {
-    fetch(`${baseUrl}/get_comments?id=${id}`)
+    fetch(`${baseUrl}/get_comments?id=${id}&per_page=5`)
       .then(res => res.json())
       .then(data => {
         if (data.error) {
@@ -159,8 +160,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         restContainer.innerHTML = "";
   
         // Split comments
-        const firstTen = cs.slice(0, 10);
-        const theRest = cs.slice(10);
+        const firstTen = cs.slice(0, 5);
+        const theRest = cs.slice(5);
   
         // Add first 10
         firstTen.forEach(c => appendComment(commentsContainer, c));
@@ -317,50 +318,43 @@ document.addEventListener('DOMContentLoaded', async () => {
       })
       setTimeout(() => {
               checkHeight()
-      }, 10);
+      }, 5000);
   }
 
   function checkHeight() {
     const ar = document.querySelector('.newsDivL');
     const mr = document.querySelector('.more');
     const ad = document.querySelector('.rAd');
-    console.log(ar.scrollHeight)
-    console.log(mr.scrollHeight)
-    console.log(ad.scrollHeight)
   
     if (window.innerWidth <= 800) return;
   
-    // create template divs
-    const d1 = document.createElement('div');
-    d1.className = 'ad-box';
-    d1.innerHTML = `<div id="container-13fdf8ad24893c5d942c794a939dcc09"></div>`;
+    // clear existing ad-boxes first (optional)
+    ad.querySelectorAll('.ad-box, .ad-box2').forEach(e => e.remove());
   
     const d2 = document.createElement('div');
     d2.className = 'ad-box2';
     d2.innerHTML = `<div id="container-18e3e8231793e50a8fb517029604e76d"></div>`;
   
-    // helper to append clone
-    function appendAdDiv(target, div) {
-      const clone = div.cloneNode(true);
-      target.appendChild(clone);
+    // calculate remaining height
+    let remainingHeight = ar.scrollHeight - ad.scrollHeight;
+    if (remainingHeight > 0) {
+      const clone = d2.cloneNode(true);
+      clone.style.height = remainingHeight + 'px';
+      clone.style.minHeight = '50px'; 
+      clone.style.boxSizing = 'border-box';
+      clone.style.overflow = 'hidden !important'
+      ad.appendChild(clone);
     }
   
     if (ar.scrollHeight > mr.scrollHeight) {
-      appendAdDiv(mr, d1); // pass the actual div, not a string
+      const clone2 = d2.cloneNode(true);
+      clone2.setAttribute('style','overflow:hidden !important');
+      clone2.style.height = (ar.scrollHeight - mr.scrollHeight) + 'px';
+      clone2.style.minHeight = '50px';
+      clone2.style.boxSizing = 'border-box';
+
+      mr.appendChild(clone2);
     }
-  
-    if (mr.scrollHeight > ad.scrollHeight) {
-      appendAdDiv(ad, d2); // pass the actual div
-    }
-  
-    let safety = 20; // prevent infinite loops
-    while (ad.scrollHeight < ar.scrollHeight && safety > 0) {
-      appendAdDiv(ad, d2);
-      safety--;
-    }
-    console.log(ar.scrollHeight)
-    console.log(mr.scrollHeight)
-    console.log(ad.scrollHeight)
   }
   
   

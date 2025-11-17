@@ -31,7 +31,7 @@ app.config['MAIL_DEFAULT_SENDER'] = ('JOMC News Team', 'lutancorpinfoteam@gmail.
 app.config['ADMIN_EMAIL'] = 'lutancorpinfoteam@gmail.com'
 
 ALLOWED_FRONTEND_ORIGINS = [
-     "http://127.0.0.1:5501",
+     "http://127.0.0.1:5601",
     "https://jomc-news.vercel.app",
 ]
 
@@ -762,4 +762,4 @@ with app.app_context():
 
 if __name__ == '__main__':
     print("app.run(debug=True, port=5000, host='0.0.0.0')")
-    app.run(debug=True, port=50000, host='0.0.0.0')
+    app.run(debug=True, port=5000, host='0.0.0.0')

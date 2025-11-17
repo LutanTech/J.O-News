@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>JOMC News | World Updates, Hot Headlines, Breaking Stories</title>
+    <meta name="description" content="JOMC News brings real time world news. Fast reliable and student powered.">
+    <meta name="keywords" content="JOMC News, World news, News Site Kenya news, student journalism, Moi University news, Joseph Owino news">
+    <meta name="author" content="JOMC News Team">
+    <link rel="canonical" href="https://jomc-news.vercel.app/">
+    <link rel="icon" href="/assets/images/logo.jpg" type="image/x-icon">
+  <link rel="shortcut-icon" href="/assets/images/logo.jpg" type="image/x-icon">
+    <meta property="og:title" content="JOMC News">
+    <meta property="og:description" content="Real time World news.">
+    <meta property="og:image" content="https://jomc-news.vercel.app/assets/images/logo.jpg">
+    <meta property="og:url" content="https://jomc-news.vercel.app/">
+    <meta property="og:type" content="website">
+  
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="JOMC News">
+    <meta name="twitter:description" content="Real time world news.">
+    <meta name="twitter:image" content="https://jomc-news.vercel.app/assets/images/logo.jpg">
+  
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" preconnect>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
+  
+    <script async data-cfasync="false" src="//pl28003297.effectivegatecpm.com/53af17ddb9e4b799586ecb86dc439eb2/invoke.js" defer></script>
+    <script async data-cfasync="false" src="//pl28005774.effectivegatecpm.com/83706ba541e98f9c09f46db018571cf6/invoke.js" defer></script>
+    <script async data-cfasync="false" src="//pl28010045.effectivegatecpm.com/545445584d06c09fd1a832fa75e54619/invoke.js" defer></script>
+  
+  
+    <script src="/assets/js/loader.js" defer></script>
+    <script src="/assets/js/main.js" defer></script>
+    <script src="/assets/js/utils.js"></script>
+  
+    <link rel="stylesheet" href="/assets/css/loader.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/dark.css">
+  
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "NewsMediaOrganization",
+      "name": "JOMC News",
+      "url": "https://jomc-news.vercel.app",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://jomc-news.vercel.app/assets/images/logo.jpg"
+      },
+      "description": "Digital news site with world updates",
+      "sameAs": [
+        "https://www.instagram.com/",
+        "https://twitter.com/",
+        "https://www.tiktok.com/"
+      ]
+    }
+    </script>
+
+    <style>
+      .main-content {
+        padding: 20px 15px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      /* Section Heading Style */
+      .section-heading {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: 25px;
+        border-bottom: 2px solid #007bff; /* Example accent color */
+        padding-bottom: 10px;
+        display: inline-block;
+      }
+      .heading-wrapper {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      /* Category Cards (Grid) */
+      .category-cards-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin-bottom: 40px; /* Space between sections */
+      }
+      .category-card {
+        display: block;
+        padding: 40px 20px;
+        text-align: center;
+        text-decoration: none;
+        color: #333;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1.5rem;
+        font-weight: 600;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .category-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        background-color: #fff;
+      }
+      /* *** NEW: Style for category card icon *** */
+      .category-card i {
+        margin-right: 10px;
+      }
+
+
+      /* Info Cards (Flexbox) */
+      .info-cards-container {
+        display: flex; /* Using Flexbox as requested */
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center; /* Center the cards */
+      }
+      .info-card {
+        flex-basis: 280px; /* Each card has a base size */
+        flex-grow: 1;
+        padding: 20px;
+        text-align: center;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .info-card h3 {
+        margin-top: 0;
+        color: #333;
+        font-size: 1.25rem;
+      }
+      .info-card i {
+        margin-right: 8px;
+      }
+      .info-card p {
+        font-size: 0.95rem;
+        flex-grow: 1;
+      }
+      .card-link {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 10px 18px;
+        background-color: #03b003;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: 600;
+        transition: background-color 0.2s;
+      }
+      .card-link:hover {
+        background-color: #17c63a;
+      }
+      
+      /* Dark mode card styles (basic) */
+      body.dark-mode .category-card,
+      body.dark-mode .info-card {
+        background-color: #333;
+        border-color: #555;
+        color: #f1f1f1;
+      }
+      body.dark-mode .category-card:hover,
+      body.dark-mode .info-card:hover {
+        background-color: #444;
+      }
+      body.dark-mode .info-card h3,
+      body.dark-mode .info-card p {
+        color: #f1f1f1;
+      }
+      body.dark-mode .section-heading {
+        border-bottom-color: #007bff;
+      }
+      /* *** NEW: Dark mode icon color *** */
+      body.dark-mode .category-card i,
+      body.dark-mode .info-card i {
+        color: #007bff;
+      }
+      .category-card i.fas{
+        color: green;
+      }
+    </style>
+
+  </head>
+  
+
+<body>
+
+  <div class="overlay">
+    <div class="loader"></div>
+  </div>
+  <header class="header">
+    <div class="l090-ic">
+      <div class="logo-name">
+        <a href="/" style="text-decoration: none;">
+          <img src="/assets/images/logo.jpg" width="70">
+        </a>
+      </div>
+      <style>
+
+      </style>
+
+      <div class="searchDiv none">
+        <button class="closeSearch">&times;</button>
+        <input type="search" name="query" id="query" placeholder="Enter your query">
+        <button type="button" id="searchBtn">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+      <div class="icons">
+        <div class="modes">
+          <i class="fas fa-moon"></i>
+        </div>
+        <div class="help">
+          <i class="fas fa-info-circle"></i>
+        </div>
+        <div class="search">
+          <i class="fas fa-search"></i>
+        </div>
+        <div class="menu-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="links" >
+      <a href="/">All News</a>
+      <a href="/people">People</a>
+      <a href="/entertainment">Entertainment</a>
+      <a href="/health">Health</a>
+      <a href="/climate">Climate</a>
+      <a href="/politics">Politics</a>
+      <a href="/business">Business</a>
+      <a href="/sports">Sports</a>
+      <a href="/world">World</a>
+    </div>
+  </header>
+  
+  <main class="main-content">
+    
+    <section class="category-cards-section">
+      <div class="heading-wrapper">
+        <h2 class="section-heading">News Categories</h2>
+      </div>
+      <div class="category-cards-container">
+        <a href="/" class="category-card"><i class="fas fa-newspaper"></i>All News</a>
+        <a href="/people" class="category-card"><i class="fas fa-users"></i>People</a>
+        <a href="/entertainment" class="category-card"><i class="fas fa-film"></i>Entertainment</a>
+        <a href="/health" class="category-card"><i class="fas fa-heartbeat"></i>Health</a>
+        <a href="/climate" class="category-card"><i class="fas fa-leaf"></i>Climate</a>
+        <a href="/politics" class="category-card"><i class="fas fa-landmark"></i>Politics</a>
+        <a href="/business" class="category-card"><i class="fas fa-briefcase"></i>Business</a>
+        <a href="/sports" class="category-card"><i class="fas fa-futbol"></i>Sports</a>
+        <a href="/world" class="category-card"><i class="fas fa-globe-americas"></i>World</a>
+      </div>
+    </section>
+
+    <section class="info-cards-section">
+      <div class="heading-wrapper">
+        <h2 class="section-heading">More Information</h2>
+      </div>
+      <div class="info-cards-container">
+        <div class="info-card">
+            <h3><i class="fas fa-users"></i> About J.O News</h3>
+            <p>Learn about our mission, vision, and the student-powered team behind the headlines.</p>
+            <a href="/about" class="card-link">Explore »</a>
+        </div>
+        
+        <div class="info-card">
+            <h3><i class="fas fa-shield-alt"></i> Privacy Policy</h3>
+            <p>Understand how we collect, use, and protect your personal data when you visit our site.</p>
+            <a href="/privacy-policy" class="card-link">Review »</a>
+        </div>
+
+        <div class="info-card">
+            <h3><i class="fas fa-gavel"></i> Terms & Conditions</h3>
+            <p>Read the legal agreement that governs your use of JOMC News content and services.</p>
+            <a href="/terms" class="card-link">Read »</a>
+        </div>
+
+        <div class="info-card">
+            <h3><i class="fas fa-bullhorn"></i> Advertise With Us</h3>
+            <p>Partner with JOMC News to reach a dynamic and engaged audience. Get our media kit.</p>
+            <a href="/advertise" class="card-link">Partner »</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+  <footer class="footer">
+    <div class="footer-top">
+
+      <div class="footer-brand">
+        <h2>J.O News</h2>
+        <p>Your daily plug for verified news and vibes.</p>
+        <div class="socials">
+          <a href="#"><i class="fab fa-facebook"></i></a>
+          <a href="#"><i class="fab fa-x-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-links">
+        <h3>Quick Links</h3>
+        <a href="/">Home</a>
+        <a href="/world">World</a>
+        <a href="/business">Business</a>
+        <a href="/sports">Sports</a>
+        <a href="/entertainment">Entertainment</a>
+      </div>
+
+      <div class="footer-sub">
+        <h3>Stay Updated</h3>
+        <p>No spam, just hot headlines.</p>
+        <form class="sub-form">
+          <input type="email" placeholder="Enter your email">
+          <button type="submit">Subscribe</button>
+        </form>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2025 J.O News. All rights reserved.</p>
+    </div>
+  </footer>
+
+</body>
+<script>
+setTimeout(() => {
+  // showLoader()
+}, 2000);
+</script>
+
+</html>

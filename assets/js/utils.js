@@ -1,4 +1,5 @@
 const baseUrl = "https://jomc.pythonanywhere.com";
+// const baseUrl = "http://127.0.0.1:5000";
 
 function copy(e) {
   e && (navigator.clipboard.writeText(String(e)), alert("Copied", "success"))

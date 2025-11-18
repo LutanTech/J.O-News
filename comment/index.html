@@ -28,8 +28,8 @@
     <!-- Fonts and Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" preconnect> -->
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"> -->
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" preconnect>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
   
     <!-- Ads -->
     <!-- <script async data-cfasync="false" src="//pl28003297.effectivegatecpm.com/53af17ddb9e4b799586ecb86dc439eb2/invoke.js" defer></script>
@@ -159,28 +159,28 @@
                     <img src="/assets/images/logo-1.jpg" alt="">
                 </div>
                 <div class="user-dets">
-                    <div class="user-name"><a href="/user/${c.user}">@ Lutan </a></div>
-                    <div class="date-posted">12, Nov 2025 12:23 PM</div>
+                    <div class="user-name"><a href="/user/${c.user}">@${c.user}</a></div>
+                    <div class="date-posted">${formatTimehD(c.at)}</div>
                 </div>
         </div>
             <hr>
             <div class="lower-dets">
                 <div class="comment-content">
-                    Ministry of Foreign Affairs' spokesperson Amina Juma described the ICC's request as "an unwarranted interference in Tanzania's sovereign affairs."
+                    ${c.content}
                 </div>
                 <div class="comment-actions">
                     <div class="stats">
                         <div class="likes" title="Likes">
                             <i class="fas fa-thumbs-up"></i>
-                             | 230
+                             | ${c.likes}
                         </div>
                         <div class="dislikes" title="Dislikes">
                             <i class="fas fa-thumbs-down"></i>
-                             | 230
+                             | ${c.dislikes}
                         </div>
                     </div>
                     <div class="acs">
-                    <div class="action copy" title="Copy Link">
+                    <div class="action copy" onclick="copy('${window.location.href}')" title="Copy Link">
                         <i class="fas fa-link"></i>
                         Copy Link
                     </div>

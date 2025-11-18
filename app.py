@@ -756,10 +756,20 @@ def like_art():
             return jsonify({'error':'Failed to like '}), 500
     return jsonify({'error':'failed'}), 400
 
+@app.route('/get_comment')
+def get_comment():
+    id = request.args.get('id')
+    if id:
+        comment = Comment.query.filter_by(id=id).first()
+        if comment:
+            return jsonify({'comment': comment.to_dict()}), 200
+        return jsonify({'error':'missing data in request'}), 400
+    return jsonify({'error':'missing data in request'}), 400
+    
 
 with app.app_context():
     db.create_all()
 
 if __name__ == '__main__':
     print("app.run(debug=True, port=5000, host='0.0.0.0')")
-    app.run(debug=True, port=5000, host='0.0.0.0')
+#    app.run(debug=True, port=5000, host='0.0.0.0')

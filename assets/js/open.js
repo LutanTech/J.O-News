@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let p = document.querySelector('#prev-comments')
     let n = document.querySelector('#next-comments')
   
-    fetch(`${baseUrl}/get_comments?id=${id}&per_page=5&page=${page}`)
+    fetch(`${baseUrl}/get_comments?id=${id}&per_page=10&page=${page}`)
       .then(res => res.json())
       .then(data => {
         if (data.error) {
@@ -192,36 +192,44 @@ document.addEventListener('DOMContentLoaded', async () => {
         // ---------------------
   
         p.addEventListener('click', () => {
+          if (p.disabled) return
           p.disabled = true
-          let init = p.innerHTML.replaceAll('<i class="fas fa-spinner fa-spin"></i>', '')
+        
+          const init = p.innerHTML.replaceAll('<i class="fas fa-spinner fa-spin"></i>', '')
           p.innerHTML = `${init} <i class="fas fa-spinner fa-spin"></i>`
-  
+        
           if (current > 1) {
             fetchComments(id, current - 1)
-  
-            setTimeout(() => {
-              console.log(init)
-              p.innerHTML = init
-            }, 2000)
+              .finally(() => {
+                p.innerHTML = init
+                p.disabled = false
+              })
+          } else {
+            p.innerHTML = init
+            p.disabled = false
           }
         })
-  
+        
+        
         n.addEventListener('click', () => {
+          if (n.disabled) return
           n.disabled = true
-          let init = n.innerHTML.replaceAll('<i class="fas fa-spinner fa-spin"></i>', '')
+        
+          const init = n.innerHTML.replaceAll('<i class="fas fa-spinner fa-spin"></i>', '')
           n.innerHTML = `${init} <i class="fas fa-spinner fa-spin"></i>`
-          setTimeout(() => {
-              n.innerHTML = init
-            }, 2000)
+        
           if (current < totalPages) {
             fetchComments(id, current + 1)
-setTimeout(() => {
-              n.innerHTML = init
-  
-}, 2500);  
+              .finally(() => {
+                n.innerHTML = init
+                n.disabled = false
+              })
+          } else {
+            n.innerHTML = init
+            n.disabled = false
           }
         })
-  
+        
         // ---------------------
         // RENDER COMMENTS
         // ---------------------
@@ -254,18 +262,7 @@ setTimeout(() => {
               <p><hr></p>
   
               <div class="inner">
-                <a href="https://wa.me/send/?text=${window.location.origin}/comment/?c=${c.id}" target="_blank">
-                  <div class="share-action"><i class="fab fa-whatsapp"></i></div>
-                </a>
-                <a href="https://www.facebook.com/sharer/sharer.php?u=${window.location.origin}/comment/?c=${c.id}" target="_blank">
-                  <div class="share-action"><i class="fab fa-facebook"></i></div>
-                </a>
-                <a href="https://twitter.com/intent/tweet?url=${window.location.origin}/comment/?c=${c.id}" target="_blank">
-                  <div class="share-action"><i class="fab fa-x-twitter"></i></div>
-                </a>
-                <a href="https://www.instagram.com/?url=${window.location.origin}/comment/?c=${c.id}" target="_blank">
-                  <div class="share-action"><i class="fab fa-instagram"></i></div>
-                </a>
+              <a href="#"> <i class="fas fa-flag"></i> Report</a>
               </div>
             </div>
           </div>
@@ -398,7 +395,7 @@ setTimeout(() => {
     let remainingHeight = ar.scrollHeight - ad.scrollHeight;
     if (remainingHeight > 0) {
       const clone = d2.cloneNode(true);
-      clone.style.height = remainingHeight + 'px';
+      // clone.style.height = remainingHeight + 'px';
       clone.style.minHeight = '50px'; 
       clone.style.boxSizing = 'border-box';
       clone.style.overflow = 'hidden !important'
@@ -408,7 +405,7 @@ setTimeout(() => {
     if (ar.scrollHeight > mr.scrollHeight) {
       const clone2 = d2.cloneNode(true);
       clone2.setAttribute('style','overflow:hidden !important');
-      clone2.style.height = (ar.scrollHeight - mr.scrollHeight) + 'px';
+      // clone2.style.height = (ar.scrollHeight - mr.scrollHeight) + 'px';
       clone2.style.minHeight = '50px';
       clone2.style.boxSizing = 'border-box';
 

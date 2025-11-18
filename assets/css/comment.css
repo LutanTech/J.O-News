@@ -1,0 +1,94 @@
+.comment-overlay{
+    width: 100%;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    z-index: 2000;
+    background: rgba(0, 0, 0, 0.858);
+    height: 100%;
+    left: 0;
+    right: 0;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+.flex{
+    display: flex !;
+}
+.none{
+    display: none !important;
+}
+
+.comment-data{
+    display: flex;
+    padding: 10px;
+    gap: 10px;
+    flex-direction: column;
+    font-family: Arial, Helvetica, sans-serif !important;
+    box-shadow: 2px 3px 40px rgba(0, 0, 0, 0.211);
+    border-radius: 5px;
+    min-width: 300px;
+    max-width: 500px;
+   margin: auto;
+   width: 95%;
+
+   background: white;
+}
+.upper-dets{
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+}
+.user-pic img{
+    width:50px;
+    border-radius: 50%;
+    object-fit: cover;
+    aspect-ratio: 1;
+    border: 2px solid #fff;
+    outline: 2px solid green;
+}
+.user-name{
+    a{color: rgb(11, 160, 11);}
+    font-size: small;
+
+}
+.user-dets{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.date-posted{
+    font-style: italic;
+    color: rgb(190, 191, 192);
+    font-size: small;
+    font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+.comment-actions{
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    justify-content: space-between;
+    padding: 10px;
+    font-size: small;
+}
+.action{
+    padding: 5px  10px;
+    background: #eee;
+    border-radius: 40px;
+    cursor: pointer;
+    user-select: none;
+    &:hover{
+        background: rgba(255, 0, 0, 0.351);
+    }
+    &:active{
+        scale: 0.95;
+    }
+}
+
+.stats, .acs{
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    justify-self: flex-start;
+}

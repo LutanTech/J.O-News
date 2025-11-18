@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
       if (window.scrollY > window.innerHeight - 300 && up) {
         up.classList.add('flex');
         up.classList.remove('none');
-      } else {
+      } else if(up) {
         up.classList.add('none');
         up.classList.remove('flex');
       }

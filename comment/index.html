@@ -140,8 +140,9 @@
         const id = p.get('c')
         if(!id || id.length < 10){
            alert('Invalid link. Please Use the correct link', 'error')
-        }
+        } else{
         getComment(id)
+        }
         function getComment(id){
             fetch(`${baseUrl}/get_comment?id=${id}`)
             .then(res=>res.json())

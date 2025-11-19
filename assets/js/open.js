@@ -190,22 +190,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         // ---------------------
         // ADD EVENT LISTENERS
         // ---------------------
+        const initn = n.innerHTML.replaceAll('<i class="fas fa-spinner fa-spin"></i>', '')
+        const initp = p.innerHTML.replaceAll('<i class="fas fa-spinner fa-spin"></i>', '')
   
         p.addEventListener('click', () => {
           if (p.disabled) return
           p.disabled = true
         
-          const init = p.innerHTML.replaceAll('<i class="fas fa-spinner fa-spin"></i>', '')
-          p.innerHTML = `${init} <i class="fas fa-spinner fa-spin"></i>`
+          p.innerHTML = `${initp} <i class="fas fa-spinner fa-spin"></i>`
         
           if (current > 1) {
             fetchComments(id, current - 1)
               .finally(() => {
-                p.innerHTML = init
+                p.innerHTML = initp
                 p.disabled = false
               })
           } else {
-            p.innerHTML = init
+            p.innerHTML = initp
             p.disabled = false
           }
         })
@@ -215,20 +216,21 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (n.disabled) return
           n.disabled = true
         
-          const init = n.innerHTML.replaceAll('<i class="fas fa-spinner fa-spin"></i>', '')
-          n.innerHTML = `${init} <i class="fas fa-spinner fa-spin"></i>`
+          n.innerHTML = `${initn} <i class="fas fa-spinner fa-spin"></i>`
         
           if (current < totalPages) {
             fetchComments(id, current + 1)
               .finally(() => {
-                n.innerHTML = init
+                n.innerHTML = initn
                 n.disabled = false
               })
           } else {
-            n.innerHTML = init
+            n.innerHTML = initn
             n.disabled = false
           }
         })
+        n.innerHTML = initn
+        p.innerHTML = initp
         
         // ---------------------
         // RENDER COMMENTS
@@ -473,11 +475,15 @@ document.addEventListener('DOMContentLoaded', async () => {
           const ts = data.tags
           ts.forEach(t => {
             const div = document.createElement('div')
+            const a = document.createElement('a')
+            a.href=`/${t}`
+            a.setAttribute('style', 'text-decoration:none')
             div.classList.add('tag')
             div.innerHTML = `<i class="fas fa-tag"></i>
                    <span>${t}</span>`
 
-            at.appendChild(div)
+            a.appendChild(div)
+            at.appendChild(a)
           })
         }
       })

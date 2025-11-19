@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>JOMC News | World Updates, Hot Headlines, Breaking Stories</title>
+    <meta name="description" content="JOMC News brings real time world news. Fast reliable and student powered.">
+    <meta name="keywords" content="JOMC News, World news, News Site Kenya news, student journalism, Moi University news, Joseph Owino news">
+    <meta name="author" content="JOMC News Team">
+    <link rel="canonical" href="https://jomc-news.vercel.app/">
+    <link rel="icon" href="/assets/images/logo.jpg" type="image/x-icon">
+  <link rel="shortcut-icon" href="/assets/images/logo.jpg" type="image/x-icon">
+    <!-- OpenGraph -->
+    <meta property="og:title" content="JOMC News">
+    <meta property="og:description" content="Real time World news.">
+    <meta property="og:image" content="https://jomc-news.vercel.app/assets/images/logo.jpg">
+    <meta property="og:url" content="https://jomc-news.vercel.app/">
+    <meta property="og:type" content="website">
+  
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="JOMC News">
+    <meta name="twitter:description" content="Real time world news.">
+    <meta name="twitter:image" content="https://jomc-news.vercel.app/assets/images/logo.jpg">
+  
+    <!-- Fonts and Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" preconnect>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
+  
+    <!-- Ads -->
+    <script async data-cfasync="false" src="//pl28003297.effectivegatecpm.com/53af17ddb9e4b799586ecb86dc439eb2/invoke.js" defer></script>
+    <script async data-cfasync="false" src="//pl28005774.effectivegatecpm.com/83706ba541e98f9c09f46db018571cf6/invoke.js" defer></script>
+    <script async data-cfasync="false" src="//pl28010045.effectivegatecpm.com/545445584d06c09fd1a832fa75e54619/invoke.js" defer></script>
+  
+  
+    <!-- JS -->
+    <script src="/assets/js/loader.js" defer></script>
+    <script src="/assets/js/main.js" defer></script>
+    <script src="/assets/js/utils.js"></script>
+    <script src="/assets/js/db.js"></script>
+  
+    <!-- CSS -->
+    <link rel="stylesheet" href="/assets/css/loader.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/dark.css">
+  
+    <!-- JSON LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "NewsMediaOrganization",
+      "name": "JOMC News",
+      "url": "https://jomc-news.vercel.app",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://jomc-news.vercel.app/assets/images/logo.jpg"
+      },
+      "description": "Digital news site with world updates",
+      "sameAs": [
+        "https://www.instagram.com/",
+        "https://twitter.com/",
+        "https://www.tiktok.com/"
+      ]
+    }
+    </script>
+  </head>
+  <style>
+    .countries {
+  padding: 20px;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.country-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.country-card {
+  padding: 15px;
+  background: var(--card-bg, #fff);
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 10px 5px 10px rgba(0, 0, 0, 0.159);
+  transition: 0.2s;
+  flex-grow: 1;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.country-card:hover {
+  transform: translateY(-4px);
+  background: rgb(128, 240, 141);
+}
+
+.country-card img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.country-card p {
+  margin-top: 10px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+  </style>
+
+<body>
+
+  <div class="overlay">
+    <div class="loader"></div>
+  </div>
+  <header class="header">
+    <div class="l090-ic">
+      <div class="logo-name">
+        <a href="/" style="text-decoration: none;">
+          <img src="/assets/images/logo.jpg" width="70">
+        </a>
+      </div>
+      <style>
+
+      </style>
+
+      <div class="searchDiv none">
+        <button class="closeSearch">&times;</button>
+        <input type="search" name="query" id="query" placeholder="Enter your query">
+        <button type="button" id="searchBtn">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+      <div class="icons">
+        <div class="modes">
+          <i class="fas fa-moon"></i>
+        </div>
+        <div class="help">
+          <i class="fas fa-info-circle"></i>
+        </div>
+        <div class="search">
+          <i class="fas fa-search"></i>
+        </div>
+        <div class="menu-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="links" >
+      <a href="/">All News</a>
+      <a href="/people">People</a>
+      <a href="/entertainment">Entertainment</a>
+      <a href="/health">Health</a>
+      <a href="/climate">Climate</a>
+      <a href="/politics">Politics</a>
+      <a href="/business">Business</a>
+      <a href="/sports">Sports</a>
+      <a href="/world">World</a>
+    </div>
+  </header>
+  <section class="countries">
+    <input type="text" id="countrySearch" placeholder="Search country..." style="width:100%;padding:10px;margin-bottom:10px;font-size:16px;">
+<select id="continentFilter" style="width:100%;padding:10px;margin-bottom:15px;font-size:16px;">
+  <option value="">All Continents</option>
+  <option value="Africa">Africa</option>
+  <option value="Asia">Asia</option>
+  <option value="Europe">Europe</option>
+  <option value="North America">North America</option>
+  <option value="South America">South America</option>
+  <option value="Oceania">Oceania</option>
+  <option value="Antarctica">Antarctica</option>
+</select>
+    <h1 class="title">Countries</h1>
+    <div class="country-grid" id="countryGrid"></div>
+  </section>
+  
+
+  <footer class="footer">
+    <div class="footer-top">
+
+      <div class="footer-brand">
+        <h2>J.O News</h2>
+        <p>Your daily plug for verified news and vibes.</p>
+        <div class="socials">
+          <a href="#"><i class="fab fa-facebook"></i></a>
+          <a href="#"><i class="fab fa-x-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-links">
+        <h3>Quick Links</h3>
+        <a href="/">Home</a>
+        <a href="/world">World</a>
+        <a href="/business">Business</a>
+        <a href="/sports">Sports</a>
+        <a href="/entertainment">Entertainment</a>
+      </div>
+
+      <div class="footer-sub">
+        <h3>Stay Updated</h3>
+        <p>No spam, just hot headlines.</p>
+        <form class="sub-form">
+          <input type="email" placeholder="Enter your email">
+          <button type="submit">Subscribe</button>
+        </form>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2025 J.O News. All rights reserved.</p>
+    </div>
+  </footer>
+
+</body>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const box = document.getElementById('countryGrid');
+  const search = document.getElementById('countrySearch');
+  const continent = document.getElementById('continentFilter');
+  const db = window.countries; 
+
+  function renderList(list) {
+    box.innerHTML = '';
+    list.forEach(c => {
+      const div = document.createElement('div');
+      div.className = 'country-card';
+      div.setAttribute('onclick', `window.location.href ='/category/?c=${c.name.replaceAll(' ', '_')}&country=1'`)
+      div.setAttribute('title', `${c.code}`)
+      div.setAttribute('title-pos', `top`)
+      div.innerHTML = `
+        <img src="/assets/images/flags/${c.name.replaceAll(' ', '_')}.png" alt="${c.name}">
+        <p>${c.name}</p>
+      `;
+      box.appendChild(div);
+    });
+  }
+
+  function filterList() {
+    const q = search.value.toLowerCase().trim();
+    const cont = continent.value;
+    const filtered = db.filter(c => 
+      c.name.toLowerCase().includes(q) &&
+      (cont === '' || c.continent === cont) && c.code.includes(q)
+    );
+    renderList(filtered);
+  }
+
+  // Initial load
+  renderList(db);
+
+  // Event listeners
+  search.addEventListener('input', filterList);
+  continent.addEventListener('change', filterList);
+});
+</script>
+   
+
+</html>

@@ -87,6 +87,7 @@ class News(db.Model):
     id = db.Column(db.String(10), primary_key=True)
     title = db.Column(db.Text, nullable=False)
     slug = db.Column(db.Text, nullable=False)
+    country = db.Column(db.String(255), nullable=True)
     categ = db.Column(db.String(255), nullable=False)
     sub = db.Column(db.String(255), nullable=False)
     is_trending = db.Column(db.Boolean, default=True)
@@ -103,6 +104,7 @@ class News(db.Model):
         return {
             "id": self.id,
             "title": self.title,
+            "country": self.country,
             "categ": self.categ,
             "sub": self.sub,
             "is_trending": self.is_trending,
@@ -128,6 +130,8 @@ class News(db.Model):
             "user": user.username if user else 'Unknown',
             "categ": self.categ,
             "sub": self.sub,
+            "country": self.country,
+
         }
 
     def to_disp_dict(self):
@@ -145,6 +149,7 @@ class News(db.Model):
             "added": self.added.isoformat(),
             "slug":self.slug,
             "user": user.username if user else 'Unknown',
+            "country": self.country,
 
 
         }

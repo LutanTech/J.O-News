@@ -44,24 +44,25 @@ document.addEventListener('DOMContentLoaded', ()=>{
         script.src = `//www.highperformanceformat.com/${adConfig[adKey].key}/invoke.js`;
         script.dataset.adKey = adKey;
 
-        script.onload = () => console.log(`Ad script ${adKey} loaded successfully in ${container.id || container.className}`);
         script.onerror = () => console.error(`Ad script ${adKey} failed to load in ${container.id || container.className}`);
 
         container.appendChild(script);
-        console.log(`Ad script ${adKey} appended to ${container.id || container.className}`);
     }
 
     const ad = document.createElement('div')
     ad.innerHTML = `
 <div id="container-545445584d06c09fd1a832fa75e54619"></div>`
 
-    fetchNewsByCateg(window.categ)
-    function fetchNewsByCateg(categ){
+    fetchNewsByCateg(window.categ, window.country)
+    
+    function fetchNewsByCateg(categ, country){
         if(categ){
+            categ = categ.toLowerCase()
+            country = country ? 'True' : 'False'
             const sections = [
-                { url: `${baseUrl}/get_news_filter/${categ}`, container: document.querySelector('.newsWrapper'), key: '1904', type: 'Latest News' },
-                { url: `${baseUrl}/most_read_filter/${categ}`, container: document.querySelector('.mr'), key: 'ec8a', type: 'Most_Read' },
-                { url: `${baseUrl}/trending_filter/${categ}`, container: document.querySelector('.tr'), key: 'a677', type: 'Trending' }
+                { url: `${baseUrl}/get_news_filter/${categ}?c=${country}`, container: document.querySelector('.newsWrapper'), key: '1904', type: 'Latest News' },
+                { url: `${baseUrl}/most_read_filter/${categ}?c=${country}`, container: document.querySelector('.mr'), key: 'ec8a', type: 'Most_Read' },
+                { url: `${baseUrl}/trending_filter/${categ}?c=${country}`, container: document.querySelector('.tr'), key: 'a677', type: 'Trending' }
             ];
         
             sections.forEach(s => {

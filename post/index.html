@@ -13,6 +13,8 @@
     <script src="/assets/js/main.js" defer></script>
     <script src="/assets/js/db.js"></script>
     <script src="/assets/js/post.js" defer></script>
+    <script src="/assets/js/db.js"></script>
+    
         <link rel="stylesheet" href="/assets/css/loader.css">
         <link rel="stylesheet" href="/assets/css/main.css">
         <link rel="stylesheet" href="/assets/css/dark.css">
@@ -87,6 +89,31 @@
           <label for="title">Enter Title</label>
           <input type="text" name="title" id="title" maxlength="150" >
         </div>
+
+        <div class="inp">
+          <label for="country">Select Country</label>
+          <select name="country" disabled id="country">
+            <option value="">Choose Country</option>
+          </select>
+        </div>
+        <script>
+              document.addEventListener('DOMContentLoaded', ()=>{
+                const cs = document.querySelector('#country')
+                const countries = window.countries
+                countries.forEach(c => {
+                  const op = document.createElement('option')
+                  op.value = String(c.name).replaceAll(' ', '_').toLowerCase()
+                  op.innerHTML = c.name
+                  if(c.name.includes('Kenya')){
+                      op.setAttribute('selected', '')
+                  }
+                  cs.appendChild(op)
+                  
+                });
+                cs.removeAttribute('disabled')
+
+              })
+        </script>
   
         <div class="inp">
           <label for="category">Enter Main Category</label>
@@ -101,19 +128,18 @@
             <option value="business">Business</option>
             <option value="sports">Sports</option>
             <option value="world">World</option>
-            <option value="kenya">Kenya</option>
           </select>
-          
-
+  
           </div>
-  
-  
+
       <div class="inp">
         <label for="sub">Enter Sub Category</label>
         <select name="sub" id="sub" disabled>
           <option value="">Select sub category</option>
         </select>
       </div>
+
+      
   
       <div class="inp">
         <label>Add to Trending</label>
@@ -122,6 +148,21 @@
             <input type="checkbox" name="trending" id="trending" value="true" style="width: fit-content;">
             Trending
           </label>
+        </div>
+      </div>
+      <div id="cropModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden z-50">
+        <div class="bg-white p-4 rounded-lg w-[90%] max-w-lg flex flex-col gap-3">
+          <div class="flex justify-between items-center">
+            <h2 class="text-lg font-bold">Crop your image</h2>
+            <button onclick="closeCropper()" class="text-red-500">✖</button>
+          </div>
+          <div class="flex justify-center items-center max-h-[400px] overflow-hidden">
+            <img id="cropImage" src="" class="max-w-full" />
+          </div>
+          <div class="flex gap-2 justify-end">
+            <button onclick="closeCropper()" class="px-4 py-2 rounded bg-gray-400 text-white">Cancel</button>
+            <button onclick="cropAndSend()" class="px-4 py-2 rounded bg-[#00ff00] text-black font-bold">Send</button>
+          </div>
         </div>
       </div>
   
@@ -139,9 +180,8 @@
         <div class="draftBtn" tooltip="Save as draft">
             <i class="fas fa-bookmark"></i>
         </div>
-    </div>
-        <div id="editable" contenteditable="true">Content Goes Here
-
+    </div> 
+        <div id="editable" contenteditable="true">
         </div>
         
     <div class="pbar" style="width: fit-content">
@@ -162,7 +202,7 @@
   </div>
   </div>
   
-<footer class="footer">
+<footer class="footer"> 
     <div class="footer-top">
       
       <div class="footer-brand">

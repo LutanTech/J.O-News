@@ -172,7 +172,6 @@ document.addEventListener('DOMContentLoaded', ()=> {
     { name: "China", code: "CN", continent: "Asia" },
     { name: "Colombia", code: "CO", continent: "South America" },
     { name: "Comoros", code: "KM", continent: "Africa" },
-    { name: "Congo (Congo-Brazzaville)", code: "CG", continent: "Africa" },
     { name: "Costa Rica", code: "CR", continent: "North America" },
     { name: "Croatia", code: "HR", continent: "Europe" },
     { name: "Cuba", code: "CU", continent: "North America" },

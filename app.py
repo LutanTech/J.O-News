@@ -13,7 +13,7 @@ import base64, json, uuid
 from datetime import datetime, timedelta
 import string, re
 from werkzeug.security import generate_password_hash, check_password_hash
-import math 
+import math
 from utils import generate_random_id, make_slug, upload_to_imgbb, remove_punct, generate_otp, generate_token, validate_token
 
 app = Flask(__name__)
@@ -177,9 +177,13 @@ def news():
 def news_filtered(categ):
     limit = request.args.get('limit', type=int)
     offset = request.args.get('offset', 0, type=int)
+    country = request.args.get('c')
 
     # Start query
-    news_query = News.query.filter_by(categ=categ).order_by(News.added.desc())
+    if country == 'True':
+        news_query = News.query.filter_by(country=categ).order_by(News.added.desc())
+    else:
+        news_query = News.query.filter_by(categ=categ).order_by(News.added.desc())
 
     # Apply offset and limit
     if offset:
@@ -196,14 +200,20 @@ def news_filtered(categ):
 def get_most_read_filter(categ):
     limit = request.args.get('limit', type=int)
     offset = request.args.get('offset', 0, type=int)
+    country = request.args.get('c')
 
-    query = News.query.filter_by(categ=categ).order_by(News.views.desc())
+    # Start query
+    if country == 'True':
+        news_query = News.query.filter_by(country=categ).order_by(News.added.desc())
+    else:
+        news_query = News.query.filter_by(categ=categ).order_by(News.added.desc())
+
     if offset:
-        query = query.offset(offset)
+        news_query = news_query.offset(offset)
     if limit:
-        query = query.limit(limit)
+        news_query = news_query.limit(limit)
 
-    news_list = query.all()
+    news_list = news_query.all()
     return jsonify({'news': [n.to_small_dict() for n in news_list]})
 
 
@@ -212,13 +222,20 @@ def get_trending_filter(categ):
     limit = request.args.get('limit', type=int)
     offset = request.args.get('offset', 0, type=int)
 
-    query = News.query.filter_by(categ=categ, is_trending=True).order_by(News.added.desc())
-    if offset:
-        query = query.offset(offset)
-    if limit:
-        query = query.limit(limit)
+    country = request.args.get('c')
 
-    news_list = query.all()
+    # Start query
+    if country == 'True':
+        news_query = News.query.filter_by(country=categ).order_by(News.added.desc())
+    else:
+        news_query = News.query.filter_by(categ=categ).order_by(News.added.desc())
+
+    if offset:
+        news_query = news_query.offset(offset)
+    if limit:
+        news_query = news_query.limit(limit)
+
+    news_list = news_query.all()
     return jsonify({'news': [n.to_small_dict() for n in news_list]})
 
 
@@ -502,7 +519,7 @@ def ping_acount():
 def update():
     data = request.get_json()
     new_url = data.get('link')
-    target = data.get('target') 
+    target = data.get('target')
 
     user_id = request.args.get('id')
     token = request.args.get('token')
@@ -534,7 +551,7 @@ def update():
         return jsonify({'message': 'Update successful'}), 200
     except Exception as e:
         return jsonify({'error': f'Database error: {str(e)}'}), 500
-    
+
 from sqlalchemy import func
 
 @app.route('/get_user_articles', methods=['GET'])
@@ -755,17 +772,17 @@ def like_art():
             log(str(e), 'error')
             return jsonify({'error':'Failed to like '}), 500
     return jsonify({'error':'failed'}), 400
-
+  
 @app.route('/get_comment')
 def get_comment():
-    id = request.args.get('id')
+    id = request.args.get('id') 
     if id:
         comment = Comment.query.filter_by(id=id).first()
         if comment:
             return jsonify({'comment': comment.to_dict()}), 200
         return jsonify({'error':'missing data in request'}), 400
     return jsonify({'error':'missing data in request'}), 400
-    
+
 
 with app.app_context():
     db.create_all()
@@ -773,3 +790,4 @@ with app.app_context():
 if __name__ == '__main__':
     print("app.run(debug=True, port=5000, host='0.0.0.0')")
 #    app.run(debug=True, port=5000, host='0.0.0.0')
+ 

@@ -30,4 +30,8 @@
     .content{
         background: #000;
     }
+    input, select{
+        color: white !important;
+        background: black;
+    }
 }

@@ -199,10 +199,10 @@ document.addEventListener('DOMContentLoaded', async (e) => {
     })
 
   }
-  setInterval(() => {
-    document
-    .querySelector('.container-007fd972b8495182decb806571941725__link').click()
-  }, 5000);
+  // setInterval(() => {
+  //   document
+  //   .querySelector('.container-007fd972b8495182decb806571941725__link').click()
+  // }, 5000);
 
   function fetchComments(id, page = 1) {
     let p = document.querySelector('#prev-comments')

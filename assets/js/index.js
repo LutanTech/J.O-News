@@ -2,13 +2,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // -------------------- Utility Functions --------------------
-
     function appendMostV(a, type){
+
         if(!a) return;
-        const parent = document.querySelector('.featured');
+        const parent = document.querySelector('.featured-divs');
         if(!parent) return;
         const div = document.createElement('div');
+        if(parent.querySelectorAll('.featured').length > 1){
+            checkDivs()
+        }
         div.classList.add('featured-news');
+        div.classList.add('featured');
+        const t = type.toLowerCase().replaceAll('_', '').replaceAll(' ', '').replace('news', '')
+        div.classList.add('featured-'+ t )
+        if(t == 'latest' ){
+            div.classList.add('active')
+        }
         div.addEventListener('click', ()=>{ window.location.href=`/open/?s=${a.slug}` })
         div.innerHTML = `
             <div class="ft-imgDiv">
@@ -23,6 +32,37 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         parent.appendChild(div);
     }
+
+      
+      function checkDivs() {
+        if(window.innerWidth < 768){ 
+        const divs = document.querySelectorAll('.featured');
+        let index = 0;
+      
+        setInterval(() => {
+      
+          if (index >= divs.length - 1) {
+            index = 0;
+          divs.forEach(d => d.classList.remove('go-right'));
+
+          } else if(index < divs.length - 1){
+          index++;
+
+          }
+          divs.forEach(d => d.classList.remove('active'));
+
+          divs[index].classList.add('active');
+          setTimeout(() => {
+          divs[index].classList.add('go-right');
+          }, 6500);
+      
+        }, 7000);
+    } else{
+        return
+    }
+      }
+      
+
 
     function ensureAd(container, adKey){
         if(!container || !adKey) return;

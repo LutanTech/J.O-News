@@ -33,7 +33,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
     if(window.innerWidth > 768 && ls){
         ls.classList.remove('large')
-        ls.querySelector('.close-links').innerHTML = ''
+        const cl = ls.querySelector('.close-links')
+        cl ? cl.innerHTML = '' : ''
     }
     if(window.innerWidth < 768 && ls){
         ls.classList.add('large')
@@ -105,5 +106,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
         });
       });
     }
-    
+    setTimeout(() => {
+      console.clear()
+    }, 10000);
 })

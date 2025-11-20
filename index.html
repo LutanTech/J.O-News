@@ -192,12 +192,52 @@
             }
         }
     }
-  </style>
+    .featured-divs{
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+    }
+    @media (max-width:768px) {
+      .featured-divs {
+        width: 100%;
+        margin: 0;
+        justify-content: center;
+        align-items: center;
+        height: 320px;
+        overflow: hidden;
+        position: relative;
+      }
+    
+      .featured {
+        transform: translateX(-100%);
+        transition: all 1s ease-in-out;
+        opacity: 0;
+      }
+    
+      .featured.active {
+        transform: translateX(0);
+        z-index: 45556666666666;
+        position: absolute;
+        top: 0px;
+        transition: all 0.5s ease-in-out;
+        opacity: 1;
 
-  <div class="featured featured-latest"></div>
+      }
+      .go-right{
+        transform: translateX(100%);
+      }
+    }
+    
+  </style>
+  <div class="featured-divs">
+  <!-- <div class="featured featured-latest"></div>
   <div class="featured featured-mostread"></div>
-  <div class="featured featured-trending"></div>
-  <div class="content">
+  <div class="featured featured-trending active"></div> -->
+  <script>
+
+  </script>
+</div>
+  <div class="content"> 
     <hr style="width: 100%;">
     <div class="newsDiv">
         <h2>Latest News</h2>

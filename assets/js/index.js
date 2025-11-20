@@ -2,23 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // -------------------- Utility Functions --------------------
-    function timeAgo(date){
-        const seconds = Math.floor((new Date() - new Date(date)) / 1000);
-        const intervals = [
-            { label: 'yr', secs: 31536000 },
-            { label: 'mon', secs: 2592000 },
-            { label: 'wk', secs: 604800 },
-            { label: 'd', secs: 86400 },
-            { label: 'hr', secs: 3600 },
-            { label: 'min', secs: 60 },
-            { label: 'sec', secs: 1 }
-        ];
-        for (const i of intervals){
-            const count = Math.floor(seconds / i.secs);
-            if(count > 0) return `${count} ${i.label}${count > 1 ? 's' : ''} ago`;
-        }
-        return 'just now';
-    }
 
     function appendMostV(a, type){
         if(!a) return;
@@ -104,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="category" tooltip="Category"><i class="fas fa-tags"></i> <span>${n.categ || 'Unknown'}</span></div>
                         <div class="time"><i class="fas fa-clock"></i> <span>${timeAgo(n.added)}</span></div>
                         ${n.user ? `
-                        <div class="user" tooltip="Publisher"><i class="fas fa-user" ></i> By ${n.user} </div>` : ''}
+                        <div class="user" tooltip="Publisher"><i class="fas fa-user" ></i> By ${n.user.length > 6? n.user.slice(0, 5) + '...' : n.user} </div>` : ''}
                     </div>
                 </div>
             `;
@@ -127,9 +110,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // -------------------- Fetching Sections --------------------
     const sections = [
-        { url: `${baseUrl}/get_news`, container: document.querySelector('.newsWrapper'), key: '1904', type: 'Latest News' },
-        { url: `${baseUrl}/most_read`, container: document.querySelector('.mr'), key: 'ec8a', type: 'Most_Read' },
-        { url: `${baseUrl}/trending`, container: document.querySelector('.tr'), key: 'a677', type: 'Trending' }
+        { url: `${baseUrl}/get_news?limit=20`, container: document.querySelector('.newsWrapper'), key: '1904', type: 'Latest News' },
+        { url: `${baseUrl}/most_read?limit=20`, container: document.querySelector('.mr'), key: 'ec8a', type: 'Most_Read' },
+        { url: `${baseUrl}/trending?limit=20`, container: document.querySelector('.tr'), key: 'a677', type: 'Trending' }
     ];
    initNews()
    async function  initNews(){

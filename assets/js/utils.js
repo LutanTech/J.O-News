@@ -14,6 +14,26 @@ function parseMarkdown(e) {
     e, t, o) => `${t}<a href="${o}" target="_blank" rel="noopener noreferrer">${o}</a>`)) : "No Description Provided"
 }
 
+function timeAgo(date){
+  const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+  const intervals = [
+      { label: 'yr', secs: 31536000 },
+      { label: 'mon', secs: 2592000 },
+      { label: 'wk', secs: 604800 },
+      { label: 'd', secs: 86400 },
+      { label: 'hr', secs: 3600 },
+      { label: 'min', secs: 60 },
+      { label: 'sec', secs: 1 }
+  ];
+  for (const i of intervals){
+      const count = Math.floor(seconds / i.secs);
+      if(count > 0) return `${count} ${i.label}${count > 1 ? 's' : ''} ago`;
+  }
+  return 'just now';
+}
+
+window.timeAgo = timeAgo
+
 function safeText(e) {
   const t = document.createElement("div");
   try {

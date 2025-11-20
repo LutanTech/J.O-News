@@ -31,11 +31,11 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
         if(ls){
 
-    if(window.innerWidth > 768){
+    if(window.innerWidth > 768 && ls){
         ls.classList.remove('large')
         ls.querySelector('.close-links').innerHTML = ''
     }
-    if(window.innerWidth < 768){
+    if(window.innerWidth < 768 && ls){
         ls.classList.add('large')
     }
 }

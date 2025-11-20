@@ -89,6 +89,33 @@ const editor = document.getElementById("editable");
           }
 
         });
+        document.addEventListener('DOMContentLoaded', async (e)=>{
+        const res = await pingAccount()
+        if(res == '❌'){
+          alert('Please Login to continue. Redirecting... ', 'info')
+          setTimeout(() => {
+            window.location.href = `/login?next=${window.location.href}`
+          }, 2000);
+        }
+
+        function pingImgUpload(){
+          fetch('https://vidupload.onrender.com')
+          .then(res=>res.json())
+          .then(data=>{
+            console.log(data)
+            if(!data.pinged){
+              alert('Our Upload Images endpoint might be experiencing some issues. We are about to resolve it. Just a moment')
+              pingImgUpload()
+            }
+          })
+        }
+        pingImgUpload()
+
+        })
+
+
+
+
         
         let savedRange = null;
         editor.addEventListener("mouseup", saveCursorPosition);
@@ -178,11 +205,13 @@ function insertImageAtCursor(url){
     img.style.maxWidth = "100%";
     insertAtCursor(img);
 }
+
 document.addEventListener('DOMContentLoaded', async ()=>{
  
   const res = await pingAccount()
   if(res== '✔'){
-    alert('Logged in. You can now post', 'success')
+    alert('Logged in. You can now post', 'success');
+    document.querySelector('.logged-in-as').innerHTML = `Logged in as ${localStorage.getItem('usn')}`
   }
 })
 document.getElementById('category').addEventListener('change', function () {

@@ -152,7 +152,7 @@ iframe{
   .rAd{
     width: fit-content;
     max-width: 600px;
-    max-width: 20%;
+    max-width: 15%;
   }
   .more{
     display: flex;
@@ -550,4 +550,12 @@ iframe{
       position: sticky;
       top: 0;
     }
+  }
+  .-news .details{
+    justify-content: space-evenly;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex-grow: 1;
+    height: -webkit-fill-available;
   }

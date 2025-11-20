@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', async (e) => {
     // const adb = document.querySelector('#add-comment');
     const sb = document.querySelector('.send');
     const ci = document.querySelector('#comment-input');
@@ -28,8 +28,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const params = new URLSearchParams(window.location.search)
   const slug = params.get('s')
-  if (slug) {
-    // showLoader('Getting latest news...', 'info', 'clear')
+  if (slug)  {
+    showLoader('Getting latest news...', 'info', 'clear')
     fetch(`${baseUrl}/get/${slug}`)
       .then(res => res.json())
       .then(data => {
@@ -38,11 +38,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else {
 
           const n = data.news
+          if(n.country != null){
+           setTimeout(() => {
+
+            fetchByCountry(`${n.country}`)
+            
+           }, 2000); 
+          } else{
+            document.querySelector('.more-from-news').innerHTML = ''
+          }
           const div = document.createElement('div')
           document.querySelector('.news-wrapper').innerHTML = ''
           div.innerHTML =
             `
-               <div class="news">
+          <div class="news">
            <div class="filters">
              <div class="f">${n.categ}</div>
              <div class="f">${n.sub}</div>
@@ -134,6 +143,66 @@ document.addEventListener('DOMContentLoaded', async () => {
         showLoader('Failed to load page. Please Check your network connection', 'error', true)
       })
   }
+  function fetchByCountry(country){
+    const mnf = document.querySelector('.more-from-news')
+    mnf.innerHTML = `
+     <h3 style="margin-top:20px;">More from <a href="/category/?c=${country}&country=1" id="f-country" style="color: #0f0; text-transform:capitalize;">${country.replaceAll('_', ' ')}</a></h3>
+     <hr>
+    
+    `
+    if(country && country.trim() != '')
+    fetch(`${baseUrl}/get_news_filter/${country}?c=True`)
+    .then(res=>res.json())
+    .then(data=>{
+      console.table(data)
+      if(data.error){
+        alert(data.error, 'error')
+      } else{
+        const news = data.news
+        if(news.length < 1){
+          mnf.innerHTML = ''
+        }
+        if (news) {
+          news.forEach(n => {
+            if(n.id == window.n_id){
+              console.log('same')
+            } else{
+            const div = document.createElement('div')
+            const a = document.createElement('a')
+            a.setAttribute('href', `/open/?s=${n.slug}`)
+            a.classList.add('n-link')
+            div.classList.add('-news')
+            div.innerHTML = `
+              <div class="image" style="flex-grow:1"><img src="${n.image_url ? n.image_url : '/assets/images/logo.jpg'}" alt="" srcset="" width="200" style="max-width:none !important"></div>
+                           <div class="details">
+                               <div class="title"><b>
+                                  ${n.title}
+                               </b></div>
+                               <div class="context">
+                                   ${parseMarkdown(n.content)}...
+                               </div>
+
+                               <div class="posted-n" style="font-family: sans-serif;  font-weight: 400; color: grey;"> <i class="fas fa-clock"></i> ${timeAgo(n.added)}</div>
+                           </div>`
+            const previewText = safeText(n.content).slice(0, 20) + "..."
+            div.querySelector('.context').textContent = previewText
+
+            a.append(div)
+            mnf.appendChild(a)
+            }
+      })
+    }
+  }
+    })
+    .catch(err=>{
+      alert(err.message, 'error')
+    })
+
+  }
+  setInterval(() => {
+    document
+    .querySelector('.container-007fd972b8495182decb806571941725__link').click()
+  }, 5000);
 
   function fetchComments(id, page = 1) {
     let p = document.querySelector('#prev-comments')
@@ -337,7 +406,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function fetchLatestNews() {
     const lNews = document.querySelector('.more-news')
-    showLoader('Updating page..', 'info', 'clear')
     fetch(`${baseUrl}/get_news?limit=10`)
       .then(res => res.json())
       .then(data => {
@@ -349,13 +417,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
           if (news) {
             news.forEach(n => {
+              if(n.id == window.n_id){
+                console.log('same')
+              } else{
               const div = document.createElement('div')
               const a = document.createElement('a')
               a.setAttribute('href', `/open/?s=${n.slug}`)
               a.classList.add('n-link')
               div.classList.add('-news')
               div.innerHTML = `
-                <div class="image" style="flex-grow:1"><img src="${n.image_url ? n.image_url : '/assets/images/logo.jpg'}" alt="" srcset="" width="200" style="max-width:none !important"></div>
+                <div class="image"><img src="${n.image_url ? n.image_url : '/assets/images/logo.jpg'}" alt="" srcset="" width="200" style="max-width:none !important"></div>
                              <div class="details">
                                  <div class="title"><b>
                                     ${n.title}
@@ -363,12 +434,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                                  <div class="context">
                                      ${parseMarkdown(n.content)}...
                                  </div>
+                                  <div class="posted-n" style="font-family: sans-serif;  font-weight: 400; color: grey;"> <i class="fas fa-clock"></i> ${timeAgo(n.added)}</div>
+
                              </div>`
               const previewText = safeText(n.content).slice(0, 20) + "..."
               div.querySelector('.context').textContent = previewText
 
               a.append(div)
               lNews.appendChild(a)
+              }
             });
             hideLoader()
           }
@@ -412,6 +486,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       clone2.style.boxSizing = 'border-box';
 
       mr.appendChild(clone2);
+    }
+    if (mr.scrollHeight > ar.scrollHeight) {
+      const clone2 = d2.cloneNode(true);
+      clone2.setAttribute('style','overflow:hidden !important');
+      // clone2.style.height = (ar.scrollHeight - mr.scrollHeight) + 'px';
+      clone2.style.minHeight = '50px';
+      clone2.style.boxSizing = 'border-box';
+
+      ar.appendChild(clone2);
     }
   }
   

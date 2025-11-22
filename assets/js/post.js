@@ -1,4 +1,6 @@
-const editor = document.getElementById("editable");
+        
+        document.addEventListener('DOMContentLoaded',async (e)=>{
+        const editor = document.getElementById("editable");
         const imgBtn = document.querySelector(".addImageBtn");
         const prevBtn = document.querySelector(".previewBtn");
         const vidBtn = document.querySelector(".addVideoBtn");
@@ -14,10 +16,10 @@ const editor = document.getElementById("editable");
           const saved = localStorage.setItem('draft', text)
           document.execCommand("insertText", false, text);
         });
-        document.addEventListener('DOMContentLoaded', ()=>{
+
             const saved = localStorage.getItem('draft');
             if(saved) editor.innerHTML = saved;
-            const fileInput = document.getElementById("image");
+            var fileInput = document.getElementById("image");
 
         fileInput.addEventListener('change', () => {
             const file = fileInput.files[0];
@@ -47,17 +49,19 @@ const editor = document.getElementById("editable");
 
               const title = form.querySelector('#title');
               const categ = form.querySelector('#category');
+              const country = form.querySelector('#country');
+              const id = localStorage.getItem('uid');
               const sub = form.querySelector('#sub');
               const content = form.querySelector('#editable');
               const trending = document.querySelector('#trending').checked;
 
-              const fileInput = document.getElementById("image");
               const file = fileInput.files[0];
 
               // lil validation vibes
               if(!file) return alert("Add a pic bro", 'error');
               if(!title.value.trim()) return alert("Title missing", 'error');
               if(!categ.value.trim()) return alert("Pick a category first ", 'error');
+              if(!country.value.trim()) return alert("Please choose country", 'error');
               if(!sub.value.trim()) return alert("Sub category empty fam", 'error');
               if(!content.innerText.trim()) return alert("Drop some content", 'error');
 
@@ -65,7 +69,9 @@ const editor = document.getElementById("editable");
               formData.append("image", file);
               formData.append("title", title.value);
               formData.append("categ", categ.value);
+              formData.append("country", country.value);
               formData.append("sub", sub.value);
+              formData.append("id", id);
               formData.append("trending", trending);
               formData.append("content", content.innerHTML);
 
@@ -88,9 +94,9 @@ const editor = document.getElementById("editable");
             });
           }
 
-        });
-        document.addEventListener('DOMContentLoaded', async (e)=>{
-        const res = await pingAccount()
+
+
+        var res = await pingAccount()
         if(res == '❌'){
           alert('Please Login to continue. Redirecting... ', 'info')
           setTimeout(() => {
@@ -111,9 +117,6 @@ const editor = document.getElementById("editable");
         }
         pingImgUpload()
 
-        })
-
-
 
 
         
@@ -126,14 +129,14 @@ const editor = document.getElementById("editable");
             if(sel.rangeCount) savedRange = sel.getRangeAt(0);
         }
         
-        const fileInput = document.getElementById("newImage");
+        let newfileInput = document.getElementById("newImage");
         const addImageBtn = imgBtn;
         addImageBtn.addEventListener('click', ()=>{
-          fileInput.click()
+          newfileInput.click()
         });
 
-        fileInput.onchange = () => {
-            const file = fileInput.files[0];
+        newfileInput.onchange = () => {
+            const file = newfileInput.files[0];
             if(!file) return;
             const formData = new FormData();
             formData.append("image", file);
@@ -160,7 +163,7 @@ const editor = document.getElementById("editable");
             };
         
             xhr.send(formData);
-            fileInput.value = "";
+            newfileInput.value = "";
         };
         
         function setProgress(percent){
@@ -206,12 +209,14 @@ function insertImageAtCursor(url){
     insertAtCursor(img);
 }
 
-document.addEventListener('DOMContentLoaded', async ()=>{
- 
-  const res = await pingAccount()
+
+  var res = await pingAccount()
   if(res== '✔'){
     alert('Logged in. You can now post', 'success');
-    document.querySelector('.logged-in-as').innerHTML = `Logged in as ${localStorage.getItem('usn')}`
+    const las = document.querySelector('.logged-in-as')
+    las.style.background = 'rgb(0, 255, 89)'
+    las.style.color = 'black'
+    las.innerHTML = `Logged in as ${localStorage.getItem('usn')}`
   }
 })
 document.getElementById('category').addEventListener('change', function () {
@@ -219,7 +224,7 @@ document.getElementById('category').addEventListener('change', function () {
 const category = this.value;
 const subSelect = document.getElementById('sub');
 
-subSelect.innerHTML = `<option value="">Select sub category</option>`;
+subSelect.innerHTML = `<option value="">Select sub categoryyy</option>`;
 subSelect.disabled = true;
 
 if (subcategories[category]) {

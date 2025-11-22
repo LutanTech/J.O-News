@@ -152,7 +152,7 @@ iframe{
   .rAd{
     width: fit-content;
     max-width: 600px;
-    max-width: 15%;
+    max-width: 20%;
   }
   .more{
     display: flex;

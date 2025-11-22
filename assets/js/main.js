@@ -107,6 +107,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
       });
     }
     setTimeout(() => {
-      console.clear()
+      // console.clear()
     }, 10000);
 })

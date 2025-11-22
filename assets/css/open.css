@@ -559,3 +559,14 @@ iframe{
     flex-grow: 1;
     height: -webkit-fill-available;
   }
+
+
+  #container-18e3e8231793e50a8fb517029604e76d .container-18e3e8231793e50a8fb517029604e76d__bn{
+    max-width: 500px !important;
+  }
+  #container-18e3e8231793e50a8fb517029604e76d{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+  }

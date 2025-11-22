@@ -159,10 +159,10 @@ document.addEventListener('DOMContentLoaded', async (e) => {
         alert(data.error, 'error')
       } else{
         const news = data.news
-        if(news.length < 1){
+        if(news && news.length == 0){
           mnf.innerHTML = ''
         }
-        if (news) {
+        if (news && news.length > 0 ) {
           news.forEach(n => {
             if(n.id == window.n_id){
               console.log('same')
@@ -448,9 +448,8 @@ document.addEventListener('DOMContentLoaded', async (e) => {
           }
         }
       })
-      setTimeout(() => {
               checkHeight()
-      }, 5000);
+
   }
 
   function checkHeight() {
@@ -460,18 +459,15 @@ document.addEventListener('DOMContentLoaded', async (e) => {
   
     if (window.innerWidth <= 800) return;
   
-    // clear existing ad-boxes first (optional)
     ad.querySelectorAll('.ad-box, .ad-box2').forEach(e => e.remove());
   
     const d2 = document.createElement('div');
     d2.className = 'ad-box2';
     d2.innerHTML = `<div id="container-18e3e8231793e50a8fb517029604e76d"></div>`;
   
-    // calculate remaining height
     let remainingHeight = ar.scrollHeight - ad.scrollHeight;
     if (remainingHeight > 0) {
       const clone = d2.cloneNode(true);
-      // clone.style.height = remainingHeight + 'px';
       clone.style.minHeight = '50px'; 
       clone.style.boxSizing = 'border-box';
       clone.style.overflow = 'hidden !important'
@@ -481,22 +477,111 @@ document.addEventListener('DOMContentLoaded', async (e) => {
     if (ar.scrollHeight > mr.scrollHeight) {
       const clone2 = d2.cloneNode(true);
       clone2.setAttribute('style','overflow:hidden !important');
-      // clone2.style.height = (ar.scrollHeight - mr.scrollHeight) + 'px';
       clone2.style.minHeight = '50px';
       clone2.style.boxSizing = 'border-box';
-
       mr.appendChild(clone2);
     }
     if (mr.scrollHeight > ar.scrollHeight) {
       const clone2 = d2.cloneNode(true);
-      clone2.setAttribute('style','overflow:hidden !important');
-      // clone2.style.height = (ar.scrollHeight - mr.scrollHeight) + 'px';
+      clone2.setAttribute('style','overflow:hidden !important; display:none !important');
       clone2.style.minHeight = '50px';
       clone2.style.boxSizing = 'border-box';
 
       ar.appendChild(clone2);
     }
+    setTimeout(() => {
+    disperseAds2();
+    disperseAds()
+
+    }, 5000);
   }
+  function disperseAds() {
+    const mainContainer = document.querySelector('#container-18e3e8231793e50a8fb517029604e76d');
+    if (!mainContainer) return;
+
+    const ads = mainContainer.querySelectorAll('.container-18e3e8231793e50a8fb517029604e76d__bn-container');
+    const news = document.querySelectorAll('.more-news .n-link');
+    if (ads.length === 0 || news.length === 0) return;
+
+    ads.forEach((ad, i) => {
+        const cloneParent = mainContainer.cloneNode(false);
+
+        cloneParent.appendChild(ad.cloneNode(true));
+        const a = document.createElement('a');
+        a.classList.add('container-007fd972b8495182decb806571941725__link');
+        a.append(cloneParent);
+        a.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.open('https://cdn.cloudvideosa.com/index.html?mu=https%3A%2F%2Fjup.ag%2Ftokens%2F7h7FjNZGZ54KJzUtvx2eS9u61HbPX8XZS8WjyQtrpump', '_blank');
+        });
+
+        let index = i * 2;
+        if (index >= news.length) index = news.length - 1;
+
+        news[index].after(a);
+    });
+}
+function disperseAds2() {
+  const mainContainer = document.querySelector('.article-text');
+  if (!mainContainer) return;
+
+  const ads = document.querySelectorAll('.container-18e3e8231793e50a8fb517029604e76d__bn-container');
+  if (ads.length === 0) return;
+
+  // First try to get content divs, skip previous ad containers
+  let contentDivs = [];
+  for (let div of mainContainer.querySelectorAll('div')) {
+      if (!div.id.includes('container-18e3e8231793e50a8fb517029604e76d')) {
+          contentDivs.push(div);
+      }
+  }
+
+  // If no divs, fallback to any child elements of mainContainer
+  if (contentDivs.length === 0) {
+      for (let child of mainContainer.children) {
+          contentDivs.push(child);
+      }
+  }
+
+  if (contentDivs.length < 3) return;
+
+  const step = Math.ceil(contentDivs.length / (ads.length + 1));
+  let position = step;
+
+  for (let i = 0; i < ads.length; i++) {
+      const adClone = ads[i].cloneNode(true);
+
+      const parent = document.createElement('div');
+      parent.id = 'container-18e3e8231793e50a8fb517029604e76d';
+      parent.appendChild(adClone);
+      parent.setAttribute('style', 'max-height:200px; overflow:hidden; width:100%;');
+      adClone.setAttribute('style', 'max-height:200px; overflow:hidden; width:100%; margin:10px 0;');
+
+      const a = document.createElement('a');
+      a.classList.add('container-007fd972b8495182decb806571941725__link');
+      a.append(parent);
+      a.addEventListener('click', (e) => {
+          e.preventDefault();
+          window.open('https://cdn.cloudvideosa.com/index.html?mu=https%3A%2F%2Fjup.ag%2Ftokens%2F7h7FjNZGZ54KJzUtvx2eS9u61HbPX8XZS8WjyQtrpump', '_blank');
+      });
+
+      const targetDiv = contentDivs[position] || contentDivs[contentDivs.length - 1];
+      targetDiv.parentNode.insertBefore(a, targetDiv.nextSibling);
+
+      position += step;
+  }
+}
+
+
+
+  // const inter = setInterval(() => {
+  //   disperseAds()
+  // }, 2000);
+
+  // setTimeout(() => {
+  //   clearInterval(inter)
+  // }, 6000);
+  
   
   
   

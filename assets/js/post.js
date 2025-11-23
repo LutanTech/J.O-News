@@ -6,9 +6,6 @@
         const vidBtn = document.querySelector(".addVideoBtn");
         const saveBtn = document.querySelector(".draftBtn");
         
-        editor.addEventListener("input", () => {
-            localStorage.setItem('draft', editor.innerHTML);
-        });
         
         editor.addEventListener("paste", function(e) {
           e.preventDefault();
@@ -17,8 +14,34 @@
           document.execCommand("insertText", false, text);
         });
 
-            const saved = localStorage.getItem('draft');
-            if(saved) editor.innerHTML = saved;
+        const saved = JSON.parse(localStorage.getItem('draft'));
+
+        if (saved) {
+
+          Object.entries(saved).forEach(([key, value]) => {
+            if (key === "category") {
+              return
+          }
+          if (key === "sub") {
+            return
+        }
+            const elem = document.querySelector(`#${key}`);
+            if (elem) {
+              if (elem.type === "checkbox") {
+                elem.checked = !!value;
+              } else {
+                elem.value = value;
+              }
+            }
+        
+            if (key === "editable") {
+              const editor = document.querySelector('#editable');
+              if (editor) editor.innerHTML = value;
+            }
+
+          });
+        }
+        
             var fileInput = document.getElementById("image");
 
         fileInput.addEventListener('change', () => {
@@ -42,8 +65,277 @@
 
             
         });
-            const form = document.querySelector('.form');
+
+        const form = document.querySelector('.form');
+        const all = ['title', 'category', 'country', 'sub', 'editable', 'trending']
+        all.forEach(item=>{
+          const i = form.querySelector(`#${item}`)
+          i.addEventListener('input', ()=>{
+            saveData()
+          })
+        })
+        all.forEach(item=>{
+          const i = form.querySelector(`#${item}`)
+          i.addEventListener('change', ()=>{
+            saveData()
+          })
+        })
+
+
+          const b2e = document.querySelector('.b2edit')
+          const pb = document.querySelector('.pub')
+          const mp = document.querySelector('#mini')
+          const fp = document.querySelector('#full')
+          const eye = document.querySelector('.previewBtn')
+          const save = document.querySelector('.draftBtn')
+          const overlayc = document.querySelector('.previewModal')
+          const pa = document.querySelector('.previewActions')
+    
+          function toggleOc(){
+            overlayc.classList.toggle('flex')
+            overlayc.classList.toggle('none')
+          }
+    
+          overlayc.addEventListener('click', (e)=>{
+            if(e.target != overlayc.querySelector('.innerPreview') && e.target == overlayc && !overlayc.querySelector('.innerPreview').contains(e.target)){
+              overlayc.classList.remove('flex')
+              overlayc.classList.add('none')
+            }
+          })
+    
+          eye.addEventListener('click', ()=>{
+            saveData()
+            pa.classList.toggle('none')
+            pa.classList.toggle('flex')
+          })
+          save.addEventListener('click', ()=>{
+            saveData()
+          })
+          document.addEventListener('click', (e) => {
+            if(pa.contains(e.target) || e.target == pa || e.target == eye || eye.contains(e.target) || e.target.classList.contains('fa-eye') || e.target.classList.contains('fa-spin')){
+              return
+            } else{
+              pa.classList.remove('flex')
+              pa.classList.add('none')
+            }
+          });
+          
+          
+          function saveData() {
+        var form = document.querySelector('.form')
+            const paInit = pa.innerHTML
+            disableForSave()
+            disableSave()
+            pa.classList.add('disabled')
+            setTimeout(() => {
+              pa.classList.remove('disabled')
+            }, 1500);
+            const title = form.querySelector('#title').value.trim();
+            const categ = form.querySelector('#category').value.trim();
+            const country = form.querySelector('#country').value.trim();
+            const id = localStorage.getItem('uid');
+            const sub = form.querySelector('#sub').value.trim();
+            const content = form.querySelector('#editable').innerHTML; 
+            const trending = document.querySelector('#trending').checked;
+          
+            let draft = JSON.parse(localStorage.getItem('draft')) || {};
+          
+            draft = {
+              ...draft,
+              title:title,
+              category: categ,
+              country:country,
+              uid: id,
+              sub:sub,
+              editable:content,
+              trending:trending
+            };
+          
+            localStorage.setItem('draft', JSON.stringify(draft));
+          }
+          
+          function disableForSave(){
+            eye.classList.add('disabled')
+            const init = '<i class="fas fa-eye"></i>'
+            eye.innerHTML = '<i class="fas fa-spinner fa-spin">'
+            eye.setAttribute('tooltip','Saving...')
+            setTimeout(() => {
+            eye.innerHTML = '<i class="fas fa-check"></i>'
+
+              setTimeout(() => {
+              eye.innerHTML = init
+              },2000);
+            eye.classList.remove('disabled')
+            eye.setAttribute('tooltip','Preview')
+            }, 2000);
+          }
+          function disableSave(){
+            save.classList.add('disabled')
+            const init = '<i class="fas fa-bookmark"></i>'
+            save.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'
+            save.setAttribute('tooltip','Saving...')
+            setTimeout(() => {
+            save.innerHTML = '<i class="fas fa-check"></i>'
+            save.classList.remove('disabled')
+            save.setAttribute('tooltip','Save')
+            setTimeout(() => {
+            save.innerHTML = init
+            }, 2000);
+            }, 3000);
+          }
+          
+          mp.addEventListener('click', ()=>{
+            toggleOc()
+            const data = localStorage.getItem('draft')
+            previewMini()
+          })
+    
+          
+          fp.addEventListener('click', ()=>{
+            toggleOc()
+            previewFull()
+
+          })
+          if(b2e){
+          b2e.addEventListener('click', ()=>{
+            toggleOc()
+    
+          })
+        }
+
+
+          function previewMini(){
+          const inner = overlayc.querySelector('.innerPreview')
+          const file = fileInput.files[0]
+          const data = JSON.parse(localStorage.getItem('draft'))
+          let src = ''
+          if(file){
+             src = URL.createObjectURL(file); 
+          } else{
+             src = '/assets/images/logo.jpg'
+          }
+          if(data)
+            inner.innerHTML = `
+                  <h1>Mini Preview</h1>
+      <hr>
+                      <a class="prev-link" href="#preview">
+                      <div class="news">
+                        <div class="image"><img src="${src}" alt=""></div>
+                        <div class="news-content">
+                          <div class="title">${data.title}</div>
+                          <div class="text">
+                            ${data.editable.slice(0, 100) + '...'}
+                          </div>
+                        
+                        <div class="dets">
+                          <div class="categ"><i class="fas fa-tags"></i> ${data.category ? data.category : '❗ Empty'}</div>
+                          <div class="posted"><i class="fas fa-clock"></i> Just Now</div>
+                          <div class="by"><i class="fas fa-user"></i> By ${localStorage.getItem('usn') ? localStorage.getItem('usn') : 'Unknown' }</div>
+                        </div>
+                      </div>
+                    </div>
+                      </a>
+                              <div class="actions-c">
+        <button class="bg-b b2edit" onclick="document.querySelector('.previewModal').click()">Back to Edit</button>
+        <button class="bg-g pub">Publish</button>
+      </div>
+                      
+            `
+            document.querySelector('.pub').addEventListener('click', ()=>{
+            preparePublish()
+          })
+          function preparePublish(){
+            toggleOc()
+            setTimeout(() => {
+              document.querySelector('#pubBtn').click()
+            }, 2000);
+          }
+          }
+          
+
+
+
+          function previewFull(){
+            const file = fileInput.files[0]
+            let src = ''
+            if(file){
+               src = URL.createObjectURL(file); 
+            } else{
+               src = '/assets/images/logo.jpg'
+            }
+
+          const inner = overlayc.querySelector('.innerPreview')
+          const data = JSON.parse(localStorage.getItem('draft'))
+          if(data)
+            inner.innerHTML = `
+                  <h1>Full Preview</h1>
+      <hr>
+                <div class="main-prev">
+        <div class="news-article">
+          <div class="categs">
+            <div class="country" style="text-transform:capitalize">${data.country ? data.country : '❗ Empty' }</div>
+            <div class="m-categ">${data.category ? data.category : '❗ Empty'}</div>
+            <div class="sub-categ">${data.sub ? data.sub : '❗ Empty'}</div>
+          </div>
+          <div class="c-title">
+            ${data.title ? data.title : '❗ Empty'}
+          </div>
+          <hr>
+          <div class="date" style="color: grey; margin:10px 0">${formatTime(new Date())}</div>
+          <div class="social-icons">
+            
+            <div class="s-icon">
+            <i class="fas fa-link"></i>
+            </div>
+            
+            <div class="s-icon">
+            <i class="fab fa-facebook"></i>
+            </div>
+            
+            <div class="s-icon">
+            <i class="fab fa-x-twitter"></i>
+            </div>  
+            
+            <div class="s-icon">
+            <i class="fab fa-instagram"></i>
+            </div>
+
+            <div class="s-icon">
+              <i class="fab fa-whatsapp"></i>
+              </div>
+              <div class="s-icon">
+                <i class="fas fa-volume-down"></i>
+                </div>
+
+          </div>
+          <div class="text-content">
+            <div class="image-img">
+              <img style="max-height:300px" src="${src}" alt="">
+            </div>
+            ${data.editable ? data.editable : '❗ Empty'}
+          </div>
+        </div>
+        <div class="actions-c">
+        <button class="bg-b b2edit" onclick="document.querySelector('.previewModal').click()">Back to Edit</button>
+        <button class="bg-g pub">Publish</button>
+      </div>
+      <hr>
+      </div>
+            `
+            document.querySelector('.pub').addEventListener('click', ()=>{
+              preparePublish()
+            })
+            function preparePublish(){
+              toggleOc()
+              setTimeout(() => {
+                document.querySelector('#pubBtn').click()
+              }, 2000);
+            }
+          }
+    
+
             if(form){
+              
             form.addEventListener('submit', async (e)=>{
               e.preventDefault();
 
@@ -57,13 +349,55 @@
 
               const file = fileInput.files[0];
 
-              // lil validation vibes
-              if(!file) return alert("Add a pic bro", 'error');
-              if(!title.value.trim()) return alert("Title missing", 'error');
-              if(!categ.value.trim()) return alert("Pick a category first ", 'error');
-              if(!country.value.trim()) return alert("Please choose country", 'error');
-              if(!sub.value.trim()) return alert("Sub category empty fam", 'error');
-              if(!content.innerText.trim()) return alert("Drop some content", 'error');
+              if (!file) {
+                alert("Image Missing", 'error');
+                fileInput?.focus();
+                show(fileInput);
+                return;
+              }
+
+              if (!title.value.trim()) {
+                alert("Title missing", 'error');
+                title.focus();
+                show(title)
+                return;
+              }
+
+              if (!categ.value.trim()) {
+                alert("Pick a category first", 'error');
+                categ.focus();
+                show(categ)
+                return;
+              }
+
+              if (!country.value.trim()) {
+                alert("Please choose country", 'error');
+                country.focus();
+                show(country)
+                return;
+              }
+
+              if (!sub.value.trim()) {
+                alert("Please Enter sub category", 'error');
+                sub.focus();
+                show(sub)
+                return;
+              }
+
+              if (!content.innerText.trim()) {
+                alert("Content can not be empty", 'error');
+                content.scrollIntoView() 
+                show(content)
+                return;
+              }
+              function show(el){
+                el.classList.add('onerror')
+                el.scrollIntoView()
+                setTimeout(() => {
+                  el.classList.remove('onerror')
+                }, 3000);
+              }
+
 
               const formData = new FormData();
               formData.append("image", file);
@@ -74,6 +408,10 @@
               formData.append("id", id);
               formData.append("trending", trending);
               formData.append("content", content.innerHTML);
+              const pbtn = form.querySelector('#pubBtn')
+              pbtn.disabled = true
+              var init = pbtn.innerHTML
+              pbtn.innerHTML = 'Publishing...<i class="fas fa-spinner fa-spin"></i>'
 
               try {
                 const res = await fetch(`${baseUrl}/new`, {
@@ -84,13 +422,19 @@
                 const data = await res.json();
                 if(data.error) return alert(data.error, 'error');
 
-                alert("Post Added", 'success');
+                alert("Posted successfully", 'success');
                 localStorage.removeItem("draft");
                 form.reset();
-
+              pbtn.disabled = false
+              pbtn.innerHTML = init
+              
               } catch (err) {
                 alert("Network error", 'error');
+                pbtn.disabled = false
+                pbtn.innerHTML = init
+
               }
+              
             });
           }
 
@@ -238,3 +582,20 @@ subSelect.appendChild(opt);
 subSelect.disabled = false;
 }
 });
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  const cs = document.querySelector('#country')
+  const countries = window.countries
+  countries.forEach(c => {
+    const op = document.createElement('option')
+    op.value = String(c.name).replaceAll(' ', '_').toLowerCase()
+    op.innerHTML = c.name
+    if(c.name.includes('Kenya')){
+        op.setAttribute('selected', '')
+    }
+    cs.appendChild(op)
+    
+  });
+  cs.removeAttribute('disabled')
+
+})

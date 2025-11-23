@@ -53,8 +53,9 @@ document.addEventListener('DOMContentLoaded', async (e) => {
             `
           <div class="news">
            <div class="filters">
-             <div class="f">${n.categ}</div>
-             <div class="f">${n.sub}</div>
+             <div class="f" title="Country">${n.country}</div>
+             <div class="f" title="Category">${n.categ}</div>
+             <div class="f" title="Sub Category">${n.sub}</div>
            </div>
            <div class="-n-title">
              ${n.title}
@@ -63,6 +64,8 @@ document.addEventListener('DOMContentLoaded', async (e) => {
            <div class="date" style="margin-top: 20px;">
              ${formatTimehD(n.added)}
              </div>
+             <div class="user-name-disp" title="User">By <a style="width:fit-content" href="/user/?u=${n.user ? n.user : 'Loading...'}">${n.user}</a></div>
+
            <div class="actions">
            <a href="#copyLink" id="copyLink">
              <div class="action" tooltip="Copy Link">
@@ -145,11 +148,7 @@ document.addEventListener('DOMContentLoaded', async (e) => {
   }
   function fetchByCountry(country){
     const mnf = document.querySelector('.more-from-news')
-    mnf.innerHTML = `
-     <h3 style="margin-top:20px;">More from <a href="/category/?c=${country}&country=1" id="f-country" style="color: #0f0; text-transform:capitalize;">${country.replaceAll('_', ' ')}</a></h3>
-     <hr>
-    
-    `
+
     if(country && country.trim() != '')
     fetch(`${baseUrl}/get_news_filter/${country}?c=True`)
     .then(res=>res.json())
@@ -158,11 +157,17 @@ document.addEventListener('DOMContentLoaded', async (e) => {
       if(data.error){
         alert(data.error, 'error')
       } else{
+
         const news = data.news
-        if(news && news.length == 0){
+        if(news && news.length <= 1){
           mnf.innerHTML = ''
         }
-        if (news && news.length > 0 ) {
+        if (news && news.length > 1 ) {
+          console.log(news.length)
+          mnf.innerHTML = `
+          <h3 style="margin-top:20px;">More from <a href="/category/?c=${country}&country=1" id="f-country" style="color: #0f0; text-transform:capitalize;">${country.replaceAll('_', ' ')}</a></h3>
+          <hr>
+         `
           news.forEach(n => {
             if(n.id == window.n_id){
               console.log('same')

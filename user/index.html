@@ -26,29 +26,17 @@
     <meta name="twitter:image" content="https://jomc-news.vercel.app/assets/images/logo.jpg">
   
     <!-- Fonts and Icons -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" preconnect>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
   
     <!-- Ads -->
-    <script async data-cfasync="false" src="//pl28003297.effectivegatecpm.com/53af17ddb9e4b799586ecb86dc439eb2/invoke.js" defer></script>
-    <script async data-cfasync="false" src="//pl28005774.effectivegatecpm.com/83706ba541e98f9c09f46db018571cf6/invoke.js" defer></script>
-    <script async data-cfasync="false" src="//pl28010045.effectivegatecpm.com/545445584d06c09fd1a832fa75e54619/invoke.js" defer></script>
   
     <!-- Service Worker -->
-    <script>
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("/sw.js")
-          .then(() => console.log("SW Registered ✅"))
-          .catch(err => console.log("SW fail 💀", err));
-      }
-    </script>
   
     <!-- JS -->
     <script src="/assets/js/loader.js" defer></script>
     <script src="/assets/js/main.js" defer></script>
-    <script src="/assets/js/index.js" defer></script>
     <script src="/assets/js/utils.js"></script>
   
     <!-- CSS -->
@@ -132,214 +120,9 @@
       <a href="/world">World</a>
     </div>
   </header>
-  <style>
-    @media (max-width:768px) {
-        .links{
-            display: none !important;
-        }
-        .menu-icon{
-            display: flex !important;
-        }        
-    }
-    .links{
-        display: flex;
-    }
-    .menu-icon{
-        display: none;
-        gap: 5px;
-        justify-content: center;
-        flex-direction: column;
-        align-items: center;
-        width: 40px !important;
-        padding: 10px 5px !important;
-        height: 40px !important;
-        &:hover{
-            span{
-                background: black;
-            }
-
-        }
-    }
-    .menu-icon span{
-        background: rgb(255, 255, 255) ;
-        width: 100%;
-        padding: 1px;
-        flex-grow: 1;
-        height: 2px;
-    }
-    .large{
-        width: 100%;
-        background: green;
-        position: fixed;
-        top: 0;
-        z-index: 20000;
-        height: 100%;
-        justify-content: start;
-        align-items: flex-start;
-        flex-direction: column;
-        a{
-            width: 100%;
-            &:nth-of-type(1){
-                margin-top: 100px;
-            }
-        }
-    }
-  </style>
-
-  <div class="featured featured-latest"></div>
-  <div class="featured featured-mostread"></div>
-  <div class="featured featured-trending"></div>
   <div class="content">
-    <div class="newsDiv">
-        <h2>Latest News</h2>
-      <div class="newsWrapper">
-        <div class="skeleton news-art">
-          <div class="image"></div>
-          <div class="details">
-            <div class="title"></div>
-            <div class="context">
-              <div class="c-line"></div>
-              <div class="c-line"></div>
-              <div class="c-line"></div>
-              <div class="c-line"></div>
-            </div>
-          </div>
-        </div>
-        <div class="skeleton news">
-          <div class="image"></div>
-          <div class="details">
-            <div class="title"></div>
-            <div class="context">
-              <div class="c-line"></div>
-              <div class="c-line"></div>
-              <div class="c-line"></div>
-              <div class="c-line"></div>
-            </div>
-          </div>
-        </div>
-        <div class="skeleton news">
-          <div class="image"></div>
-          <div class="details">
-            <div class="title"></div>
-            <div class="context">
-              <div class="c-line"></div>
-              <div class="c-line"></div>
-              <div class="c-line"></div>
-              <div class="c-line"></div>
-            </div>
-          </div>
-        </div>
-        <div class="skeleton news">
-          <div class="image"></div>
-          <div class="details">
-            <div class="title"></div>
-            <div class="context">
-              <div class="c-line"></div>
-              <div class="c-line"></div>
-              <div class="c-line"></div>
-              <div class="c-line"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="mostRead">
-      <h2>Most Read </h2>
-      <!-- <script type="text/javascript">
-      atOptions = {
-        'key': 'ec8ad3d9df982516c830881e448efb48',
-        'format': 'iframe',
-        'height': 50,
-        'width': 320,
-        'params': {}
-      };
-      </script>
-      <script type="text/javascript" src="//www.highperformanceformat.com/ec8ad3d9df982516c830881e448efb48/invoke.js"></script> -->
-      <div class="mr">
-      <div class="skeleton news-art">
-        <div class="image"></div>
-        <div class="details">
-          <div class="title"></div>
-          <div class="context">
-            <div class="c-line"></div>
-            <div class="c-line"></div>
-            <div class="c-line"></div>
-            <div class="c-line"></div>
-          </div>
-        </div>
-      </div>
-      <div class="skeleton news">
-        <div class="image"></div>
-        <div class="details">
-          <div class="title"></div>
-          <div class="context">
-            <div class="c-line"></div>
-            <div class="c-line"></div>
-            <div class="c-line"></div>
-            <div class="c-line"></div>
-          </div>
-        </div>
-      </div>
-      <div class="skeleton news">
-        <div class="image"></div>
-        <div class="details">
-          <div class="title"></div>
-          <div class="context">
-            <div class="c-line"></div>
-            <div class="c-line"></div>
-            <div class="c-line"></div>
-            <div class="c-line"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-</div>
-    <div class="trending">
-      <h2>Trending</h2>
-      <div class="tr">
-      <div class="skeleton news-art">
-
-        <div class="image"></div>
-        <div class="details">
-          <div class="title"></div>
-          <div class="context">
-            <div class="c-line"></div>
-            <div class="c-line"></div>
-            <div class="c-line"></div>
-            <div class="c-line"></div>
-          </div>
-        </div>
-      </div>
-      <div class="skeleton news">
-        <div class="image"></div>
-        <div class="details">
-          <div class="title"></div>
-          <div class="context">
-            <div class="c-line"></div>
-            <div class="c-line"></div>
-            <div class="c-line"></div>
-            <div class="c-line"></div>
-          </div>
-        </div>
-      </div>
-      <div class="skeleton news">
-        <div class="image"></div>
-        <div class="details">
-          <div class="title"></div>
-          <div class="context">
-            <div class="c-line"></div>
-            <div class="c-line"></div>
-            <div class="c-line"></div>
-            <div class="c-line"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    </div>
-
+    <h3>Coming soon..</h3>
   </div>
-  <div id="container-53af17ddb9e4b799586ecb86dc439eb2"></div>
-
   <footer class="footer">
     <div class="footer-top">
 

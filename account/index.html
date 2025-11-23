@@ -26,9 +26,7 @@
     <meta name="twitter:image" content="https://jomc-news.vercel.app/assets/images/logo.jpg">
   
     <!-- Fonts and Icons -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" preconnect>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
   
     <!-- Ads -->
@@ -383,16 +381,45 @@
        </div>
 
         </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap" id="btns">
+          <style>
+            #btns{
+              button{
+                flex-grow: 1;
+              }
+            }
+            button:disabled{
+              pointer-events: none;
+              cursor: not-allowed;
+              background: rgba(128, 128, 128, 0.264) !important;
+              color: grey;
+            }
+          </style>
         <button class="openArticles" onclick="window.location.href='/user/articles'">
-          Open Your Articles
+         <i class="fas fa-user"></i> Your Articles
         </button>
         <button class="post" onclick="window.location.href='/post'">
-          Post a new article
+         <i class="fas fa-plus"></i> New Article
         </button>
-</div>
+        <button style="background: rgb(255, 179, 0);color:black" class="openArticles" onclick="alert('Coming soon')">
+        <i class="fas fa-sign-out-alt"></i>  Logout
+        </button>
+        <hr style="width: 100%;">
+        <h2>Danger Zone</h2>
+        <hr style="width: 100%;">
+
+        <button style="background: orangered;" class="openArticles" onclick="alert('Coming soon')">
+          <i class="fas fa-trash"></i>  Delete Account
+          </button>
+</div></div>
 <script>
     document.addEventListener('DOMContentLoaded', ()=>{
         const user = JSON.parse(localStorage.getItem('user'))
+        const bts = document.querySelectorAll('button')
+        console.log(bts.length)
+        bts.forEach(b=>{
+          b.disabled=true
+        })
         if(user){
             const token = localStorage.getItem('token')
             if(token){
@@ -470,6 +497,11 @@
                         </div>
                     </div>
                     `
+                    const bts = document.querySelectorAll('button')
+                    bts.forEach(b=>{
+                      b.disabled=false
+                    })
+
                 }
                })
                .catch(err=>{

@@ -1,322 +1,373 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Dashboard</title>
+<title>NEXUS // Admin Interface</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
 <script>
   tailwind.config = {
     darkMode: 'class',
     theme: {
       extend: {
         colors: {
-          'primary': {
-            50: '#f0fdf4', 100: '#ecfdf5', 200: '#d1fae5', 300: '#a7f3d0', 
-            400: '#6ee7b7', 500: '#10b981', 
-            600: '#059669', 
-            700: '#047857', 800: '#065f46', 900: '#064e3b', 950: '#022c22' 
+          dark: {
+            900: '#030712',
+            800: '#0b1121',
+            700: '#151e32',
           },
+          neon: {
+            cyan: '#00f3ff',
+            pink: '#bc13fe',
+            red: '#ff003c',
+            green: '#00ff9f',
+          }
         },
         fontFamily: {
-          sans: ['Inter', 'sans-serif'],
+          display: ['Orbitron', 'sans-serif'],
+          body: ['Rajdhani', 'sans-serif'],
+          mono: ['Share Tech Mono', 'monospace'],
         },
+        backgroundImage: {
+          'grid-pattern': "linear-gradient(to right, #151e32 1px, transparent 1px), linear-gradient(to bottom, #151e32 1px, transparent 1px)",
+        }
       }
     }
   }
 </script>
+
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-  
   body {
-    transition: background-color 0.3s, color 0.3s;
-    font-family: 'Inter', sans-serif;
+    background-color: #030712;
+    background-image: linear-gradient(to right, rgba(21, 30, 50, 0.5) 1px, transparent 1px), 
+                      linear-gradient(to bottom, rgba(21, 30, 50, 0.5) 1px, transparent 1px);
+    background-size: 40px 40px;
+    font-family: 'Rajdhani', sans-serif;
+    color: #e2e8f0;
+  }
+
+  .hud-card {
+    background: rgba(11, 17, 33, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 243, 255, 0.1);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hud-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 20px; height: 20px;
+    border-top: 2px solid #00f3ff;
+    border-left: 2px solid #00f3ff;
+    z-index: 10;
   }
   
-  ::-webkit-scrollbar { width: 8px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  .dark ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
-  .light ::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 4px; }
-
-  .dark {
-    --tw-bg-opacity: 1;
-    background-color: rgb(17 24 39 / var(--tw-bg-opacity));
-    color: #e5e7eb;
+  .hud-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 20px; height: 20px;
+    border-bottom: 2px solid #00f3ff;
+    border-right: 2px solid #00f3ff;
+    z-index: 10;
   }
 
-  .card {
-    background-color: #ffffff; 
-    border-radius: 0.75rem; 
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); 
-    padding: 1.5rem; 
-    border: 1px solid #f3f4f6; 
-    transition: all 300ms;
-  }
-  .dark .card {
-    background-color: #1f2937; 
-    border-color: rgba(55, 65, 81, 0.5);
+  .tech-input {
+    background: rgba(3, 7, 18, 0.8);
+    border: 1px solid #1f2937;
+    color: #00f3ff;
+    font-family: 'Share Tech Mono', monospace;
+    transition: all 0.3s ease;
   }
 
-  .delete-button {
-    padding: 0.375rem 0.75rem; 
-    border-radius: 0.5rem; 
-    font-size: 0.875rem; 
-    font-weight: 500; 
-    transition: background-color 0.15s ease-in-out;
+  .tech-input:focus {
+    border-color: #00f3ff;
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
     outline: none;
-    
-    background-color: #dc2626; 
-    color: white; 
   }
-  .delete-button:hover {
-    background-color: #b91c1c; 
+
+  .tech-btn {
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.75rem;
   }
-  .delete-button:focus {
-    outline: 2px solid transparent;
-    outline-offset: 2px;
-    box-shadow: 0 0 0 2px white, 0 0 0 4px #ef4444; 
+  
+  .tech-btn:active {
+    transform: scale(0.98);
   }
-  .dark .delete-button:focus {
-    box-shadow: 0 0 0 2px #1f2937, 0 0 0 4px #ef4444; 
+
+  .table-row-hover:hover td {
+    background-color: rgba(0, 243, 255, 0.05);
+    color: #00f3ff;
+  }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: #030712; }
+  ::-webkit-scrollbar-thumb { background: #1f2937; border: 1px solid #00f3ff; }
+  
+  .glitch-text {
+    position: relative;
+  }
+  
+  .neon-glow {
+    text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
   }
 </style>
 </head>
 
-<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 min-h-screen">
+<body class="min-h-screen antialiased selection:bg-neon-cyan selection:text-black">
 
-<header class="bg-primary-600 dark:bg-primary-700 shadow-xl sticky top-0 z-10">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-    <h1 class="text-2xl font-extrabold text-white flex items-center">
-      <i class="fas fa-cogs w-6 h-6 mr-3"></i>
-      Admin Panel
-    </h1>
+<header class="fixed w-full top-0 z-50 border-b border-white/10 bg-dark-900/80 backdrop-blur-md">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
+    <div class="flex items-center space-x-3">
+      <div class="w-8 h-8 bg-neon-cyan flex items-center justify-center text-black font-bold font-display skew-x-[-10deg]">
+        <span class="skew-x-[10deg]">N</span>
+      </div>
+      <h1 class="text-xl font-display font-bold tracking-wider text-white">
+        NEXUS <span class="text-neon-cyan text-sm align-top">V2.0</span>
+      </h1>
+    </div>
     <div class="flex items-center space-x-4">
-        <div id="authStatus" class="text-sm font-medium text-white px-3 py-1 bg-red-500 rounded-full hidden">
-            Auth Required
+        <div id="authStatus" class="hidden font-mono text-xs px-2 py-1 border border-neon-red text-neon-red bg-neon-red/10 animate-pulse">
+            AUTH_FAILURE
         </div>
-        <button id="themeToggle" onclick="toggleTheme()" class="p-2 rounded-full text-white hover:bg-primary-500/30 transition-colors">
-            <i class="fas fa-sun w-6 h-6" id="themeIcon"></i>
+        <div class="flex items-center space-x-2 text-neon-cyan border border-neon-cyan/30 px-3 py-1 bg-dark-800/50">
+           <i class="fas fa-satellite-dish text-xs animate-pulse"></i>
+           <span id="systemStatus" class="font-mono text-xs tracking-widest uppercase">ONLINE</span>
+        </div>
+        <button id="themeToggle" onclick="toggleTheme()" class="text-gray-400 hover:text-white transition-colors">
+            <i class="fas fa-adjust hover:rotate-180 transition-transform duration-500"></i>
         </button>
     </div>
   </div>
 </header>
 
-<div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+<div class="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
   
   <div id="mainContent" class="space-y-8">
     
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        
-        <div class="card p-4 flex items-center space-x-4 bg-primary-50 dark:bg-gray-700/50">
-            <div class="p-3 rounded-full bg-primary-200 text-primary-700 dark:bg-primary-800 dark:text-primary-200">
-                <i class="fas fa-users w-5 h-5"></i>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="hud-card p-6 flex flex-col justify-between h-32 group hover:border-neon-cyan/50 transition-colors">
+            <div class="flex justify-between items-start">
+                <span class="font-mono text-xs text-gray-500 uppercase tracking-widest">Database // Users</span>
+                <i class="fas fa-users text-neon-cyan/50 group-hover:text-neon-cyan transition-colors"></i>
             </div>
-            <div>
-                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Users</p>
-                <p id="totalUsersStat" class="text-2xl font-bold text-gray-900 dark:text-gray-100">0</p>
+            <div class="flex items-baseline space-x-2">
+                <p id="totalUsersStat" class="text-4xl font-display font-bold text-white group-hover:neon-glow transition-all">0</p>
+                <span class="text-xs text-neon-green font-mono">ACTIVE ENTITIES</span>
             </div>
-        </div>
-
-        <div class="card p-4 flex items-center space-x-4 bg-primary-50 dark:bg-gray-700/50">
-            <div class="p-3 rounded-full bg-primary-200 text-primary-700 dark:bg-primary-800 dark:text-primary-200">
-                <i class="fas fa-newspaper w-5 h-5"></i>
-            </div>
-            <div>
-                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Articles</p>
-                <p id="totalArticlesStat" class="text-2xl font-bold text-gray-900 dark:text-gray-100">0</p>
+            <div class="w-full bg-gray-800 h-1 mt-2">
+                <div class="bg-neon-cyan h-1 w-3/4 shadow-[0_0_10px_#00f3ff]"></div>
             </div>
         </div>
 
-        <div class="card p-4 flex items-center space-x-4 bg-primary-50 dark:bg-gray-700/50">
-            <div class="p-3 rounded-full bg-primary-200 text-primary-700 dark:bg-primary-800 dark:text-primary-200">
-                <i class="fas fa-comments w-5 h-5"></i>
+        <div class="hud-card p-6 flex flex-col justify-between h-32 group hover:border-neon-pink/50 transition-colors">
+            <div class="flex justify-between items-start">
+                <span class="font-mono text-xs text-gray-500 uppercase tracking-widest">Content // Articles</span>
+                <i class="fas fa-file-code text-neon-pink/50 group-hover:text-neon-pink transition-colors"></i>
             </div>
-            <div>
-                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Comments</p>
-                <p id="totalCommentsStat" class="text-2xl font-bold text-gray-900 dark:text-gray-100">0</p>
+            <div class="flex items-baseline space-x-2">
+                <p id="totalArticlesStat" class="text-4xl font-display font-bold text-white group-hover:text-shadow-pink">0</p>
+                <span class="text-xs text-neon-pink font-mono">PUBLISHED</span>
+            </div>
+            <div class="w-full bg-gray-800 h-1 mt-2">
+                <div class="bg-neon-pink h-1 w-1/2 shadow-[0_0_10px_#bc13fe]"></div>
             </div>
         </div>
 
-        <div class="card p-4 flex items-center justify-between space-x-4 bg-primary-50 dark:bg-gray-700/50">
-             <div class="p-3 rounded-full bg-primary-200 text-primary-700 dark:bg-primary-800 dark:text-primary-200">
-                <i class="fas fa-server w-5 h-5"></i>
+        <div class="hud-card p-6 flex flex-col justify-between h-32 group hover:border-neon-green/50 transition-colors">
+            <div class="flex justify-between items-start">
+                <span class="font-mono text-xs text-gray-500 uppercase tracking-widest">Feed // Comments</span>
+                <i class="fas fa-comments text-neon-green/50 group-hover:text-neon-green transition-colors"></i>
             </div>
-            <div>
-                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">System Status</p>
-                <span id="systemStatus" class="px-3 py-1 rounded-full text-xs font-semibold bg-primary-100 text-primary-800 dark:bg-primary-800 dark:text-primary-100">Operational</span>
+            <div class="flex items-baseline space-x-2">
+                <p id="totalCommentsStat" class="text-4xl font-display font-bold text-white">0</p>
+                <span class="text-xs text-neon-green font-mono">INTERACTIONS</span>
+            </div>
+            <div class="w-full bg-gray-800 h-1 mt-2">
+                <div class="bg-neon-green h-1 w-2/3 shadow-[0_0_10px_#00ff9f]"></div>
             </div>
         </div>
     </div>
     
-        <div class="card w-full" id="usersCard">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-xl font-semibold flex items-center text-primary-600 dark:text-primary-400">
-            <i class="fas fa-users w-6 h-6 mr-2"></i>
-            Users Management
+    <div class="hud-card p-0" id="usersCard">
+      <div class="p-4 border-b border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-dark-800/50">
+        <h3 class="text-lg font-display font-bold text-neon-cyan flex items-center tracking-wider">
+            <span class="mr-2 text-xs bg-neon-cyan text-black px-1 font-mono">01</span>
+            USER_DIRECTORY
         </h3>
-              </div>
-        <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
-          <input type="text" id="userSearch" placeholder="Search by username or email..." oninput="renderUsers(1)"
-                class="flex-grow min-w-[200px] p-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-primary-500 focus:border-primary-500 bg-gray-50 dark:bg-gray-700 dark:text-white transition-all">
-          <div class="flex items-center space-x-2">
-            <label for="userLimit" class="text-sm text-gray-700 dark:text-gray-300">Show:</label>
+        <div class="flex flex-wrap items-center gap-3">
+            <div class="relative group">
+                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-neon-cyan transition-colors text-xs"></i>
+                <input type="text" id="userSearch" placeholder="SEARCH_QUERY..." oninput="renderUsers(1)"
+                    class="tech-input pl-8 pr-3 py-1.5 text-sm w-48 sm:w-64 focus:w-72 transition-all rounded-sm">
+            </div>
             <select id="userLimit" onchange="renderUsers(1)" 
-                class="p-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-primary-500 focus:border-primary-500 bg-gray-50 dark:bg-gray-700 dark:text-white text-sm">
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="25">25</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
+                class="tech-input py-1.5 px-2 text-sm rounded-sm cursor-pointer">
+                <option value="5">05 ROWS</option>
+                <option value="10">10 ROWS</option>
+                <option value="25">25 ROWS</option>
+                <option value="50">50 ROWS</option>
+                <option value="100">100 ROWS</option>
             </select>
-          </div>
         </div>
-            <div class="max-h-[500px] overflow-y-auto overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-          <thead class="bg-gray-100 dark:bg-gray-700 sticky top-0">
+      </div>
+      
+      <div class="overflow-x-auto">
+        <table class="w-full text-left">
+          <thead class="bg-dark-900 border-b border-white/10 text-xs uppercase font-mono text-gray-400">
             <tr>
-              <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">Username</th>
-              <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">Email</th>
-              <th class="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">Actions</th>
+              <th class="px-6 py-3 tracking-wider">Identity</th>
+              <th class="px-6 py-3 tracking-wider">Contact_Protocol</th>
+              <th class="px-6 py-3 text-right tracking-wider">Command</th>
             </tr>
           </thead>
-          <tbody id="usersList" class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-            <tr><td colspan="3" class="px-3 py-3 text-center text-gray-500 dark:text-gray-400">Loading users...</td></tr>
+          <tbody id="usersList" class="divide-y divide-white/5 font-mono text-sm">
+            <tr><td colspan="3" class="px-6 py-4 text-center text-neon-cyan animate-pulse">INITIALIZING DATA STREAM...</td></tr>
           </tbody>
         </table>
-        <p id="usersEmptyState" class="text-center text-gray-500 dark:text-gray-400 py-4 hidden">No users found.</p>
+        <p id="usersEmptyState" class="hidden text-center py-8 font-mono text-gray-500">NO_ENTITIES_FOUND</p>
       </div>
-            <div id="userPagination" class="flex justify-between items-center mt-4">
-        <span id="userPagingInfo" class="text-sm text-gray-600 dark:text-gray-400"></span>
-        <div class="flex space-x-2">
-          <button id="userPrev" onclick="changePage('users', -1)" disabled class="px-3 py-1 rounded-lg text-sm font-medium transition-colors bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed">
-            <i class="fas fa-chevron-left"></i> Prev
+
+      <div id="userPagination" class="p-4 border-t border-white/10 flex justify-between items-center bg-dark-800/30">
+        <span id="userPagingInfo" class="text-xs font-mono text-gray-500">WAITING...</span>
+        <div class="flex space-x-1">
+          <button id="userPrev" onclick="changePage('users', -1)" disabled class="tech-btn bg-dark-700 hover:bg-neon-cyan hover:text-black text-white px-4 py-2 disabled:opacity-30 disabled:cursor-not-allowed">
+            <i class="fas fa-chevron-left mr-1"></i> PREV
           </button>
-          <button id="userNext" onclick="changePage('users', 1)" disabled class="px-3 py-1 rounded-lg text-sm font-medium transition-colors bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed">
-            Next <i class="fas fa-chevron-right"></i>
+          <button id="userNext" onclick="changePage('users', 1)" disabled class="tech-btn bg-dark-700 hover:bg-neon-cyan hover:text-black text-white px-4 py-2 disabled:opacity-30 disabled:cursor-not-allowed">
+            NEXT <i class="fas fa-chevron-right ml-1"></i>
           </button>
         </div>
       </div>
     </div>
 
-        <div class="card w-full" id="articlesCard">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-xl font-semibold flex items-center text-primary-600 dark:text-primary-400">
-            <i class="fas fa-newspaper w-6 h-6 mr-2"></i>
-            Articles
+    <div class="hud-card p-0" id="articlesCard">
+      <div class="p-4 border-b border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-dark-800/50">
+        <h3 class="text-lg font-display font-bold text-neon-pink flex items-center tracking-wider">
+            <span class="mr-2 text-xs bg-neon-pink text-black px-1 font-mono">02</span>
+            DATA_ARCHIVES
         </h3>
-              </div>
-      <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
-        <input type="text" id="articleSearch" placeholder="Search by title or category..." oninput="renderArticles(1)"
-             class="flex-grow min-w-[200px] p-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-primary-500 focus:border-primary-500 bg-gray-50 dark:bg-gray-700 dark:text-white transition-all">
-        <div class="flex items-center space-x-2">
-          <label for="articleLimit" class="text-sm text-gray-700 dark:text-gray-300">Show:</label>
-          <select id="articleLimit" onchange="renderArticles(1)" 
-              class="p-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-primary-500 focus:border-primary-500 bg-gray-50 dark:bg-gray-700 dark:text-white text-sm">
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="25">25</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
+        <div class="flex flex-wrap items-center gap-3">
+             <div class="relative group">
+                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-neon-pink transition-colors text-xs"></i>
+                <input type="text" id="articleSearch" placeholder="FILTER_ARCHIVES..." oninput="renderArticles(1)"
+                    class="tech-input pl-8 pr-3 py-1.5 text-sm w-48 sm:w-64 focus:w-72 transition-all rounded-sm focus:border-neon-pink focus:shadow-[0_0_10px_rgba(188,19,254,0.2)]">
+            </div>
+            <select id="articleLimit" onchange="renderArticles(1)" 
+                class="tech-input py-1.5 px-2 text-sm rounded-sm cursor-pointer focus:border-neon-pink">
+              <option value="5">05 ROWS</option>
+              <option value="10">10 ROWS</option>
+              <option value="25">25 ROWS</option>
+              <option value="50">50 ROWS</option>
+              <option value="100">100 ROWS</option>
           </select>
         </div>
       </div>
-            <div class="max-h-[500px] overflow-y-auto overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-          <thead class="bg-gray-100 dark:bg-gray-700 sticky top-0">
-            <tr>
-              <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">Title</th>
-              <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">Category</th>
-              <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">User</th>
-              <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">Views</th>
 
-              <th class="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">Actions</th>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left">
+          <thead class="bg-dark-900 border-b border-white/10 text-xs uppercase font-mono text-gray-400">
+            <tr>
+              <th class="px-6 py-3 tracking-wider">Header_Data</th>
+              <th class="px-6 py-3 tracking-wider">Class</th>
+              <th class="px-6 py-3 tracking-wider">Author_ID</th>
+              <th class="px-6 py-3 tracking-wider">Impressions</th>
+              <th class="px-6 py-3 text-right tracking-wider">Command</th>
             </tr>
           </thead>
-          <tbody id="articlesList" class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-            <tr><td colspan="3" class="px-3 py-3 text-center text-gray-500 dark:text-gray-400">Loading articles...</td></tr>
+          <tbody id="articlesList" class="divide-y divide-white/5 font-mono text-sm">
+            <tr><td colspan="5" class="px-6 py-4 text-center text-neon-pink animate-pulse">ACCESSING ARCHIVES...</td></tr>
           </tbody>   
         </table>
-        <p id="articlesEmptyState" class="text-center text-gray-500 dark:text-gray-400 py-4 hidden">No articles found.</p>
+        <p id="articlesEmptyState" class="hidden text-center py-8 font-mono text-gray-500">ARCHIVE_EMPTY</p>
       </div>
-            <div id="articlePagination" class="flex justify-between items-center mt-4">
-        <span id="articlePagingInfo" class="text-sm text-gray-600 dark:text-gray-400"></span>
-        <div class="flex space-x-2">
-          <button id="articlePrev" onclick="changePage('articles', -1)" disabled class="px-3 py-1 rounded-lg text-sm font-medium transition-colors bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed">
-            <i class="fas fa-chevron-left"></i> Prev
+
+      <div id="articlePagination" class="p-4 border-t border-white/10 flex justify-between items-center bg-dark-800/30">
+        <span id="articlePagingInfo" class="text-xs font-mono text-gray-500">WAITING...</span>
+        <div class="flex space-x-1">
+          <button id="articlePrev" onclick="changePage('articles', -1)" disabled class="tech-btn bg-dark-700 hover:bg-neon-pink hover:text-black text-white px-4 py-2 disabled:opacity-30 disabled:cursor-not-allowed">
+            <i class="fas fa-chevron-left mr-1"></i> PREV
           </button>
-          <button id="articleNext" onclick="changePage('articles', 1)" disabled class="px-3 py-1 rounded-lg text-sm font-medium transition-colors bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed">
-            Next <i class="fas fa-chevron-right"></i>
+          <button id="articleNext" onclick="changePage('articles', 1)" disabled class="tech-btn bg-dark-700 hover:bg-neon-pink hover:text-black text-white px-4 py-2 disabled:opacity-30 disabled:cursor-not-allowed">
+            NEXT <i class="fas fa-chevron-right ml-1"></i>
           </button>
         </div>
       </div>
     </div>
 
-        <div class="card w-full" id="commentsCard">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-xl font-semibold flex items-center text-primary-600 dark:text-primary-400">
-            <i class="fas fa-comments w-6 h-6 mr-2"></i>
-            Comments Feed
+    <div class="hud-card p-0" id="commentsCard">
+      <div class="p-4 border-b border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-dark-800/50">
+        <h3 class="text-lg font-display font-bold text-neon-green flex items-center tracking-wider">
+            <span class="mr-2 text-xs bg-neon-green text-black px-1 font-mono">03</span>
+            COMMS_LOG
         </h3>
-              </div>
-      <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
-        <input type="text" id="commentSearch" placeholder="Search by content or user ID..." oninput="renderComments(1)"
-             class="flex-grow min-w-[200px] p-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-primary-500 focus:border-primary-500 bg-gray-50 dark:bg-gray-700 dark:text-white transition-all">
-        <div class="flex items-center space-x-2">
-          <label for="commentLimit" class="text-sm text-gray-700 dark:text-gray-300">Show:</label>
-          <select id="commentLimit" onchange="renderComments(1)" 
-              class="p-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-primary-500 focus:border-primary-500 bg-gray-50 dark:bg-gray-700 dark:text-white text-sm">
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="25">25</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-
+         <div class="flex flex-wrap items-center gap-3">
+             <div class="relative group">
+                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-neon-green transition-colors text-xs"></i>
+                <input type="text" id="commentSearch" placeholder="SCAN_LOGS..." oninput="renderComments(1)"
+                    class="tech-input pl-8 pr-3 py-1.5 text-sm w-48 sm:w-64 focus:w-72 transition-all rounded-sm focus:border-neon-green focus:shadow-[0_0_10px_rgba(0,255,159,0.2)]">
+            </div>
+            <select id="commentLimit" onchange="renderComments(1)" 
+                class="tech-input py-1.5 px-2 text-sm rounded-sm cursor-pointer focus:border-neon-green">
+              <option value="5">05 ROWS</option>
+              <option value="10">10 ROWS</option>
+              <option value="25">25 ROWS</option>
+              <option value="50">50 ROWS</option>
+              <option value="100">100 ROWS</option>
           </select>
         </div>
       </div>
-            <div class="max-h-[500px] overflow-y-auto overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-          <thead class="bg-gray-100 dark:bg-gray-700 sticky top-0">
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left">
+          <thead class="bg-dark-900 border-b border-white/10 text-xs uppercase font-mono text-gray-400">
             <tr>
-              <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">Content Preview</th>
-              <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">User ID</th>
-              <th class="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-300">Actions</th>
+              <th class="px-6 py-3 tracking-wider">Payload_Preview</th>
+              <th class="px-6 py-3 tracking-wider">Origin_ID</th>
+              <th class="px-6 py-3 text-right tracking-wider">Command</th>
             </tr>
           </thead>
-          <tbody id="commentsList" class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-            <tr><td colspan="3" class="px-3 py-3 text-center text-gray-500 dark:text-gray-400">Loading comments...</td></tr>
+          <tbody id="commentsList" class="divide-y divide-white/5 font-mono text-sm">
+            <tr><td colspan="3" class="px-6 py-4 text-center text-neon-green animate-pulse">DECRYPTING COMMS...</td></tr>
           </tbody>
         </table>
-        <p id="commentsEmptyState" class="text-center text-gray-500 dark:text-gray-400 py-4 hidden">No comments found.</p>
+        <p id="commentsEmptyState" class="hidden text-center py-8 font-mono text-gray-500">NO_TRANSMISSIONS</p>
       </div>
-            <div id="commentPagination" class="flex justify-between items-center mt-4">
-        <span id="commentPagingInfo" class="text-sm text-gray-600 dark:text-gray-400"></span>
-        <div class="flex space-x-2">
-          <button id="commentPrev" onclick="changePage('comments', -1)" disabled class="px-3 py-1 rounded-lg text-sm font-medium transition-colors bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed">
-            <i class="fas fa-chevron-left"></i> Prev
+
+      <div id="commentPagination" class="p-4 border-t border-white/10 flex justify-between items-center bg-dark-800/30">
+        <span id="commentPagingInfo" class="text-xs font-mono text-gray-500">WAITING...</span>
+        <div class="flex space-x-1">
+          <button id="commentPrev" onclick="changePage('comments', -1)" disabled class="tech-btn bg-dark-700 hover:bg-neon-green hover:text-black text-white px-4 py-2 disabled:opacity-30 disabled:cursor-not-allowed">
+            <i class="fas fa-chevron-left mr-1"></i> PREV
           </button>
-          <button id="commentNext" onclick="changePage('comments', 1)" disabled class="px-3 py-1 rounded-lg text-sm font-medium transition-colors bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed">
-            Next <i class="fas fa-chevron-right"></i>
+          <button id="commentNext" onclick="changePage('comments', 1)" disabled class="tech-btn bg-dark-700 hover:bg-neon-green hover:text-black text-white px-4 py-2 disabled:opacity-30 disabled:cursor-not-allowed">
+            NEXT <i class="fas fa-chevron-right ml-1"></i>
           </button>
         </div>
       </div>
     </div>
 
-        <div class="card w-full md:w-fit" id="settingsCard">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-xl font-semibold flex items-center text-primary-600 dark:text-primary-400">
-            <i class="fas fa-cog w-6 h-6 mr-2"></i>
-            System Management
-        </h3>
-        <span class="text-sm font-mono text-gray-500 dark:text-gray-400">V1.2</span>
-      </div>
-      <div class="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
-        <button onclick="runBackup()" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 bg-yellow-600 text-white hover:bg-yellow-700 focus:ring-yellow-500">
-            <i class="fas fa-database w-4 h-4 mr-2 inline"></i> Run Database Backup
+    <div class="hud-card p-6 flex flex-col md:flex-row items-center justify-between gap-4 border-t-4 border-t-yellow-500" id="settingsCard">
+        <div>
+            <h3 class="text-lg font-display font-bold text-yellow-500 tracking-wider mb-1">SYSTEM_MAINTENANCE</h3>
+            <p class="text-xs font-mono text-gray-400">CORE_VERSION: <span class="text-white">v1.2.4_FINAL</span></p>
+        </div>
+      <div class="flex space-x-4">
+        <button onclick="runBackup()" class="tech-btn bg-yellow-600/20 text-yellow-500 border border-yellow-500/50 hover:bg-yellow-500 hover:text-black px-6 py-3">
+            <i class="fas fa-database mr-2"></i> INITIATE_BACKUP
         </button>
-        <button onclick="clearCache()" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 bg-gray-600 text-white hover:bg-gray-700 focus:ring-gray-500">
-            <i class="fas fa-sync-alt w-4 h-4 mr-2 inline"></i> Clear App Cache
+        <button onclick="clearCache()" class="tech-btn bg-gray-700/50 text-gray-300 border border-gray-500/50 hover:bg-white hover:text-black px-6 py-3">
+            <i class="fas fa-eraser mr-2"></i> PURGE_CACHE
         </button>
       </div>
     </div>
@@ -324,19 +375,23 @@
   </div>
 </div>
 
-<div id="confirmationModal" class="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 z-50 flex items-center justify-center hidden transition-opacity duration-300">
-  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-3xl p-6 w-11/12 max-w-md transform scale-95 transition-transform duration-300">
-    <h4 class="text-lg font-bold mb-4 text-gray-900 dark:text-gray-100">Confirm Action</h4>
-    <p id="modalMessage" class="mb-6 text-gray-600 dark:text-gray-300"></p>
-    <div class="flex justify-end space-x-3">
-      <button id="modalCancel" class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">Cancel</button>
-      <button id="modalConfirm" class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500">Confirm</button>
+<div id="confirmationModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden transition-opacity duration-300">
+  <div class="bg-dark-900 border border-neon-red/50 w-full max-w-md p-0 transform scale-95 transition-transform duration-300 shadow-[0_0_30px_rgba(255,0,60,0.2)]">
+    <div class="bg-neon-red/10 p-4 border-b border-neon-red/20 flex items-center space-x-3">
+        <i class="fas fa-exclamation-triangle text-neon-red animate-pulse"></i>
+        <h4 class="text-lg font-display font-bold text-white tracking-widest">CONFIRMATION_REQUIRED</h4>
+    </div>
+    <div class="p-6">
+        <p id="modalMessage" class="text-gray-300 font-mono text-sm leading-relaxed"></p>
+    </div>
+    <div class="p-4 bg-dark-800 flex justify-end space-x-3 border-t border-white/5">
+      <button id="modalCancel" class="tech-btn bg-transparent border border-gray-600 text-gray-400 hover:border-white hover:text-white px-6 py-2">ABORT</button>
+      <button id="modalConfirm" class="tech-btn bg-neon-red text-black hover:bg-white hover:text-neon-red px-6 py-2 shadow-[0_0_10px_rgba(255,0,60,0.4)]">EXECUTE</button>
     </div>
   </div>
 </div>
 
 <script>
-// const BASE_URL = "http://127.0.0.1:50000"; 
 const BASE_URL = "https://jomc.pythonanywhere.com"; 
 
 const admin_id = localStorage.getItem('uid');
@@ -345,35 +400,16 @@ const admin_token = localStorage.getItem('token');
 let users=[], articles=[], comments=[];
 let confirmationCallback = null;
 
-// Pagination State
 let userCurrentPage = 1;
 let articleCurrentPage = 1;
 let commentCurrentPage = 1;
 
 function initTheme() {
-    const isDark = (window.matchMedia('(prefers-color-scheme: dark)').matches && !localStorage.getItem('theme')) || localStorage.getItem('theme') === 'dark';
-    document.documentElement.classList.toggle('dark', isDark);
-    const icon = document.getElementById('themeIcon');
-    if (isDark) {
-        icon.classList.remove('fa-sun');
-        icon.classList.add('fa-moon');
-    } else {
-        icon.classList.remove('fa-moon');
-        icon.classList.add('fa-sun');
-    }
+    document.documentElement.classList.add('dark');
 }
 
 function toggleTheme(){
-    const isDark = document.documentElement.classList.toggle('dark');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    const icon = document.getElementById('themeIcon');
-    if (isDark) {
-        icon.classList.remove('fa-sun');
-        icon.classList.add('fa-moon');
-    } else {
-        icon.classList.remove('fa-moon');
-        icon.classList.add('fa-sun');
-    }
+    console.log("Theme locked to Dark Mode in Cyber Interface");
 }
 
 async function fetchJSON(path, opts={}) {
@@ -399,7 +435,7 @@ function showConfirmation(message, callback) {
     modalMessage.textContent = message;
     confirmationCallback = callback;
     modal.classList.remove('hidden');
-    setTimeout(() => { // Enable transition effect
+    setTimeout(() => { 
       modal.querySelector('div').classList.remove('scale-95');
       modal.style.opacity = 1;
     }, 10);
@@ -425,16 +461,15 @@ modalCancelButton.onclick = hideConfirmation;
 
 function showAuthError() {
     const statusDiv = document.getElementById('authStatus');
-    statusDiv.textContent = 'Authentication Failed';
-    statusDiv.classList.remove('bg-red-500', 'hidden');
-    statusDiv.classList.add('bg-red-600', 'block');
-    document.getElementById('mainContent').innerHTML = `<p class="text-center text-xl p-20 text-red-500 dark:text-red-400">
-        Authentication token missing or invalid. Please ensure 
-        'uid' and 'token' are correctly set in localStorage and refresh.
-    </p>`;
+    statusDiv.textContent = 'AUTH_TOKEN_MISSING';
+    statusDiv.classList.remove('hidden');
+    statusDiv.classList.add('block');
+    document.getElementById('mainContent').innerHTML = `<div class="flex flex-col items-center justify-center h-96 border border-neon-red/30 bg-neon-red/5">
+        <i class="fas fa-lock text-6xl text-neon-red mb-6"></i>
+        <h2 class="text-2xl font-display text-white mb-2">ACCESS DENIED</h2>
+        <p class="font-mono text-neon-red">MISSING_CREDENTIALS: uid // token</p>
+    </div>`;
 }
-
-// --- Pagination Controls Logic ---
 
 function changePage(entity, direction) {
   switch (entity) {
@@ -453,13 +488,10 @@ function changePage(entity, direction) {
   }
 }
 
-// --- User Functions ---
-
 async function loadUsers(){
   const data = await fetchJSON(`/admin/users?id=${admin_id}&token=${admin_token}`);
   users = data?.users || [];
   
-  // NEW: Update Stat Card
   document.getElementById('totalUsersStat').textContent = users.length;
   
   userCurrentPage = 1;
@@ -476,7 +508,6 @@ function renderUsers(resetPage = 0){
   
   tbody.innerHTML = '';
   
-  // 1. Apply Search/Filter
   const filteredUsers = users.filter(u => 
     u.username.toLowerCase().includes(search) || u.email.toLowerCase().includes(search)
   );
@@ -484,7 +515,6 @@ function renderUsers(resetPage = 0){
   const totalItems = filteredUsers.length;
   const totalPages = Math.ceil(totalItems / limit);
 
-  // Adjust current page if it exceeds total pages
   if (userCurrentPage > totalPages && totalPages > 0) {
     userCurrentPage = totalPages;
   } else if (userCurrentPage < 1 && totalPages > 0) {
@@ -504,54 +534,48 @@ function renderUsers(resetPage = 0){
   emptyState.classList.add('hidden');
   document.getElementById('userPagination').classList.remove('hidden');
 
-
-  // 2. Apply Pagination (Client-side slicing)
   const offset = (userCurrentPage - 1) * limit;
   const paginatedUsers = filteredUsers.slice(offset, offset + limit);
 
   paginatedUsers.forEach(u=>{
     const row = document.createElement('tr');
-    row.className='hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors';
+    row.className='table-row-hover transition-colors border-b border-white/5';
     row.innerHTML = `
-      <td class="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">${u.username}</td>
-      <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">${u.email}</td>
-      <td class="px-3 py-3 whitespace-nowrap text-right text-sm font-medium">
-          <button onclick="deleteUser('${u.id}')" class="delete-button">Delete</button>
+      <td class="px-6 py-4 whitespace-nowrap font-bold text-white">${u.username}</td>
+      <td class="px-6 py-4 whitespace-nowrap text-gray-400 font-mono text-xs">${u.email}</td>
+      <td class="px-6 py-4 whitespace-nowrap text-right">
+          <button onclick="deleteUser('${u.id}')" class="tech-btn bg-red-900/30 text-red-500 border border-red-500/50 hover:bg-red-500 hover:text-white px-3 py-1 text-xs">Term_User</button>
       </td>
     `;
     tbody.appendChild(row);
   });
   
-  // 3. Update Pagination UI
   const start = offset + 1;
   const end = Math.min(offset + limit, totalItems);
   document.getElementById('userPagingInfo').textContent = 
-    `Showing ${start}-${end} of ${totalItems} users (Page ${userCurrentPage}/${totalPages})`;
+    `DISPLAYING ${start}-${end} // ${totalItems} ENTITIES`;
   
   document.getElementById('userPrev').disabled = userCurrentPage <= 1;
   document.getElementById('userNext').disabled = userCurrentPage >= totalPages;
 }
 
 async function deleteUser(uid){
-  showConfirmation(`Are you sure you want to permanently delete user: ${uid}?`, async () => {
+  showConfirmation(`CONFIRM DELETION OF ENTITY: ${uid}?`, async () => {
     const data = await fetchJSON('/admin/delete_user',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body: JSON.stringify({admin_id, token:admin_token, target_id:uid})
     });
     if (data && data.success) {
-        loadUsers(); // Re-load and re-render
+        loadUsers(); 
     }
   });
 }
-
-// --- Article Functions ---
 
 async function loadArticles(){
   const data = await fetchJSON(`/admin/articles?id=${admin_id}&token=${admin_token}`);
   articles = data?.articles || [];
   
-  // NEW: Update Stat Card
   document.getElementById('totalArticlesStat').textContent = articles.length;
   
   articleCurrentPage = 1;
@@ -568,7 +592,6 @@ function renderArticles(resetPage = 0){
   
   tbody.innerHTML = '';
 
-  // 1. Apply Search/Filter
   const filteredArticles = articles.filter(a => 
     a.title.toLowerCase().includes(search) || a.categ.toLowerCase().includes(search) || a.sub.toLowerCase().includes(search)
   );
@@ -595,56 +618,51 @@ function renderArticles(resetPage = 0){
   emptyState.classList.add('hidden');
   document.getElementById('articlePagination').classList.remove('hidden');
 
-  // 2. Apply Pagination (Client-side slicing)
   const offset = (articleCurrentPage - 1) * limit;
   const paginatedArticles = filteredArticles.slice(offset, offset + limit);
 
   paginatedArticles.forEach(a=>{
     const row = document.createElement('tr');
-    row.className='hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors';
+    row.className='table-row-hover transition-colors border-b border-white/5';
     const titlePreview = a.title.length > 25 ? a.title.slice(0, 22) + '...' : a.title;
     row.innerHTML = `
-      <td class="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">${titlePreview}</td>
-      <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">${a.categ}/${a.sub}</td>
-       <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">${a.user}</td>
-       <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">${a.views}</td>
-      <td class="px-3 py-3 whitespace-nowrap text-right text-sm font-medium">
-          <button onclick="deleteArticle('${a.id}')" class="delete-button">Delete</button>
+      <td class="px-6 py-4 whitespace-nowrap font-bold text-white">${titlePreview}</td>
+      <td class="px-6 py-4 whitespace-nowrap text-neon-pink text-xs font-mono uppercase">[${a.categ}/${a.sub}]</td>
+       <td class="px-6 py-4 whitespace-nowrap text-gray-400 font-mono text-xs">${a.user}</td>
+       <td class="px-6 py-4 whitespace-nowrap text-gray-400 font-mono text-xs">${a.views}</td>
+      <td class="px-6 py-4 whitespace-nowrap text-right">
+          <button onclick="deleteArticle('${a.id}')" class="tech-btn bg-red-900/30 text-red-500 border border-red-500/50 hover:bg-red-500 hover:text-white px-3 py-1 text-xs">Purge_File</button>
       </td>
     `;
     tbody.appendChild(row);
   });
   
-  // 3. Update Pagination UI
   const start = offset + 1;
   const end = Math.min(offset + limit, totalItems);
   document.getElementById('articlePagingInfo').textContent = 
-    `Showing ${start}-${end} of ${totalItems} articles (Page ${articleCurrentPage}/${totalPages})`;
+    `DISPLAYING ${start}-${end} // ${totalItems} RECORDS`;
   
   document.getElementById('articlePrev').disabled = articleCurrentPage <= 1;
   document.getElementById('articleNext').disabled = articleCurrentPage >= totalPages;
 }
 
 async function deleteArticle(aid){
-  showConfirmation(`Are you sure you want to delete the article with ID: ${aid}?`, async () => {
+  showConfirmation(`INITIATE PERMANENT DELETION SEQUENCE FOR ID: ${aid}?`, async () => {
     const data = await fetchJSON('/admin/delete_article',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body: JSON.stringify({admin_id, token:admin_token, article_id:aid})
     });
     if (data && data.success) {
-        loadArticles(); // Re-load and re-render
+        loadArticles();
     }
   });
 }
-
-// --- Comment Functions ---
 
 async function loadComments(){
   const data = await fetchJSON(`/admin/comments?id=${admin_id}&token=${admin_token}`);
   comments = data?.comments || [];
   
-  // NEW: Update Stat Card
   document.getElementById('totalCommentsStat').textContent = comments.length;
   
   commentCurrentPage = 1;
@@ -661,7 +679,6 @@ function renderComments(resetPage = 0){
   
   tbody.innerHTML = '';
 
-  // 1. Apply Search/Filter
   const filteredComments = comments.filter(c => 
     c.content.toLowerCase().includes(search) || c.user.toLowerCase().includes(search)
   );
@@ -688,79 +705,74 @@ function renderComments(resetPage = 0){
   emptyState.classList.add('hidden');
   document.getElementById('commentPagination').classList.remove('hidden');
 
-  // 2. Apply Pagination (Client-side slicing)
   const offset = (commentCurrentPage - 1) * limit;
   const paginatedComments = filteredComments.slice(offset, offset + limit);
 
   paginatedComments.forEach(c=>{
     const row = document.createElement('tr');
-    row.className='hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors';
+    row.className='table-row-hover transition-colors border-b border-white/5';
     const contentPreview = c.content.length > 50 ? c.content.substring(0, 30) + '...' : c.content;
     row.innerHTML = `
-      <td class="px-3 py-3 text-sm font-medium text-gray-900 dark:text-gray-100">${contentPreview}</td>
-      <td class="px-3 py-3 whitespace-nowrap text-xs font-mono text-gray-500 dark:text-gray-400">${c.user} | ${c.user_id}</td>
-      <td class="px-3 py-3 whitespace-nowrap text-right text-sm font-medium">
-          <button onclick="deleteComment('${c.id}')" class="delete-button">Delete</button>
+      <td class="px-6 py-4 font-medium text-gray-300 text-sm italic">"${contentPreview}"</td>
+      <td class="px-6 py-4 whitespace-nowrap text-neon-green font-mono text-xs">${c.user} <span class="text-gray-600">::</span> ${c.user_id}</td>
+      <td class="px-6 py-4 whitespace-nowrap text-right">
+          <button onclick="deleteComment('${c.id}')" class="tech-btn bg-red-900/30 text-red-500 border border-red-500/50 hover:bg-red-500 hover:text-white px-3 py-1 text-xs">Erase_Log</button>
       </td>
     `;
     tbody.appendChild(row);
   });
   
-  // 3. Update Pagination UI
   const start = offset + 1;
   const end = Math.min(offset + limit, totalItems);
   document.getElementById('commentPagingInfo').textContent = 
-    `Showing ${start}-${end} of ${totalItems} comments (Page ${commentCurrentPage}/${totalPages})`;
+    `DISPLAYING ${start}-${end} // ${totalItems} LOGS`;
   
   document.getElementById('commentPrev').disabled = commentCurrentPage <= 1;
   document.getElementById('commentNext').disabled = commentCurrentPage >= totalPages;
 }
 
 async function deleteComment(cid){
-  showConfirmation(`Are you sure you want to delete the comment with ID: ${cid}?`, async () => {
+  showConfirmation(`CONFIRM LOG DELETION: ${cid}?`, async () => {
     const data = await fetchJSON('/admin/delete_comment',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body: JSON.stringify({admin_id, token:admin_token, comment_id:cid})
     });
     if (data && data.success) {
-        loadComments(); // Re-load and re-render
+        loadComments();
     }
   });
 }
 
 function runBackup() {
-  showConfirmation('This will start a full database backup. Do you want to proceed?', () => {
-    console.log('Starting database backup...');
+  showConfirmation('INITIATING FULL SYSTEM BACKUP. PROCEED?', () => {
     const statusElement = document.getElementById('systemStatus');
-    statusElement.textContent = 'Backing up...';
-    statusElement.classList.remove('bg-primary-100', 'text-primary-800', 'dark:bg-primary-800', 'dark:text-primary-100');
-    statusElement.classList.add('bg-yellow-100', 'text-yellow-800', 'dark:bg-yellow-800', 'dark:text-yellow-100');
+    const originalText = statusElement.textContent;
+    statusElement.textContent = 'BACKUP_IN_PROGRESS...';
+    statusElement.parentElement.classList.remove('text-neon-cyan', 'border-neon-cyan/30');
+    statusElement.parentElement.classList.add('text-yellow-500', 'border-yellow-500/50', 'animate-pulse');
 
     setTimeout(() => {
-        statusElement.textContent = 'Operational';
-        statusElement.classList.remove('bg-yellow-100', 'text-yellow-800', 'dark:bg-yellow-800', 'dark:text-yellow-100');
-        statusElement.classList.add('bg-primary-100', 'text-primary-800', 'dark:bg-primary-800', 'dark:text-primary-100');
+        statusElement.textContent = 'ONLINE';
+        statusElement.parentElement.classList.add('text-neon-cyan', 'border-neon-cyan/30');
+        statusElement.parentElement.classList.remove('text-yellow-500', 'border-yellow-500/50', 'animate-pulse');
         
-        console.log("Database backup complete!"); 
     }, 2000);
   });
 }
 
 function clearCache() {
-  showConfirmation('Are you sure you want to clear all application cache? This may temporarily slow down performance.', () => {
-    console.log('Clearing application cache...');
+  showConfirmation('PURGING SYSTEM CACHE. PERFORMANCE MAY DEGRADE TEMPORARILY.', () => {
     const statusElement = document.getElementById('systemStatus');
-    statusElement.textContent = 'Clearing Cache...';
-    statusElement.classList.remove('bg-primary-100', 'text-primary-800', 'dark:bg-primary-800', 'dark:text-primary-100');
-    statusElement.classList.add('bg-gray-100', 'text-gray-800', 'dark:bg-gray-700', 'dark:text-gray-100');
+    statusElement.textContent = 'PURGING...';
+    statusElement.parentElement.classList.remove('text-neon-cyan', 'border-neon-cyan/30');
+    statusElement.parentElement.classList.add('text-white', 'border-white/30');
 
     setTimeout(() => {
-        statusElement.textContent = 'Operational';
-        statusElement.classList.remove('bg-gray-100', 'text-gray-800', 'dark:bg-gray-700', 'dark:text-gray-100');
-        statusElement.classList.add('bg-primary-100', 'text-primary-800', 'dark:bg-primary-800', 'dark:text-primary-100');
+        statusElement.textContent = 'ONLINE';
+        statusElement.parentElement.classList.add('text-neon-cyan', 'border-neon-cyan/30');
+        statusElement.parentElement.classList.remove('text-white', 'border-white/30');
 
-        console.log("Cache cleared successfully!");
     }, 1500);
   });
 }
@@ -768,7 +780,6 @@ function clearCache() {
 window.onload = function() {
   initTheme();
   
-  // Ensure default limit is set to 10
   document.getElementById('userLimit').value = 10;
   document.getElementById('articleLimit').value = 10;
   document.getElementById('commentLimit').value = 10;

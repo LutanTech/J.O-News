@@ -452,7 +452,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 showNote('Registration successful');
                 setTimeout(() => window.location.href = '/login', 800);
             } else {
-                showNote(data.message || 'Registration failed');
+                showNote(data.error || 'Registration failed');
             }
         })
         .catch(() => showNote('Server error'))

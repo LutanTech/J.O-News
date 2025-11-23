@@ -31,7 +31,7 @@ app.config['MAIL_DEFAULT_SENDER'] = ('JOMC News Team', 'lutancorpinfoteam@gmail.
 app.config['ADMIN_EMAIL'] = 'lutancorpinfoteam@gmail.com'
 
 ALLOWED_FRONTEND_ORIGINS = [
-     "http://127.0.0.1:5601",
+     "http://127.0.0.1:5500",
     "https://jomc-news.vercel.app",
 ]
 
@@ -115,6 +115,8 @@ def new():
     categ = request.form.get('categ')
     trending = request.form.get('trending')
     content = request.form.get('content')
+    country = request.form.get('country')
+    id = request.form.get('id')
 
     # get file
     image_file = request.files.get("image")
@@ -132,14 +134,24 @@ def new():
     if not image_url:
         return jsonify({'error':'Image not Uploaded'}), 400
 
+    if not id:
+        return jsonify({'error':'User not initiated properly', 'id':id}), 400
+
+    uploader = User.query.filter_by(id=id).first()
+
+    if not uploader:
+        return jsonify({'error':'Data mismatch in request. Please login again'}), 400
+
     new_post = News(
         id = generate_random_id(),
         image_url = image_url,
         title = title,
         categ = categ,
+        country=country,
         sub = sub,
         content = content,
-        is_trending = trending == "true"
+        is_trending = trending == "true",
+        user_id=uploader.id
     )
 
     new_post.slug = make_slug(title)
@@ -158,7 +170,7 @@ def new():
 
 @app.route('/get_news')
 def news():
-    limit = request.args.get('limit', type=int)
+    limit = request.args.get('limit', 5,  type=int)
     offset = request.args.get('offset', 0, type=int)
 
     news_query = News.query.order_by(News.added.desc())
@@ -175,7 +187,7 @@ def news():
 
 @app.route('/get_news_filter/<categ>')
 def news_filtered(categ):
-    limit = request.args.get('limit', type=int)
+    limit = request.args.get('limit', 5,  type=int)
     offset = request.args.get('offset', 0, type=int)
     country = request.args.get('c')
 
@@ -198,7 +210,7 @@ def news_filtered(categ):
 
 @app.route('/most_read_filter/<categ>')
 def get_most_read_filter(categ):
-    limit = request.args.get('limit', type=int)
+    limit = request.args.get('limit', 5,  type=int)
     offset = request.args.get('offset', 0, type=int)
     country = request.args.get('c')
 
@@ -219,7 +231,7 @@ def get_most_read_filter(categ):
 
 @app.route('/trending_filter/<categ>')
 def get_trending_filter(categ):
-    limit = request.args.get('limit', type=int)
+    limit = request.args.get('limit', 5,  type=int)
     offset = request.args.get('offset', 0, type=int)
 
     country = request.args.get('c')
@@ -468,6 +480,12 @@ def register():
                 if int(otp) != savedOtp:
                     return jsonify({'error':'OTP mismatch'}), 400
                 try:
+                    existing = User.query.filter_by(email=email).first()
+                    if existing:
+                        return jsonify({'error':'Email already registered'}), 400
+                    existing_usn = User.query.filter_by(username=username).first()
+                    if existing:
+                        return jsonify({'error':'Please choose a new username'}), 400
                     new_user = User(email=email, username=username, password=generate_password_hash(password), pic='https://i.ibb.co/HfDsDYb9/default.png')
                     db.session.add(new_user)
                     new_user.verified = True
@@ -476,8 +494,11 @@ def register():
                     return jsonify({'message','Registration successfull'}), 200
                 except Exception as e:
                     return jsonify({'error':f'Database Error {str(e)}'}), 500
+            return jsonify({'error':'Please Request a new OTP'}), 400
 
-    return jsonify({'error':'Missing data in request'}), 404
+        return jsonify({'error':'Missing data in request'}), 404
+    else:
+      return jsonify({'error':'Missing data in request', 'data':data}), 404
 
 
 from werkzeug.security import check_password_hash
@@ -772,10 +793,10 @@ def like_art():
             log(str(e), 'error')
             return jsonify({'error':'Failed to like '}), 500
     return jsonify({'error':'failed'}), 400
-  
+
 @app.route('/get_comment')
 def get_comment():
-    id = request.args.get('id') 
+    id = request.args.get('id')
     if id:
         comment = Comment.query.filter_by(id=id).first()
         if comment:
@@ -790,4 +811,3 @@ with app.app_context():
 if __name__ == '__main__':
     print("app.run(debug=True, port=5000, host='0.0.0.0')")
 #    app.run(debug=True, port=5000, host='0.0.0.0')
- 

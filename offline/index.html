@@ -323,12 +323,6 @@
   // ON PAGE LOAD
   document.addEventListener("DOMContentLoaded", () => {
 
-    // If online, reset retries and go home
-    if (navigator.onLine) {
-      localStorage.setItem("retries", 0);
-      window.location.href = "/";
-      return;
-    }
 
     // If offline + retries >=3, stop trying
     if (retries >= 3) {

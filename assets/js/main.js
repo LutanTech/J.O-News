@@ -110,3 +110,132 @@ document.addEventListener('DOMContentLoaded', ()=>{
       // console.clear()
     }, 10000);
 })
+document.addEventListener('DOMContentLoaded', ()=>{
+  const helpIcon = document.querySelector('.help')
+ const feedbackHub = document.createElement('div')
+
+feedbackHub.className = 'feedback-ov none'
+
+ feedbackHub.innerHTML =  `
+
+  <div class="feedback-inner">
+    <button class="back-f-btn" type="button"><i class="fas fa-angles-left"></i> Back</button>
+    <hr>
+    <h2>Feedback</h2>
+    <h3>Submit feedback, errors or general queries</h3>
+    <div class="submission">
+      <form action="" method="post" id="f-form">
+        <legend>
+        <label for="screenshot">Upload Screenshot</label>
+        <input type="file" name="screenshot" accept="image/*" id="screenshot">
+        Or
+        <button type="button" id="screenshotCapture">Capture Screen </button>
+      </legend>
+      <legend>
+        <label for="text"> Enter Description </label>
+        <textarea name="description" placeholder="Describe the issue" id="description" cols="10" rows="10"></textarea>
+      </legend>
+      <legend>
+        <button type="submit">Submit</button>
+      </legend>
+      </form>
+    </div>
+</div>
+
+ `
+ document.body.appendChild(feedbackHub)
+ const backBtn = feedbackHub.querySelector('.back-f-btn')
+ backBtn.addEventListener('click', ()=>{
+  feedbackHub.classList.toggle('flex')
+  feedbackHub.classList.toggle('none')
+ })
+ const capBtn = feedbackHub.querySelector('#screenshotCapture')
+capBtn.addEventListener('click', ()=>{
+  const init = capBtn.innerHTML
+  capBtn.innerHTML =  '<i class="fas fa-spinner fa-spin">'
+  capBtn.disabled = true
+  captureFullPage()
+  setTimeout(() => {
+    capBtn.innerHTML = init
+  }, 2000);
+ }) 
+
+ if(helpIcon){
+  helpIcon.addEventListener('click', ()=>{
+    feedbackHub.classList.toggle('flex')
+    feedbackHub.classList.toggle('none')
+  })
+}
+ const innerFdb = feedbackHub.querySelector('.feedback-inner')
+ document.addEventListener('click', (e)=>{
+  if(e.target == feedbackHub && !innerFdb.contains(e.target) && e.target !== innerFdb && feedbackHub.classList.contains('flex') ){
+    feedbackHub.classList.remove('flex')
+    feedbackHub.classList.add('none')
+  }
+ })
+ 
+ async function captureFullPage() {
+  feedbackHub.classList.toggle('flex')
+  feedbackHub.classList.toggle('none')
+  try {
+    // take screenshot
+    const canvas = await html2canvas(document.body, {
+      useCORS: true,
+      allowTaint: false,
+      backgroundColor: null,
+      logging: false,
+      removeContainer: true,
+      scrollX: 0,
+      scrollY: -window.scrollY,
+      foreignObjectRendering: true
+    });
+
+    // convert canvas to blob + file
+    const dataURL = canvas.toDataURL("image/png");
+    const blob = await (await fetch(dataURL)).blob();
+    const file = new File([blob], "screenshot.png", { type: "image/png" });
+
+    // inject file into the file input automatically
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    document.getElementById("screenshot").files = dt.files;
+
+    // show preview inside the form
+    showScreenshotPreview(dataURL);
+
+    console.log("Screenshot captured and attached.");
+    feedbackHub.classList.toggle('flex')
+    feedbackHub.classList.toggle('none')  
+  capBtn.disabled =false
+
+  } catch (err) {
+    console.error("Screenshot failed:", err);
+    feedbackHub.classList.toggle('flex')
+    feedbackHub.classList.toggle('none')
+  capBtn.disabled =false
+
+  }
+}
+
+function showScreenshotPreview(src) {
+  let prev = document.getElementById("shot-preview");
+
+  if (!prev) {
+    prev = document.createElement("img");
+    prev.id = "shot-preview";
+    prev.style.width = "100%";
+    prev.style.marginTop = "10px";
+    prev.style.borderRadius = "6px";
+    prev.style.maxWidth = '300px'
+
+    document
+      .querySelector("#screenshot")
+      .insertAdjacentElement("afterend", prev);
+  }
+
+  prev.src = src;
+}
+
+
+  
+})

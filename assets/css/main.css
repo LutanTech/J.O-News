@@ -839,3 +839,107 @@ button{
   pointer-events: all;
   background-color: rgb(0, 255, 89) !important;
 }
+.feedback-ov{
+  position: fixed;
+  top: 0;
+  z-index: 5400;
+  background: #00000091 !important;
+  right: 0;
+  width: 100vw;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  height: 100vh;
+}
+.feedback-inner{
+  background: white;
+  height: 100vh;
+  padding: 10px;
+  box-shadow: 2px 9px 20px white;
+  overflow: auto;
+  width: 100%;
+  max-width: 400px;
+}
+#f-form{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  legend{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+  }
+  input{
+    padding: 10px;
+    border: 0;
+    outline: 1px solid rgb(166, 166, 166);
+    display: flex;
+    position: relative;
+    text-indent: 200px;
+    justify-content: flex-end;
+    &::-webkit-file-upload-button{
+      padding: 5px;
+      width: 50%;
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+      background: black;
+      color: white;
+      border: 0;
+      content: '';
+      position: absolute;
+      width: 50%;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      height: 100%;
+      cursor: pointer;
+    }
+  }
+  textarea{
+    padding: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    outline: none;
+    border: 1px solid rgba(0, 0, 0, 0.258);
+    &:focus{
+      outline: 2px solid #0f0;
+    }
+
+  }
+  button{
+    display: flex;
+    padding: 10px ;
+    justify-content: center;
+    align-items: center;
+    outline: 2px solid black;
+    border: 2px solid white;
+  }
+  button[type=submit]{
+    background: rgb(186, 255, 83);
+  }
+  button[type=button]{
+    background: rgb(49, 111, 255);
+    color: white;
+  }
+}
+.back-f-btn{
+  font-size:large;
+  color: rgb(0, 0, 0);
+  background: lightcoral;
+  padding: 10px;
+  width: fit-content;
+  cursor: pointer;
+border: 0;
+border-radius: 40px;
+margin: 10px 0;
+&:hover{
+background: black;
+color: #ffffff;
+}
+}
+.none{
+  display: none !important;
+}
+.flex{
+  display: flex !important;
+}

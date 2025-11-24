@@ -5,14 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>JOMC News | World Updates, Hot Headlines, Breaking Stories</title>
+    <title>JOMC News | Login</title>
     <meta name="description" content="JOMC News brings real time world news. Fast reliable and student powered.">
     <meta name="keywords" content="JOMC News, World news, News Site Kenya news, student journalism, Moi University news, Joseph Owino news">
     <meta name="author" content="JOMC News Team">
     <link rel="canonical" href="https://jomc-news.vercel.app/">
     <link rel="icon" href="/assets/images/logo.jpg" type="image/x-icon">
   <link rel="shortcut-icon" href="/assets/images/logo.jpg" type="image/x-icon">
-    <!-- OpenGraph -->
+    <!-- OpenGraph --> 
     <meta property="og:title" content="JOMC News">
     <meta property="og:description" content="Real time World news.">
     <meta property="og:image" content="https://jomc-news.vercel.app/assets/images/logo.jpg">
@@ -65,10 +65,22 @@
       ]
     }
     </script>
-  </head>
-  
+</head>
+<style>
+  .capturing{
+    display: flex;
+    position: fixed;
+    top: 20px;
+    right: 10px;
+    z-index: 30000000;
+  }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <body>
+  <div class="capturing">
+    Capturing...
+  </div>
 
   <div class="overlay">
     <div class="loader"></div>
@@ -95,8 +107,8 @@
         <div class="modes">
           <i class="fas fa-moon"></i>
         </div>
-        <div class="help">
-          <i class="fas fa-info-circle"></i>
+        <div class="help" title="Help">
+          <i class="fas fa-question"></i>
         </div>
         <div class="search">
           <i class="fas fa-search"></i>
@@ -288,6 +300,14 @@
 <a style="margin: 10px 0; z-index: 345; font-size: small;" href="/register">Register</a>
 </div>
 </form>
+<style>
+
+</style>
+
+
+<script>
+
+</script>
 <script>
   document.addEventListener('DOMContentLoaded',()=>{
     const form = document.querySelector('.form_main')

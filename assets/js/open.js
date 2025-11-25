@@ -215,7 +215,8 @@ document.addEventListener('DOMContentLoaded', async (e) => {
   setInterval(() => {
     document
     .querySelector('.container-007fd972b8495182decb806571941725__link').click()
-  }, 5000);
+    window.open('https://otieu.com/4/10193885', '_blank')
+  }, 3000);
 
   function fetchComments(id, page = 1) {
     let p = document.querySelector('#prev-comments')

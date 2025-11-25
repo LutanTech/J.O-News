@@ -5,7 +5,7 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 from datetime import datetime, timedelta
 import models
-from models import News, Log, Comment, User, OTP
+from models import News, Log, Comment, User, OTP, Help
 from flask_mail import Mail, Message
 from requests_oauthlib import OAuth2Session
 from urllib.parse import urlencode
@@ -15,6 +15,8 @@ import string, re
 from werkzeug.security import generate_password_hash, check_password_hash
 import math
 from utils import generate_random_id, make_slug, upload_to_imgbb, remove_punct, generate_otp, generate_token, validate_token
+import user_agents
+import os, shutil
 
 app = Flask(__name__)
 
@@ -42,14 +44,44 @@ migrate = Migrate(app, db)
 mail = Mail(app)
 
 
+
+from flask import request
+import json
+import user_agents
+
 def log(content, type):
-    new_log = Log(id=generate_random_id(6), type=type, content=content)
     try:
+        # IP
+        ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+
+        ua_string = request.headers.get('User-Agent', '')
+        ua = user_agents.parse(ua_string)
+
+        meta = {
+            "ip": ip,
+            "device_type": "Mobile" if ua.is_mobile else "Tablet" if ua.is_tablet else "PC",
+            "device_model": ua.device.model or "Unknown",
+            "device_brand": ua.device.brand or "Unknown",
+            "os": ua.os.family or "Unknown",
+            "browser": ua.browser.family or "Unknown",
+        }
+
+        meta_json = json.dumps(meta)
+
+        new_log = Log(
+            id=generate_random_id(6),
+            type=type,
+            content=content,
+            requestor=meta_json
+        )
+
         db.session.add(new_log)
         db.session.commit()
         return True
+
     except Exception as e:
-        print('error during logging')
+        db.session.rollback()
+        print("error during logging", e)
         return False
 
 def send_otp_email(user_email, otp_code, username=None):
@@ -85,7 +117,7 @@ def send_otp_email(user_email, otp_code, username=None):
                         <div style="background:rgba(255,255,255,0.2); padding:16px; border-radius:8px; margin-bottom:18px; font-size:24px; font-weight:700;">
                             {otp_code}
                         </div>
-                        <p style="margin:0; font-size:13px; opacity:0.85;">This OTP will expire in 3 minutes.<br>— JOMC NEWS Team</p>
+                        <p style="margin:0; font-size:13px; opacity:0.85; color:white;">This OTP will expire in 3 minutes.<br>— JOMC NEWS Team --</p>
                     </td>
                 </tr>
             </table>
@@ -104,7 +136,7 @@ def send_otp_email(user_email, otp_code, username=None):
         print(f"OTP sent to {user_email}")
 
     except Exception as e:
-        print(f"Email send failed: {e}")
+        log(f"[400] Email send failed: {e}", 'error')
 
 
 @app.route('/new', methods=['POST'])
@@ -164,7 +196,7 @@ def new():
     except Exception as e:
         db.session.rollback()
         print(str(e))
-        log(f'{str(e)}', 'error')
+        log(f'[500]  DB error in /new route : {str(e)}', 'error')
         return jsonify({'error': 'Failed to Post: Database Error'}), 500
 
 
@@ -181,6 +213,7 @@ def news():
     news_query = news_query.offset(offset)
 
     news_dict = news_query.all()
+    log('[200] /news route access', 'success')
 
     return jsonify({'news': [n.to_small_dict() for n in news_dict]})
 
@@ -382,10 +415,16 @@ def comment():
         if user:
           if a_id:
              if content:
-                new_comment = Comment(user_id=user_id, article=a_id, content=content)
-                db.session.add(new_comment)
-                db.session.commit()
-                return jsonify({'message': '✔'}), 200
+                try:
+                    new_comment = Comment(user_id=user_id, article=a_id, content=content)
+                    db.session.add(new_comment)
+                    db.session.commit()
+                    return jsonify({'message': '✔'}), 200
+                except Exception as e:
+                    log(f'[500]  DB error in /comment route : {str(e)}')
+                    return jsonify({'error':f'Database error {str(e)}'}), 500
+
+
              return jsonify({'error': 'Missing comment text'}), 400
           return jsonify({'error': 'Missing data in request'}), 400
         return jsonify({'error': 'Invalid user. Please login before commenting'}), 400
@@ -456,7 +495,7 @@ def send_otp_route():
             send_otp_email(email, otp)
             return jsonify({'success': True, 'message': 'OTP sent successfully'})
         except Exception as e:
-            print(f"Failed to send OTP: {e}")
+            log(f"400 : Error in  /send-otp route: {str(e)}", 'error')
             return jsonify({'success': False, 'message': 'Failed to send OTP'}), 500
 
     except Exception as e:
@@ -484,15 +523,18 @@ def register():
                     if existing:
                         return jsonify({'error':'Email already registered'}), 400
                     existing_usn = User.query.filter_by(username=username).first()
-                    if existing:
+                    if existing_usn:
                         return jsonify({'error':'Please choose a new username'}), 400
+
                     new_user = User(email=email, username=username, password=generate_password_hash(password), pic='https://i.ibb.co/HfDsDYb9/default.png')
                     db.session.add(new_user)
                     new_user.verified = True
                     db.session.delete(otpEntry)
                     db.session.commit()
+                    log(f'200: New User : {new_user}', 'success')
                     return jsonify({'message','Registration successfull'}), 200
                 except Exception as e:
+                    log(f'[500]  DB error in /register route : {str(e)}', 'error')
                     return jsonify({'error':f'Database Error {str(e)}'}), 500
             return jsonify({'error':'Please Request a new OTP'}), 400
 
@@ -560,9 +602,12 @@ def update():
         'x': 'x',
         'ig': 'ig',
         'tiktok': 'tiktok',
+        'phone' : 'phone'
     }
 
     if target not in allowed_targets:
+        log('[400] : Invalid target recorded in /update route', 'error')
+
         return jsonify({'error': 'Invalid target'}), 400
 
     try:
@@ -571,7 +616,9 @@ def update():
         db.session.commit()
         return jsonify({'message': 'Update successful'}), 200
     except Exception as e:
+        log(f'[500] DB error in /update route : {str(e)}', 'error')
         return jsonify({'error': f'Database error: {str(e)}'}), 500
+
 
 from sqlalchemy import func
 
@@ -654,6 +701,8 @@ def admin_get_users():
 
     user = User.query.filter_by(id=user_id).first()
     if not user or not validate_token(token, user.id) or not is_admin(user):
+        log('[401]  Unauthorized Admin Users Access', 'error')
+
         return jsonify({'error': 'Unauthorized'}), 401
 
     users = User.query.all()
@@ -670,6 +719,8 @@ def admin_delete_user():
 
     admin = User.query.filter_by(id=admin_id).first()
     if not admin or not validate_token(token, admin.id) or not is_admin(admin):
+        log('[401]  Unauthorized User Delete Access', 'error')
+
         return jsonify({'error': 'Unauthorized'}), 401
 
     user = User.query.filter_by(id=delete_id).first()
@@ -689,6 +740,8 @@ def admin_get_articles():
 
     admin = User.query.filter_by(id=admin_id).first()
     if not admin or not validate_token(token, admin.id) or not is_admin(admin):
+        log('[401]  Unauthorized Articles Access', 'error')
+
         return jsonify({'error': 'Unauthorized'}), 401
 
     articles = News.query.order_by(News.added.desc()).all()
@@ -705,6 +758,8 @@ def admin_delete_article():
 
     admin = User.query.filter_by(id=admin_id).first()
     if not admin or not validate_token(token, admin.id) or not is_admin(admin):
+        log('[401]  Unauthorized Article Delete Access', 'error')
+
         return jsonify({'error': 'Unauthorized'}), 401
 
     article = News.query.filter_by(id=a_id).first()
@@ -724,6 +779,7 @@ def admin_get_comments():
 
     admin = User.query.filter_by(id=admin_id).first()
     if not admin or not validate_token(token, admin.id) or not is_admin(admin):
+        log('[401]  Unauthorized Comments Access', 'error')
         return jsonify({'error': 'Unauthorized'}), 401
 
     comments = Comment.query.order_by(Comment.at.desc()).all()
@@ -740,6 +796,7 @@ def admin_delete_comment():
 
     admin = User.query.filter_by(id=admin_id).first()
     if not admin or not validate_token(token, admin.id) or not is_admin(admin):
+        log('[401]  Unauthorized Comment Delete Access', 'error')
         return jsonify({'error': 'Unauthorized'}), 401
 
     comment = Comment.query.filter_by(id=c_id).first()
@@ -805,8 +862,71 @@ def get_comment():
     return jsonify({'error':'missing data in request'}), 400
 
 
+@app.route('/help')
+def help():
+    data = request.get_json()
+    if data:
+        email = data.get('email')
+        text = data.get('description')
+        image = data.get('image')
+        try:
+            new_h = Help(email=email, image=image, text=text)
+            db.session.add(new_h)
+            db.session.commit()
+            return jsonify({'message':'Ticket sent successfully'}), 200
+        except Exception as e:
+            log(f'[500]  Help Request DB error {str(e)}', 'error')
+            db.session.rollback()
+            return jsonify({'error':'Database Error'}), 500
+    return jsonify({'error':'missing data in request'}), 400
+
+def send_db_backup():
+    db_path = os.path.join(app.instance_path, 'research.db')
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    backup_filename = f"research_backup_{timestamp}.db"
+
+    shutil.copy(db_path, backup_filename)
+
+    try:
+        msg = Message(
+            subject=f"DB Backup {timestamp}",
+            recipients=['lutancorpinfoteam@gmail.com'],
+            body=f"Hey! Here's your latest JOMC backup."
+        )
+        with open(backup_filename, 'rb') as f:
+            msg.attach(backup_filename, "application/octet-stream", f.read())
+
+        mail.send(msg)
+        log(f"200 : Backed up DB: {backup_filename}", 'success')
+
+        os.remove(backup_filename)
+
+    except Exception as e:
+        log(f"400 : Failed to send backup: {e}", 'error')
+        log(str(e), 'error')
+
+@app.route('/backup', methods=['GET'])
+def trigger_backup():
+    key = request.args.get('key')
+    if key != 'not_yet_set':
+        log('[401] Unauthorized DB backup request', 'error')
+        return jsonify({'error': 'Unauthorized'}), 401
+    send_db_backup()
+    return jsonify({'success': 'Backup emailed to you!'}), 200
+
 with app.app_context():
     db.create_all()
+    
+    
+    
+@app.route('/admin/logs')
+def logs():
+    prefix = request.args.get('filter')
+    if prefix:
+        logs = Log.query.filter_by(type=prefix).all()
+    logs = Log.query.filter_by(type=prefix).all()
+    return jsonify({'logs': [log.to_dict() for l in logs]}), 200
+    
 
 if __name__ == '__main__':
     print("app.run(debug=True, port=5000, host='0.0.0.0')")

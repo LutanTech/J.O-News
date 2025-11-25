@@ -158,6 +158,21 @@ class Log(db.Model):
    id = db.Column(db.String(6), primary_key=True)
    type = db.Column(db.String(20))
    content = db.Column(db.Text)
+   requestor = db.Column(db.Text)
+   at = db.Column(db.DateTime, default=lambda: datetime.utcnow() + timedelta(hours=3))
+   
+   
+   def to_dict(self):
+       s = self
+       return{
+           'id':s.id,
+           'type':s.type,
+           'content': s.content,
+           'info' : s.requestor,
+           'at': s.at
+           
+       }
+       
 
 class Comment(db.Model):
     id = db.Column(db.String, primary_key=True, default=lambda: generate_random_id(10))
@@ -188,3 +203,10 @@ class OTP(db.Model):
     email = db.Column(db.String(255), nullable=False, unique=True)
     generated = db.Column(db.DateTime, default=lambda: datetime.utcnow() + timedelta(hours=3))
     otp = db.Column(db.String(6), nullable=False)
+
+class Help(db.Model):
+    id = db.Column(db.String(6), primary_key=True, default=lambda: generate_random_id(6))
+    email = db.Column(db.String(255), nullable=False, unique=True)
+    image = db.Column(db.Text(), nullable=True)
+    text= db.Column(db.Text(), nullable=True)
+     

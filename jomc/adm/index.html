@@ -1,797 +1,679 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NEXUS // Admin Interface</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JOMC Admin Panel</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-<script>
-  tailwind.config = {
-    darkMode: 'class',
-    theme: {
-      extend: {
-        colors: {
-          dark: {
-            900: '#030712',
-            800: '#0b1121',
-            700: '#151e32',
-          },
-          neon: {
-            cyan: '#00f3ff',
-            pink: '#bc13fe',
-            red: '#ff003c',
-            green: '#00ff9f',
-          }
-        },
-        fontFamily: {
-          display: ['Orbitron', 'sans-serif'],
-          body: ['Rajdhani', 'sans-serif'],
-          mono: ['Share Tech Mono', 'monospace'],
-        },
-        backgroundImage: {
-          'grid-pattern': "linear-gradient(to right, #151e32 1px, transparent 1px), linear-gradient(to bottom, #151e32 1px, transparent 1px)",
+    <!-- Tailwind Config for Dark Mode -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            750: '#2d3748', // Custom dark shade
+                            850: '#1a202c',
+                            950: '#0f172a',
+                        }
+                    }
+                }
+            }
         }
-      }
-    }
-  }
-</script>
-
-<style>
-  body {
-    background-color: #030712;
-    background-image: linear-gradient(to right, rgba(21, 30, 50, 0.5) 1px, transparent 1px), 
-                      linear-gradient(to bottom, rgba(21, 30, 50, 0.5) 1px, transparent 1px);
-    background-size: 40px 40px;
-    font-family: 'Rajdhani', sans-serif;
-    color: #e2e8f0;
-  }
-
-  .hud-card {
-    background: rgba(11, 17, 33, 0.7);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(0, 243, 255, 0.1);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hud-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 20px; height: 20px;
-    border-top: 2px solid #00f3ff;
-    border-left: 2px solid #00f3ff;
-    z-index: 10;
-  }
-  
-  .hud-card::after {
-    content: '';
-    position: absolute;
-    bottom: 0; right: 0;
-    width: 20px; height: 20px;
-    border-bottom: 2px solid #00f3ff;
-    border-right: 2px solid #00f3ff;
-    z-index: 10;
-  }
-
-  .tech-input {
-    background: rgba(3, 7, 18, 0.8);
-    border: 1px solid #1f2937;
-    color: #00f3ff;
-    font-family: 'Share Tech Mono', monospace;
-    transition: all 0.3s ease;
-  }
-
-  .tech-input:focus {
-    border-color: #00f3ff;
-    box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
-    outline: none;
-  }
-
-  .tech-btn {
-    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
-    transition: all 0.2s;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.75rem;
-  }
-  
-  .tech-btn:active {
-    transform: scale(0.98);
-  }
-
-  .table-row-hover:hover td {
-    background-color: rgba(0, 243, 255, 0.05);
-    color: #00f3ff;
-  }
-
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: #030712; }
-  ::-webkit-scrollbar-thumb { background: #1f2937; border: 1px solid #00f3ff; }
-  
-  .glitch-text {
-    position: relative;
-  }
-  
-  .neon-glow {
-    text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
-  }
-</style>
-</head>
-
-<body class="min-h-screen antialiased selection:bg-neon-cyan selection:text-black">
-
-<header class="fixed w-full top-0 z-50 border-b border-white/10 bg-dark-900/80 backdrop-blur-md">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
-    <div class="flex items-center space-x-3">
-      <div class="w-8 h-8 bg-neon-cyan flex items-center justify-center text-black font-bold font-display skew-x-[-10deg]">
-        <span class="skew-x-[10deg]">N</span>
-      </div>
-      <h1 class="text-xl font-display font-bold tracking-wider text-white">
-        NEXUS <span class="text-neon-cyan text-sm align-top">V2.0</span>
-      </h1>
-    </div>
-    <div class="flex items-center space-x-4">
-        <div id="authStatus" class="hidden font-mono text-xs px-2 py-1 border border-neon-red text-neon-red bg-neon-red/10 animate-pulse">
-            AUTH_FAILURE
-        </div>
-        <div class="flex items-center space-x-2 text-neon-cyan border border-neon-cyan/30 px-3 py-1 bg-dark-800/50">
-           <i class="fas fa-satellite-dish text-xs animate-pulse"></i>
-           <span id="systemStatus" class="font-mono text-xs tracking-widest uppercase">ONLINE</span>
-        </div>
-        <button id="themeToggle" onclick="toggleTheme()" class="text-gray-400 hover:text-white transition-colors">
-            <i class="fas fa-adjust hover:rotate-180 transition-transform duration-500"></i>
-        </button>
-    </div>
-  </div>
-</header>
-
-<div class="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-  
-  <div id="mainContent" class="space-y-8">
-    
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="hud-card p-6 flex flex-col justify-between h-32 group hover:border-neon-cyan/50 transition-colors">
-            <div class="flex justify-between items-start">
-                <span class="font-mono text-xs text-gray-500 uppercase tracking-widest">Database // Users</span>
-                <i class="fas fa-users text-neon-cyan/50 group-hover:text-neon-cyan transition-colors"></i>
-            </div>
-            <div class="flex items-baseline space-x-2">
-                <p id="totalUsersStat" class="text-4xl font-display font-bold text-white group-hover:neon-glow transition-all">0</p>
-                <span class="text-xs text-neon-green font-mono">ACTIVE ENTITIES</span>
-            </div>
-            <div class="w-full bg-gray-800 h-1 mt-2">
-                <div class="bg-neon-cyan h-1 w-3/4 shadow-[0_0_10px_#00f3ff]"></div>
-            </div>
-        </div>
-
-        <div class="hud-card p-6 flex flex-col justify-between h-32 group hover:border-neon-pink/50 transition-colors">
-            <div class="flex justify-between items-start">
-                <span class="font-mono text-xs text-gray-500 uppercase tracking-widest">Content // Articles</span>
-                <i class="fas fa-file-code text-neon-pink/50 group-hover:text-neon-pink transition-colors"></i>
-            </div>
-            <div class="flex items-baseline space-x-2">
-                <p id="totalArticlesStat" class="text-4xl font-display font-bold text-white group-hover:text-shadow-pink">0</p>
-                <span class="text-xs text-neon-pink font-mono">PUBLISHED</span>
-            </div>
-            <div class="w-full bg-gray-800 h-1 mt-2">
-                <div class="bg-neon-pink h-1 w-1/2 shadow-[0_0_10px_#bc13fe]"></div>
-            </div>
-        </div>
-
-        <div class="hud-card p-6 flex flex-col justify-between h-32 group hover:border-neon-green/50 transition-colors">
-            <div class="flex justify-between items-start">
-                <span class="font-mono text-xs text-gray-500 uppercase tracking-widest">Feed // Comments</span>
-                <i class="fas fa-comments text-neon-green/50 group-hover:text-neon-green transition-colors"></i>
-            </div>
-            <div class="flex items-baseline space-x-2">
-                <p id="totalCommentsStat" class="text-4xl font-display font-bold text-white">0</p>
-                <span class="text-xs text-neon-green font-mono">INTERACTIONS</span>
-            </div>
-            <div class="w-full bg-gray-800 h-1 mt-2">
-                <div class="bg-neon-green h-1 w-2/3 shadow-[0_0_10px_#00ff9f]"></div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="hud-card p-0" id="usersCard">
-      <div class="p-4 border-b border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-dark-800/50">
-        <h3 class="text-lg font-display font-bold text-neon-cyan flex items-center tracking-wider">
-            <span class="mr-2 text-xs bg-neon-cyan text-black px-1 font-mono">01</span>
-            USER_DIRECTORY
-        </h3>
-        <div class="flex flex-wrap items-center gap-3">
-            <div class="relative group">
-                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-neon-cyan transition-colors text-xs"></i>
-                <input type="text" id="userSearch" placeholder="SEARCH_QUERY..." oninput="renderUsers(1)"
-                    class="tech-input pl-8 pr-3 py-1.5 text-sm w-48 sm:w-64 focus:w-72 transition-all rounded-sm">
-            </div>
-            <select id="userLimit" onchange="renderUsers(1)" 
-                class="tech-input py-1.5 px-2 text-sm rounded-sm cursor-pointer">
-                <option value="5">05 ROWS</option>
-                <option value="10">10 ROWS</option>
-                <option value="25">25 ROWS</option>
-                <option value="50">50 ROWS</option>
-                <option value="100">100 ROWS</option>
-            </select>
-        </div>
-      </div>
-      
-      <div class="overflow-x-auto">
-        <table class="w-full text-left">
-          <thead class="bg-dark-900 border-b border-white/10 text-xs uppercase font-mono text-gray-400">
-            <tr>
-              <th class="px-6 py-3 tracking-wider">Identity</th>
-              <th class="px-6 py-3 tracking-wider">Contact_Protocol</th>
-              <th class="px-6 py-3 text-right tracking-wider">Command</th>
-            </tr>
-          </thead>
-          <tbody id="usersList" class="divide-y divide-white/5 font-mono text-sm">
-            <tr><td colspan="3" class="px-6 py-4 text-center text-neon-cyan animate-pulse">INITIALIZING DATA STREAM...</td></tr>
-          </tbody>
-        </table>
-        <p id="usersEmptyState" class="hidden text-center py-8 font-mono text-gray-500">NO_ENTITIES_FOUND</p>
-      </div>
-
-      <div id="userPagination" class="p-4 border-t border-white/10 flex justify-between items-center bg-dark-800/30">
-        <span id="userPagingInfo" class="text-xs font-mono text-gray-500">WAITING...</span>
-        <div class="flex space-x-1">
-          <button id="userPrev" onclick="changePage('users', -1)" disabled class="tech-btn bg-dark-700 hover:bg-neon-cyan hover:text-black text-white px-4 py-2 disabled:opacity-30 disabled:cursor-not-allowed">
-            <i class="fas fa-chevron-left mr-1"></i> PREV
-          </button>
-          <button id="userNext" onclick="changePage('users', 1)" disabled class="tech-btn bg-dark-700 hover:bg-neon-cyan hover:text-black text-white px-4 py-2 disabled:opacity-30 disabled:cursor-not-allowed">
-            NEXT <i class="fas fa-chevron-right ml-1"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div class="hud-card p-0" id="articlesCard">
-      <div class="p-4 border-b border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-dark-800/50">
-        <h3 class="text-lg font-display font-bold text-neon-pink flex items-center tracking-wider">
-            <span class="mr-2 text-xs bg-neon-pink text-black px-1 font-mono">02</span>
-            DATA_ARCHIVES
-        </h3>
-        <div class="flex flex-wrap items-center gap-3">
-             <div class="relative group">
-                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-neon-pink transition-colors text-xs"></i>
-                <input type="text" id="articleSearch" placeholder="FILTER_ARCHIVES..." oninput="renderArticles(1)"
-                    class="tech-input pl-8 pr-3 py-1.5 text-sm w-48 sm:w-64 focus:w-72 transition-all rounded-sm focus:border-neon-pink focus:shadow-[0_0_10px_rgba(188,19,254,0.2)]">
-            </div>
-            <select id="articleLimit" onchange="renderArticles(1)" 
-                class="tech-input py-1.5 px-2 text-sm rounded-sm cursor-pointer focus:border-neon-pink">
-              <option value="5">05 ROWS</option>
-              <option value="10">10 ROWS</option>
-              <option value="25">25 ROWS</option>
-              <option value="50">50 ROWS</option>
-              <option value="100">100 ROWS</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="overflow-x-auto">
-        <table class="w-full text-left">
-          <thead class="bg-dark-900 border-b border-white/10 text-xs uppercase font-mono text-gray-400">
-            <tr>
-              <th class="px-6 py-3 tracking-wider">Header_Data</th>
-              <th class="px-6 py-3 tracking-wider">Class</th>
-              <th class="px-6 py-3 tracking-wider">Author_ID</th>
-              <th class="px-6 py-3 tracking-wider">Impressions</th>
-              <th class="px-6 py-3 text-right tracking-wider">Command</th>
-            </tr>
-          </thead>
-          <tbody id="articlesList" class="divide-y divide-white/5 font-mono text-sm">
-            <tr><td colspan="5" class="px-6 py-4 text-center text-neon-pink animate-pulse">ACCESSING ARCHIVES...</td></tr>
-          </tbody>   
-        </table>
-        <p id="articlesEmptyState" class="hidden text-center py-8 font-mono text-gray-500">ARCHIVE_EMPTY</p>
-      </div>
-
-      <div id="articlePagination" class="p-4 border-t border-white/10 flex justify-between items-center bg-dark-800/30">
-        <span id="articlePagingInfo" class="text-xs font-mono text-gray-500">WAITING...</span>
-        <div class="flex space-x-1">
-          <button id="articlePrev" onclick="changePage('articles', -1)" disabled class="tech-btn bg-dark-700 hover:bg-neon-pink hover:text-black text-white px-4 py-2 disabled:opacity-30 disabled:cursor-not-allowed">
-            <i class="fas fa-chevron-left mr-1"></i> PREV
-          </button>
-          <button id="articleNext" onclick="changePage('articles', 1)" disabled class="tech-btn bg-dark-700 hover:bg-neon-pink hover:text-black text-white px-4 py-2 disabled:opacity-30 disabled:cursor-not-allowed">
-            NEXT <i class="fas fa-chevron-right ml-1"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div class="hud-card p-0" id="commentsCard">
-      <div class="p-4 border-b border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-dark-800/50">
-        <h3 class="text-lg font-display font-bold text-neon-green flex items-center tracking-wider">
-            <span class="mr-2 text-xs bg-neon-green text-black px-1 font-mono">03</span>
-            COMMS_LOG
-        </h3>
-         <div class="flex flex-wrap items-center gap-3">
-             <div class="relative group">
-                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-neon-green transition-colors text-xs"></i>
-                <input type="text" id="commentSearch" placeholder="SCAN_LOGS..." oninput="renderComments(1)"
-                    class="tech-input pl-8 pr-3 py-1.5 text-sm w-48 sm:w-64 focus:w-72 transition-all rounded-sm focus:border-neon-green focus:shadow-[0_0_10px_rgba(0,255,159,0.2)]">
-            </div>
-            <select id="commentLimit" onchange="renderComments(1)" 
-                class="tech-input py-1.5 px-2 text-sm rounded-sm cursor-pointer focus:border-neon-green">
-              <option value="5">05 ROWS</option>
-              <option value="10">10 ROWS</option>
-              <option value="25">25 ROWS</option>
-              <option value="50">50 ROWS</option>
-              <option value="100">100 ROWS</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="overflow-x-auto">
-        <table class="w-full text-left">
-          <thead class="bg-dark-900 border-b border-white/10 text-xs uppercase font-mono text-gray-400">
-            <tr>
-              <th class="px-6 py-3 tracking-wider">Payload_Preview</th>
-              <th class="px-6 py-3 tracking-wider">Origin_ID</th>
-              <th class="px-6 py-3 text-right tracking-wider">Command</th>
-            </tr>
-          </thead>
-          <tbody id="commentsList" class="divide-y divide-white/5 font-mono text-sm">
-            <tr><td colspan="3" class="px-6 py-4 text-center text-neon-green animate-pulse">DECRYPTING COMMS...</td></tr>
-          </tbody>
-        </table>
-        <p id="commentsEmptyState" class="hidden text-center py-8 font-mono text-gray-500">NO_TRANSMISSIONS</p>
-      </div>
-
-      <div id="commentPagination" class="p-4 border-t border-white/10 flex justify-between items-center bg-dark-800/30">
-        <span id="commentPagingInfo" class="text-xs font-mono text-gray-500">WAITING...</span>
-        <div class="flex space-x-1">
-          <button id="commentPrev" onclick="changePage('comments', -1)" disabled class="tech-btn bg-dark-700 hover:bg-neon-green hover:text-black text-white px-4 py-2 disabled:opacity-30 disabled:cursor-not-allowed">
-            <i class="fas fa-chevron-left mr-1"></i> PREV
-          </button>
-          <button id="commentNext" onclick="changePage('comments', 1)" disabled class="tech-btn bg-dark-700 hover:bg-neon-green hover:text-black text-white px-4 py-2 disabled:opacity-30 disabled:cursor-not-allowed">
-            NEXT <i class="fas fa-chevron-right ml-1"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div class="hud-card p-6 flex flex-col md:flex-row items-center justify-between gap-4 border-t-4 border-t-yellow-500" id="settingsCard">
-        <div>
-            <h3 class="text-lg font-display font-bold text-yellow-500 tracking-wider mb-1">SYSTEM_MAINTENANCE</h3>
-            <p class="text-xs font-mono text-gray-400">CORE_VERSION: <span class="text-white">v1.2.4_FINAL</span></p>
-        </div>
-      <div class="flex space-x-4">
-        <button onclick="runBackup()" class="tech-btn bg-yellow-600/20 text-yellow-500 border border-yellow-500/50 hover:bg-yellow-500 hover:text-black px-6 py-3">
-            <i class="fas fa-database mr-2"></i> INITIATE_BACKUP
-        </button>
-        <button onclick="clearCache()" class="tech-btn bg-gray-700/50 text-gray-300 border border-gray-500/50 hover:bg-white hover:text-black px-6 py-3">
-            <i class="fas fa-eraser mr-2"></i> PURGE_CACHE
-        </button>
-      </div>
-    </div>
-    
-  </div>
-</div>
-
-<div id="confirmationModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden transition-opacity duration-300">
-  <div class="bg-dark-900 border border-neon-red/50 w-full max-w-md p-0 transform scale-95 transition-transform duration-300 shadow-[0_0_30px_rgba(255,0,60,0.2)]">
-    <div class="bg-neon-red/10 p-4 border-b border-neon-red/20 flex items-center space-x-3">
-        <i class="fas fa-exclamation-triangle text-neon-red animate-pulse"></i>
-        <h4 class="text-lg font-display font-bold text-white tracking-widest">CONFIRMATION_REQUIRED</h4>
-    </div>
-    <div class="p-6">
-        <p id="modalMessage" class="text-gray-300 font-mono text-sm leading-relaxed"></p>
-    </div>
-    <div class="p-4 bg-dark-800 flex justify-end space-x-3 border-t border-white/5">
-      <button id="modalCancel" class="tech-btn bg-transparent border border-gray-600 text-gray-400 hover:border-white hover:text-white px-6 py-2">ABORT</button>
-      <button id="modalConfirm" class="tech-btn bg-neon-red text-black hover:bg-white hover:text-neon-red px-6 py-2 shadow-[0_0_10px_rgba(255,0,60,0.4)]">EXECUTE</button>
-    </div>
-  </div>
-</div>
-
-<script>
-const BASE_URL = "https://jomc.pythonanywhere.com"; 
-
-const admin_id = localStorage.getItem('uid');
-const admin_token = localStorage.getItem('token');
-
-let users=[], articles=[], comments=[];
-let confirmationCallback = null;
-
-let userCurrentPage = 1;
-let articleCurrentPage = 1;
-let commentCurrentPage = 1;
-
-function initTheme() {
-    document.documentElement.classList.add('dark');
-}
-
-function toggleTheme(){
-    console.log("Theme locked to Dark Mode in Cyber Interface");
-}
-
-async function fetchJSON(path, opts={}) {
-  try {
-    const res = await fetch(`${BASE_URL}${path}`, opts);
-    if(!res.ok) {
-        console.error(`API Error on ${path}: ${res.status} ${res.statusText}`);
-        return null;
-    }
-    return res.json();
-  } catch(error) {
-    console.error("Fetch failed:", error);
-    return null;
-  }
-}
-
-const modal = document.getElementById('confirmationModal');
-const modalMessage = document.getElementById('modalMessage');
-const modalConfirmButton = document.getElementById('modalConfirm');
-const modalCancelButton = document.getElementById('modalCancel');
-
-function showConfirmation(message, callback) {
-    modalMessage.textContent = message;
-    confirmationCallback = callback;
-    modal.classList.remove('hidden');
-    setTimeout(() => { 
-      modal.querySelector('div').classList.remove('scale-95');
-      modal.style.opacity = 1;
-    }, 10);
-}
-
-function hideConfirmation() {
-    modal.querySelector('div').classList.add('scale-95');
-    modal.style.opacity = 0;
-    setTimeout(() => {
-      modal.classList.add('hidden');
-    }, 300);
-}
-
-modalConfirmButton.onclick = () => {
-    if (confirmationCallback) {
-        confirmationCallback();
-    }
-    hideConfirmation();
-};
-
-modalCancelButton.onclick = hideConfirmation;
-
-
-function showAuthError() {
-    const statusDiv = document.getElementById('authStatus');
-    statusDiv.textContent = 'AUTH_TOKEN_MISSING';
-    statusDiv.classList.remove('hidden');
-    statusDiv.classList.add('block');
-    document.getElementById('mainContent').innerHTML = `<div class="flex flex-col items-center justify-center h-96 border border-neon-red/30 bg-neon-red/5">
-        <i class="fas fa-lock text-6xl text-neon-red mb-6"></i>
-        <h2 class="text-2xl font-display text-white mb-2">ACCESS DENIED</h2>
-        <p class="font-mono text-neon-red">MISSING_CREDENTIALS: uid // token</p>
-    </div>`;
-}
-
-function changePage(entity, direction) {
-  switch (entity) {
-    case 'users':
-      userCurrentPage += direction;
-      renderUsers();
-      break;
-    case 'articles':
-      articleCurrentPage += direction;
-      renderArticles();
-      break;
-    case 'comments':
-      commentCurrentPage += direction;
-      renderComments();
-      break;
-  }
-}
-
-async function loadUsers(){
-  const data = await fetchJSON(`/admin/users?id=${admin_id}&token=${admin_token}`);
-  users = data?.users || [];
-  
-  document.getElementById('totalUsersStat').textContent = users.length;
-  
-  userCurrentPage = 1;
-  renderUsers();
-}
-
-function renderUsers(resetPage = 0){
-  const tbody = document.getElementById('usersList');
-  const emptyState = document.getElementById('usersEmptyState');
-  const search = document.getElementById('userSearch').value.toLowerCase();
-  const limit = parseInt(document.getElementById('userLimit').value, 10);
-  
-  if (resetPage) userCurrentPage = 1;
-  
-  tbody.innerHTML = '';
-  
-  const filteredUsers = users.filter(u => 
-    u.username.toLowerCase().includes(search) || u.email.toLowerCase().includes(search)
-  );
-  
-  const totalItems = filteredUsers.length;
-  const totalPages = Math.ceil(totalItems / limit);
-
-  if (userCurrentPage > totalPages && totalPages > 0) {
-    userCurrentPage = totalPages;
-  } else if (userCurrentPage < 1 && totalPages > 0) {
-    userCurrentPage = 1;
-  } else if (totalPages === 0) {
-    userCurrentPage = 0;
-  }
-
-  if (totalItems === 0) {
-     tbody.classList.add('hidden');
-     emptyState.classList.remove('hidden');
-     document.getElementById('userPagination').classList.add('hidden');
-     return;
-  }
-  
-  tbody.classList.remove('hidden');
-  emptyState.classList.add('hidden');
-  document.getElementById('userPagination').classList.remove('hidden');
-
-  const offset = (userCurrentPage - 1) * limit;
-  const paginatedUsers = filteredUsers.slice(offset, offset + limit);
-
-  paginatedUsers.forEach(u=>{
-    const row = document.createElement('tr');
-    row.className='table-row-hover transition-colors border-b border-white/5';
-    row.innerHTML = `
-      <td class="px-6 py-4 whitespace-nowrap font-bold text-white">${u.username}</td>
-      <td class="px-6 py-4 whitespace-nowrap text-gray-400 font-mono text-xs">${u.email}</td>
-      <td class="px-6 py-4 whitespace-nowrap text-right">
-          <button onclick="deleteUser('${u.id}')" class="tech-btn bg-red-900/30 text-red-500 border border-red-500/50 hover:bg-red-500 hover:text-white px-3 py-1 text-xs">Term_User</button>
-      </td>
-    `;
-    tbody.appendChild(row);
-  });
-  
-  const start = offset + 1;
-  const end = Math.min(offset + limit, totalItems);
-  document.getElementById('userPagingInfo').textContent = 
-    `DISPLAYING ${start}-${end} // ${totalItems} ENTITIES`;
-  
-  document.getElementById('userPrev').disabled = userCurrentPage <= 1;
-  document.getElementById('userNext').disabled = userCurrentPage >= totalPages;
-}
-
-async function deleteUser(uid){
-  showConfirmation(`CONFIRM DELETION OF ENTITY: ${uid}?`, async () => {
-    const data = await fetchJSON('/admin/delete_user',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({admin_id, token:admin_token, target_id:uid})
-    });
-    if (data && data.success) {
-        loadUsers(); 
-    }
-  });
-}
-
-async function loadArticles(){
-  const data = await fetchJSON(`/admin/articles?id=${admin_id}&token=${admin_token}`);
-  articles = data?.articles || [];
-  
-  document.getElementById('totalArticlesStat').textContent = articles.length;
-  
-  articleCurrentPage = 1;
-  renderArticles();
-}
-
-function renderArticles(resetPage = 0){
-  const tbody = document.getElementById('articlesList');
-  const emptyState = document.getElementById('articlesEmptyState');
-  const search = document.getElementById('articleSearch').value.toLowerCase();
-  const limit = parseInt(document.getElementById('articleLimit').value, 10);
-
-  if (resetPage) articleCurrentPage = 1;
-  
-  tbody.innerHTML = '';
-
-  const filteredArticles = articles.filter(a => 
-    a.title.toLowerCase().includes(search) || a.categ.toLowerCase().includes(search) || a.sub.toLowerCase().includes(search)
-  );
-  
-  const totalItems = filteredArticles.length;
-  const totalPages = Math.ceil(totalItems / limit);
-
-  if (articleCurrentPage > totalPages && totalPages > 0) {
-    articleCurrentPage = totalPages;
-  } else if (articleCurrentPage < 1 && totalPages > 0) {
-    articleCurrentPage = 1;
-  } else if (totalPages === 0) {
-    articleCurrentPage = 0;
-  }
-  
-  if (totalItems === 0) {
-     tbody.classList.add('hidden');
-     emptyState.classList.remove('hidden');
-     document.getElementById('articlePagination').classList.add('hidden');
-     return;
-  }
-
-  tbody.classList.remove('hidden');
-  emptyState.classList.add('hidden');
-  document.getElementById('articlePagination').classList.remove('hidden');
-
-  const offset = (articleCurrentPage - 1) * limit;
-  const paginatedArticles = filteredArticles.slice(offset, offset + limit);
-
-  paginatedArticles.forEach(a=>{
-    const row = document.createElement('tr');
-    row.className='table-row-hover transition-colors border-b border-white/5';
-    const titlePreview = a.title.length > 25 ? a.title.slice(0, 22) + '...' : a.title;
-    row.innerHTML = `
-      <td class="px-6 py-4 whitespace-nowrap font-bold text-white">${titlePreview}</td>
-      <td class="px-6 py-4 whitespace-nowrap text-neon-pink text-xs font-mono uppercase">[${a.categ}/${a.sub}]</td>
-       <td class="px-6 py-4 whitespace-nowrap text-gray-400 font-mono text-xs">${a.user}</td>
-       <td class="px-6 py-4 whitespace-nowrap text-gray-400 font-mono text-xs">${a.views}</td>
-      <td class="px-6 py-4 whitespace-nowrap text-right">
-          <button onclick="deleteArticle('${a.id}')" class="tech-btn bg-red-900/30 text-red-500 border border-red-500/50 hover:bg-red-500 hover:text-white px-3 py-1 text-xs">Purge_File</button>
-      </td>
-    `;
-    tbody.appendChild(row);
-  });
-  
-  const start = offset + 1;
-  const end = Math.min(offset + limit, totalItems);
-  document.getElementById('articlePagingInfo').textContent = 
-    `DISPLAYING ${start}-${end} // ${totalItems} RECORDS`;
-  
-  document.getElementById('articlePrev').disabled = articleCurrentPage <= 1;
-  document.getElementById('articleNext').disabled = articleCurrentPage >= totalPages;
-}
-
-async function deleteArticle(aid){
-  showConfirmation(`INITIATE PERMANENT DELETION SEQUENCE FOR ID: ${aid}?`, async () => {
-    const data = await fetchJSON('/admin/delete_article',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({admin_id, token:admin_token, article_id:aid})
-    });
-    if (data && data.success) {
-        loadArticles();
-    }
-  });
-}
-
-async function loadComments(){
-  const data = await fetchJSON(`/admin/comments?id=${admin_id}&token=${admin_token}`);
-  comments = data?.comments || [];
-  
-  document.getElementById('totalCommentsStat').textContent = comments.length;
-  
-  commentCurrentPage = 1;
-  renderComments();
-}
-
-function renderComments(resetPage = 0){
-  const tbody = document.getElementById('commentsList');
-  const emptyState = document.getElementById('commentsEmptyState');
-  const search = document.getElementById('commentSearch').value.toLowerCase();
-  const limit = parseInt(document.getElementById('commentLimit').value, 10);
-  
-  if (resetPage) commentCurrentPage = 1;
-  
-  tbody.innerHTML = '';
-
-  const filteredComments = comments.filter(c => 
-    c.content.toLowerCase().includes(search) || c.user.toLowerCase().includes(search)
-  );
-  
-  const totalItems = filteredComments.length;
-  const totalPages = Math.ceil(totalItems / limit);
-
-  if (commentCurrentPage > totalPages && totalPages > 0) {
-    commentCurrentPage = totalPages;
-  } else if (commentCurrentPage < 1 && totalPages > 0) {
-    commentCurrentPage = 1;
-  } else if (totalPages === 0) {
-    commentCurrentPage = 0;
-  }
-
-  if (totalItems === 0) {
-     tbody.classList.add('hidden');
-     emptyState.classList.remove('hidden');
-     document.getElementById('commentPagination').classList.add('hidden');
-     return;
-  }
-
-  tbody.classList.remove('hidden');
-  emptyState.classList.add('hidden');
-  document.getElementById('commentPagination').classList.remove('hidden');
-
-  const offset = (commentCurrentPage - 1) * limit;
-  const paginatedComments = filteredComments.slice(offset, offset + limit);
-
-  paginatedComments.forEach(c=>{
-    const row = document.createElement('tr');
-    row.className='table-row-hover transition-colors border-b border-white/5';
-    const contentPreview = c.content.length > 50 ? c.content.substring(0, 30) + '...' : c.content;
-    row.innerHTML = `
-      <td class="px-6 py-4 font-medium text-gray-300 text-sm italic">"${contentPreview}"</td>
-      <td class="px-6 py-4 whitespace-nowrap text-neon-green font-mono text-xs">${c.user} <span class="text-gray-600">::</span> ${c.user_id}</td>
-      <td class="px-6 py-4 whitespace-nowrap text-right">
-          <button onclick="deleteComment('${c.id}')" class="tech-btn bg-red-900/30 text-red-500 border border-red-500/50 hover:bg-red-500 hover:text-white px-3 py-1 text-xs">Erase_Log</button>
-      </td>
-    `;
-    tbody.appendChild(row);
-  });
-  
-  const start = offset + 1;
-  const end = Math.min(offset + limit, totalItems);
-  document.getElementById('commentPagingInfo').textContent = 
-    `DISPLAYING ${start}-${end} // ${totalItems} LOGS`;
-  
-  document.getElementById('commentPrev').disabled = commentCurrentPage <= 1;
-  document.getElementById('commentNext').disabled = commentCurrentPage >= totalPages;
-}
-
-async function deleteComment(cid){
-  showConfirmation(`CONFIRM LOG DELETION: ${cid}?`, async () => {
-    const data = await fetchJSON('/admin/delete_comment',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({admin_id, token:admin_token, comment_id:cid})
-    });
-    if (data && data.success) {
-        loadComments();
-    }
-  });
-}
-
-function runBackup() {
-  showConfirmation('INITIATING FULL SYSTEM BACKUP. PROCEED?', () => {
-    const statusElement = document.getElementById('systemStatus');
-    const originalText = statusElement.textContent;
-    statusElement.textContent = 'BACKUP_IN_PROGRESS...';
-    statusElement.parentElement.classList.remove('text-neon-cyan', 'border-neon-cyan/30');
-    statusElement.parentElement.classList.add('text-yellow-500', 'border-yellow-500/50', 'animate-pulse');
-
-    setTimeout(() => {
-        statusElement.textContent = 'ONLINE';
-        statusElement.parentElement.classList.add('text-neon-cyan', 'border-neon-cyan/30');
-        statusElement.parentElement.classList.remove('text-yellow-500', 'border-yellow-500/50', 'animate-pulse');
+    </script>
+    <style>
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         
-    }, 2000);
-  });
-}
+        /* Smooth transitions */
+        .transition-all-300 { transition: all 0.3s ease-in-out; }
+    </style>
+</head>
+<body class="bg-gray-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 transition-colors duration-300">
 
-function clearCache() {
-  showConfirmation('PURGING SYSTEM CACHE. PERFORMANCE MAY DEGRADE TEMPORARILY.', () => {
-    const statusElement = document.getElementById('systemStatus');
-    statusElement.textContent = 'PURGING...';
-    statusElement.parentElement.classList.remove('text-neon-cyan', 'border-neon-cyan/30');
-    statusElement.parentElement.classList.add('text-white', 'border-white/30');
+    <div id="app" class="min-h-screen flex flex-col">
+        <!-- App content injected by JS -->
+    </div>
 
-    setTimeout(() => {
-        statusElement.textContent = 'ONLINE';
-        statusElement.parentElement.classList.add('text-neon-cyan', 'border-neon-cyan/30');
-        statusElement.parentElement.classList.remove('text-white', 'border-white/30');
+    <script>
+        // --- Constants & State ---
+        const API_BASE = "https://jomc.pythonanywhere.com";
+        
+        let state = {
+            auth: JSON.parse(localStorage.getItem('admin_auth')) || { isAuthenticated: false, adminId: '', token: '', user: null },
+            view: 'dashboard',
+            darkMode: localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches),
+            sidebarOpen: true,
+            data: { users: [], articles: [], comments: [], logs: [] },
+            filters: { search: '', logType: '' },
+            loading: false
+        };
 
-    }, 1500);
-  });
-}
+        // --- Core Functions ---
 
-window.onload = function() {
-  initTheme();
-  
-  document.getElementById('userLimit').value = 10;
-  document.getElementById('articleLimit').value = 10;
-  document.getElementById('commentLimit').value = 10;
-  
-  if(admin_id && admin_token){
-    loadUsers();
-    loadArticles();
-    loadComments();
-  }else{
-    showAuthError();
-  }
-}
-</script>
+        function init() {
+            applyTheme();
+            render();
+        }
+
+        function setState(newState) {
+            state = { ...state, ...newState };
+            render();
+        }
+
+        function applyTheme() {
+            const html = document.documentElement;
+            if (state.darkMode) {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        function toggleTheme() {
+            state.darkMode = !state.darkMode;
+            applyTheme();
+            // Re-render chart if on dashboard to update colors
+            if(state.view === 'dashboard' && state.auth.isAuthenticated) renderDashboardCharts();
+        }
+
+        // --- API Interactions ---
+
+        async function login(email, password) {
+            try {
+                const res = await fetch(`${API_BASE}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+                
+                if (res.ok && data.token) {
+                    const authData = { 
+                        isAuthenticated: true, 
+                        adminId: data.user.id, 
+                        token: data.token,
+                        user: data.user
+                    };
+                    localStorage.setItem('admin_auth', JSON.stringify(authData));
+                    setState({ auth: authData, view: 'dashboard' });
+                } else {
+                    alert(data.error || 'Login failed');
+                }
+            } catch (err) {
+                alert('Connection error. Is the Flask backend running?');
+                console.error(err);
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('admin_auth');
+            setState({ auth: { isAuthenticated: false }, view: 'dashboard', data: { users: [], articles: [], comments: [], logs: [] } });
+        }
+
+        async function fetchData(endpoint) {
+            const { adminId, token } = state.auth;
+            // Add auth params to URL if not logs (logs are public in your code currently, but good practice to keep consistent)
+            const separator = endpoint.includes('?') ? '&' : '?';
+            const url = endpoint.includes('logs') 
+                ? `${API_BASE}/${endpoint}` 
+                : `${API_BASE}/${endpoint}${separator}id=${adminId}&token=${token}`;
+                
+            const res = await fetch(url);
+            return res.json();
+        }
+
+        async function loadDashboardData() {
+            setState({ loading: true });
+            try {
+                const [users, articles, comments, logs] = await Promise.all([
+                    fetchData('admin/users'),
+                    fetchData('admin/articles'),
+                    fetchData('admin/comments'),
+                    fetchData('admin/logs')
+                ]);
+                
+                setState({ 
+                    loading: false, 
+                    data: { 
+                        users: users.users || [], 
+                        articles: articles.articles || [], 
+                        comments: comments.comments || [], 
+                        logs: logs.logs || [] 
+                    } 
+                });
+                
+                // Initialize charts after DOM update
+                setTimeout(renderDashboardCharts, 100);
+            } catch (e) {
+                console.error(e);
+                setState({ loading: false });
+            }
+        }
+
+        async function deleteItem(type, id) {
+            if (!confirm(`Permanently delete this ${type}?`)) return;
+            
+            const endpoints = {
+                user: 'admin/delete_user',
+                article: 'admin/delete_article',
+                comment: 'admin/delete_comment'
+            };
+            
+            const idFields = {
+                user: 'target_id',
+                article: 'article_id',
+                comment: 'comment_id'
+            };
+
+            try {
+                const res = await fetch(`${API_BASE}/${endpoints[type]}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        admin_id: state.auth.adminId, 
+                        token: state.auth.token, 
+                        [idFields[type]]: id 
+                    })
+                });
+
+                if (res.ok) {
+                    // Optimistic update
+                    const newData = { ...state.data };
+                    if (type === 'user') newData.users = newData.users.filter(u => u.id !== id);
+                    if (type === 'article') newData.articles = newData.articles.filter(a => a.id !== id);
+                    if (type === 'comment') newData.comments = newData.comments.filter(c => c.id !== id);
+                    setState({ data: newData });
+                } else {
+                    alert('Failed to delete item');
+                }
+            } catch (e) {
+                alert('Error connecting to server');
+            }
+        }
+
+        // --- Render Functions ---
+
+        function render() {
+            const app = document.getElementById('app');
+            
+            if (!state.auth.isAuthenticated) {
+                app.innerHTML = renderLogin();
+                // Attach Login Listener
+                document.getElementById('loginForm')?.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    login(e.target.email.value, e.target.password.value);
+                });
+            } else {
+                app.innerHTML = `
+                    <div class="flex h-screen overflow-hidden">
+                        ${renderSidebar()}
+                        <div class="flex-1 flex flex-col min-w-0 transition-all duration-300 lg:ml-64 relative" id="main-content">
+                            ${renderHeader()}
+                            <main class="flex-1 p-4 lg:p-8 overflow-y-auto">
+                                ${state.loading ? renderLoading() : renderCurrentView()}
+                            </main>
+                        </div>
+                    </div>
+                `;
+                
+                // Attach global listeners
+                attachGlobalListeners();
+            }
+            
+            // Initialize Icons
+            lucide.createIcons();
+        }
+
+        function renderLoading() {
+            return `<div class="flex items-center justify-center h-full"><div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>`;
+        }
+
+        function renderLogin() {
+            return `
+                <div class="min-h-screen flex items-center justify-center p-4">
+                     <button onclick="toggleTheme()" class="absolute top-6 right-6 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors">
+                        <i data-lucide="${state.darkMode ? 'sun' : 'moon'}"></i>
+                    </button>
+                    <div class="w-full max-w-md p-8 rounded-2xl shadow-xl border bg-white dark:bg-slate-800 dark:border-slate-700 border-gray-100">
+                        <div class="flex flex-col items-center mb-8">
+                            <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-blue-600/30">
+                                <i data-lucide="shield" class="text-white h-8 w-8"></i>
+                            </div>
+                            <h2 class="text-3xl font-bold">Welcome Back</h2>
+                            <p class="text-sm opacity-60 mt-2">Enter credentials to access admin panel</p>
+                        </div>
+                        <form id="loginForm" class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium mb-2 opacity-80">Email Address</label>
+                                <input name="email" type="email" required placeholder="admin@example.com" class="w-full px-4 py-3 rounded-xl border bg-gray-50 dark:bg-slate-900 border-gray-200 dark:border-slate-600 focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2 opacity-80">Password</label>
+                                <input name="password" type="password" required placeholder="••••••••" class="w-full px-4 py-3 rounded-xl border bg-gray-50 dark:bg-slate-900 border-gray-200 dark:border-slate-600 focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                            </div>
+                            <button type="submit" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-600/30 transition-all transform hover:-translate-y-0.5">
+                                Sign In
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderSidebar() {
+            const items = [
+                { id: 'dashboard', icon: 'bar-chart-3', label: 'Overview' },
+                { id: 'users', icon: 'users', label: 'Users' },
+                { id: 'articles', icon: 'file-text', label: 'Articles' },
+                { id: 'comments', icon: 'message-square', label: 'Comments' },
+                { id: 'logs', icon: 'activity', label: 'System Logs' },
+                { id: 'refresh', icon: 'refresh', label: 'Refresh' }
+            ];
+
+            const navHTML = items.map(item => `
+                <button onclick="navigate('${item.id}')" 
+                    class="w-full flex items-center px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 mb-1 ${state.view === item.id ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' : 'text-slate-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700/50'}">
+                    <i data-lucide="${item.icon}" class="w-5 h-5 mr-3"></i>
+                    ${item.label}
+                </button>
+            `).join('');
+
+            return `
+                <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-slate-800 border-r border-gray-200 dark:border-slate-700 transform ${state.sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 transition-transform duration-300">
+                    <div class="h-16 flex items-center justify-between px-6 border-b border-opacity-10 dark:border-slate-700">
+                        <div class="flex items-center space-x-2">
+                            <div class="bg-blue-600 p-1.5 rounded-lg"><i data-lucide="shield" class="text-white w-4 h-4"></i></div>
+                            <span class="text-lg font-bold tracking-tight">Admin<span class="text-blue-500">Panel</span></span>
+                        </div>
+                        <button onclick="toggleSidebar()" class="lg:hidden text-slate-400"><i data-lucide="x" class="w-5 h-5"></i></button>
+                    </div>
+                    <nav class="p-4">${navHTML}</nav>
+                    <div class="absolute bottom-0 w-full p-4 border-t border-opacity-10 dark:border-slate-700">
+                        <div class="flex items-center p-3 mb-3 rounded-lg bg-gray-100 dark:bg-slate-900/50">
+                            <img src="${state.auth.user?.pic || 'https://api.dicebear.com/7.x/avataaars/svg'}" class="w-8 h-8 rounded-full mr-3 bg-gray-300">
+                            <div class="overflow-hidden">
+                                <p class="text-sm font-medium truncate">${state.auth.user?.username || 'Admin'}</p>
+                                <p class="text-xs opacity-60 truncate">${state.auth.user?.email}</p>
+                            </div>
+                        </div>
+                        <button onclick="logout()" class="flex items-center w-full px-4 py-2 text-sm font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">
+                            <i data-lucide="log-out" class="w-4 h-4 mr-3"></i> Sign Out
+                        </button>
+                    </div>
+                </aside>
+            `;
+        }
+
+        function renderHeader() {
+            return `
+                <header class="h-16 flex items-center justify-between px-4 lg:px-8 border-b dark:border-slate-700 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm sticky top-0 z-40">
+                    <div class="flex items-center">
+                        <button onclick="toggleSidebar()" class="lg:hidden mr-4 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-slate-700"><i data-lucide="menu" class="w-5 h-5"></i></button>
+                        <h1 class="text-xl font-semibold capitalize">${state.view}</h1>
+                    </div>
+                    <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 text-slate-600 dark:text-yellow-400">
+                        <i data-lucide="${state.darkMode ? 'moon' : 'sun'}" class="w-5 h-5"></i>
+                    </button>
+                </header>
+            `;
+        }
+
+        function renderCurrentView() {
+            switch(state.view) {
+                case 'dashboard': return renderDashboard();
+                case 'users': return renderUsers();
+                case 'articles': return renderArticles();
+                case 'comments': return renderComments();
+                case 'logs': return renderLogs();
+                default: return renderDashboard();
+            }
+        }
+
+        // --- View Implementations ---
+
+        function renderDashboard() {
+            const { users, articles, comments, logs } = state.data;
+            const stats = [
+                { title: 'Total Users', value: users.length, icon: 'users', color: 'text-blue-500', bg: 'bg-blue-50 dark:bg-blue-500/10' },
+                { title: 'Articles', value: articles.length, icon: 'file-text', color: 'text-emerald-500', bg: 'bg-emerald-50 dark:bg-emerald-500/10' },
+                { title: 'Comments', value: comments.length, icon: 'message-square', color: 'text-purple-500', bg: 'bg-purple-50 dark:bg-purple-500/10' },
+                { title: 'Events', value: logs.length, icon: 'activity', color: 'text-amber-500', bg: 'bg-amber-50 dark:bg-amber-500/10' }
+            ];
+
+            return `
+                <div class="space-y-6">
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        ${stats.map(s => `
+                            <div class="p-6 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm hover:shadow-md transition-shadow">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="p-3 rounded-xl ${s.bg} ${s.color}"><i data-lucide="${s.icon}" class="w-6 h-6"></i></div>
+                                </div>
+                                <h3 class="text-3xl font-bold mb-1">${s.value}</h3>
+                                <p class="text-sm opacity-60">${s.title}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <!-- Charts Grid -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="p-6 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800" style="max-height;500px">
+                            <h3 class="text-lg font-bold mb-4">Top Articles by Views</h3>
+                            <canvas id="viewsChart" class="w-full h-64" style="max-height:400px"></canvas>
+                        </div>
+                        <div class="p-6 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+                            <h3 class="text-lg font-bold mb-4">Categories Distribution</h3>
+                            <div class="h-64 flex justify-center">
+                                <canvas id="categoryChart" style="max-height:400px"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderUsers() {
+            const filtered = state.data.users.filter(u => 
+                (u.name || '').toLowerCase().includes(state.filters.search.toLowerCase()) || 
+                (u.email || '').toLowerCase().includes(state.filters.search.toLowerCase())
+            );
+
+            return `
+                <div class="space-y-4">
+                    <div class="flex justify-between gap-4">
+                        <div class="relative flex-1 max-w-md">
+                            <i data-lucide="search" class="absolute left-3 top-3 opacity-40 w-5 h-5"></i>
+                            <input type="text" placeholder="Search users..." value="${state.filters.search}" oninput="updateSearch(this.value)" 
+                                class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-blue-500 outline-none">
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-gray-50 dark:bg-slate-900/50 text-xs uppercase opacity-70">
+                                    <tr>
+                                        <th class="p-4">User</th>
+                                        <th class="p-4">Status</th>
+                                        <th class="p-4">Level</th>
+                                        <th class="p-4 text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100 dark:divide-slate-700">
+                                    ${filtered.map(u => `
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-slate-700/30">
+                                            <td class="p-4">
+                                                <div class="flex items-center">
+                                                    <img src="${u.pic}" class="w-10 h-10 rounded-full mr-3 bg-gray-200 object-cover">
+                                                    <div>
+                                                        <div class="font-medium text-sm">${u.name || u.username}</div>
+                                                        <div class="text-xs opacity-60">${u.email}</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="p-4"><span class="px-2 py-0.5 rounded-full text-xs font-medium ${u.is_active ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400' : 'bg-red-100 text-red-700'}">${u.is_active ? 'Active' : 'Inactive'}</span></td>
+                                            <td class="p-4 text-sm">${u.level}</td>
+                                            <td class="p-4 text-right">
+                                                <button onclick="deleteItem('user', '${u.id}')" class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderArticles() {
+            const filtered = state.data.articles.filter(a => a.title.toLowerCase().includes(state.filters.search.toLowerCase()));
+
+            return `
+                 <div class="space-y-4">
+                    <div class="relative flex-1 max-w-md">
+                        <i data-lucide="search" class="absolute left-3 top-3 opacity-40 w-5 h-5"></i>
+                        <input type="text" placeholder="Search articles..." value="${state.filters.search}" oninput="updateSearch(this.value); this.focus()" 
+                            class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none">
+                    </div>
+                    <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead class="bg-gray-50 dark:bg-slate-900/50 text-xs uppercase opacity-70">
+                                    <tr><th class="p-4">Article</th><th class="p-4">Category</th><th class="p-4">Stats</th><th class="p-4 text-right">Action</th></tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100 dark:divide-slate-700">
+                                    ${filtered.map(a => `
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-slate-700/30 cursor-pointer" onclick="window.open('${window,location.origin + '/open/?s=' + a.slug}', '_blank')">
+                                            <td class="p-4 max-w-xs">
+                                                <div class="flex items-center">
+                                                    ${a.image_url ? `<img src="${a.image_url}" class="w-12 h-8 object-cover rounded mr-3">` : ''}
+                                                    <span class="text-sm font-medium line-clamp-1">${a.title}</span>
+                                                </div>
+                                            </td>
+                                            <td class="p-4"><span class="px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400">${a.categ}</span></td>
+                                            <td class="p-4 text-xs opacity-70">Views: ${a.views} | Likes: ${a.likes}</td>
+                                            <td class="p-4 text-right">
+                                                <button onclick="deleteItem('article', '${a.id}')" class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                 </div>
+            `;
+        }
+
+        function renderComments() {
+             return `
+                <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 dark:bg-slate-900/50 text-xs uppercase opacity-70">
+                            <tr><th class="p-4">User</th><th class="p-4">Content</th><th class="p-4">Date</th><th class="p-4 text-right">Action</th></tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 dark:divide-slate-700">
+                            ${state.data.comments.map(c => `
+                                <tr class="hover:bg-gray-50 dark:hover:bg-slate-700/30">
+                                    <td class="p-4 text-sm font-medium">${c.user}</td>
+                                    <td class="p-4 text-sm opacity-80 max-w-md truncate">${c.content}</td>
+                                    <td class="p-4 text-xs opacity-60">${new Date(c.at).toLocaleDateString()}</td>
+                                    <td class="p-4 text-right">
+                                        <button onclick="deleteItem('comment', '${c.id}')" class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function renderLogs() {
+            const logs = state.filters.logType 
+                ? state.data.logs.filter(l => l.type === state.filters.logType) 
+                : state.data.logs;
+
+            return `
+                <div class="space-y-4">
+                    <div class="flex gap-2">
+                        ${['', 'success', 'error', 'info'].map(t => `
+                            <button onclick="filterLogs('${t}')" class="px-4 py-2 rounded-lg text-sm font-medium border transition-colors ${state.filters.logType === t ? 'bg-blue-600 text-white border-blue-600' : 'bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700'}">
+                                ${t === '' ? 'All Logs' : t.charAt(0).toUpperCase() + t.slice(1)}
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
+                        <table class="w-full text-left font-mono text-sm">
+                            <thead class="bg-gray-50 dark:bg-slate-900/50 text-xs uppercase opacity-70">
+                                <tr><th class="p-4">Type</th><th class="p-4">Message</th><th class="p-4">Time</th></tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 dark:divide-slate-700">
+                                ${logs.map(l => `
+                                    <tr class="hover:bg-gray-50 dark:hover:bg-slate-700/30">
+                                        <td class="p-4">
+                                            <span class="px-2 py-0.5 rounded-full text-xs font-bold ${l.type === 'error' ? 'bg-red-100 text-red-700' : l.type === 'success' ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700'}">${l.type}</span>
+                                        </td>
+                                        <td class="p-4">${l.content} <span class="block text-xs opacity-50 mt-1">${l.info || ''}</span></td>
+                                        <td class="p-4 opacity-60 text-xs">${new Date(l.at).toLocaleString()}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Interaction Helpers ---
+
+        function attachGlobalListeners() {
+            // Re-bind Lucide icons for injected content
+            lucide.createIcons();
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.querySelector('aside');
+            const main = document.getElementById('main-content');
+            
+            state.sidebarOpen = !state.sidebarOpen;
+            
+            if (state.sidebarOpen) {
+                sidebar.classList.remove('-translate-x-full');
+                main.classList.add('lg:ml-64');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                main.classList.remove('lg:ml-64');
+            }
+        }
+
+        async function navigate(viewId) {
+            state.view = viewId;
+            state.filters = { search: '', logType: '' }; // Reset filters
+            
+            // Re-render main content container
+            const main = document.querySelector('main');
+            main.innerHTML = renderLoading();
+            
+            // Update sidebar active state (visual only)
+            render(); 
+
+            // Refresh data if needed
+            if (viewId === 'dashboard' || viewId == 'refresh') {
+              await loadDashboardData();
+            } else {
+                main.innerHTML = renderCurrentView();
+                lucide.createIcons();
+            }
+        }
+
+        function updateSearch(val) {
+            state.filters.search = val;
+            const main = document.querySelector('main');
+            main.innerHTML = renderCurrentView();
+            lucide.createIcons();
+        }
+
+        function filterLogs(type) {
+            state.filters.logType = type;
+            const main = document.querySelector('main');
+            main.innerHTML = renderCurrentView();
+            lucide.createIcons();
+        }
+
+        // --- Charts Logic ---
+
+        let viewsChartInstance = null;
+        let categoryChartInstance = null;
+
+        function renderDashboardCharts() {
+            const ctxViews = document.getElementById('viewsChart');
+            const ctxCat = document.getElementById('categoryChart');
+            
+            if (!ctxViews || !ctxCat) return;
+
+            const isDark = state.darkMode;
+            const gridColor = isDark ? '#374151' : '#e5e7eb';
+            const textColor = isDark ? '#9ca3af' : '#4b5563';
+
+            // Prepare Data
+            const articles = [...state.data.articles].sort((a,b) => b.views - a.views).slice(0, 10);
+            const categories = {};
+            state.data.articles.forEach(a => categories[a.categ] = (categories[a.categ] || 0) + 1);
+
+            // Destroy old instances
+            if (viewsChartInstance) viewsChartInstance.destroy();
+            if (categoryChartInstance) categoryChartInstance.destroy();
+
+            // Views Chart
+            viewsChartInstance = new Chart(ctxViews, {
+                type: 'bar',
+                data: {
+                    labels: articles.map(a => a.id ),
+                    datasets: [{
+                        label: 'Views',
+                        data: articles.map(a => a.views),
+                        backgroundColor: '#3b82f6',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { grid: { color: gridColor }, ticks: { color: textColor } },
+                        x: { grid: { display: false }, ticks: { color: textColor } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // Category Chart
+            categoryChartInstance = new Chart(ctxCat, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(categories),
+                    datasets: [{
+                        data: Object.values(categories),
+                        backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { color: textColor } }
+                    }
+                }
+            });
+        }
+
+        // Start App
+        init();
+        
+        // Load initial data if logged in
+        if (state.auth.isAuthenticated) {
+            loadDashboardData();
+        }
+
+    </script>
 </body>
 </html>

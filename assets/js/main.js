@@ -42,35 +42,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
 }
     })
 
-    // const adScriptUrl = "//pl28010045.effectivegatecpm.com/545445584d06c09fd1a832fa75e54619/invoke.js";
-
-    // const script = document.createElement('script');
-    // script.src = adScriptUrl;
-    // script.async = true;
-  
-    // // Fired if the script loads successfully
-    // script.onload = function() {
-    //   console.log("Script loaded fine, no AdBlock detected.");
-    // };
-  
-    // // Fired if the script fails to load
-    // script.onerror = function(e) {
-    //   if (e && e.type === 'error') {
-    //     console.clear()
-    //     setTimeout(() => {
-    //                 console.table(e)
-
-    //     }, 2000);
-    //     alert("AdBlocker detected! This script was blocked.");
-    //     console.log("AdBlock detected for script:", adScriptUrl);
-    //   }
-    // };
-  
-    // document.head.appendChild(script);
-    // setInterval(() => {
-    //     // document.querySelector('.container-545445584d06c09fd1a832fa75e54619__link').click()
-    //     // window.open('https://www.effectivegatecpm.com/if6kn5wf?key=ebf2aa69dd00ee58f87bc8efa921ec13', '_blank')
-    // }, 1000);
     
     const div = document.createElement('div');
     div.classList.add('login');
@@ -128,6 +99,7 @@ feedbackHub.className = 'feedback-ov none'
         <legend>
         <label for="screenshot">Upload Screenshot</label>
         <input type="file" name="screenshot" accept="image/*" id="screenshot">
+        <div id="preview" style="position:relative;"></div>
         Or
         <button type="button" id="screenshotCapture">Capture Screen </button>
       </legend>
@@ -144,6 +116,7 @@ feedbackHub.className = 'feedback-ov none'
 
  `
  document.body.appendChild(feedbackHub)
+ 
  const backBtn = feedbackHub.querySelector('.back-f-btn')
  backBtn.addEventListener('click', ()=>{
   feedbackHub.classList.toggle('flex')
@@ -171,14 +144,32 @@ capBtn.addEventListener('click', ()=>{
   if(e.target == feedbackHub && !innerFdb.contains(e.target) && e.target !== innerFdb && feedbackHub.classList.contains('flex') ){
     feedbackHub.classList.remove('flex')
     feedbackHub.classList.add('none')
+    c.classList.remove('flex')
+    c.classList.add('none')
   }
  })
+ const ss = document.querySelector('#screenshot')
+ ss.addEventListener('input', (e)=>{
+  const file = ss.files[0]
+  if(file){
+  const url = URL.createObjectURL(file)
+   showScreenshotPreview(url)
+  }
+ })
+
+ const c = document.createElement('div')
+ c.className = 'capturing none'
+ c.innerHTML = `
+    <div class="line"></div>
+ `
+ document.body.appendChild(c)
  
  async function captureFullPage() {
   feedbackHub.classList.toggle('flex')
   feedbackHub.classList.toggle('none')
+  c.classList.toggle('flex')
+  c.classList.toggle('none')  
   try {
-    // take screenshot
     const canvas = await html2canvas(document.body, {
       useCORS: true,
       allowTaint: false,
@@ -190,28 +181,29 @@ capBtn.addEventListener('click', ()=>{
       foreignObjectRendering: true
     });
 
-    // convert canvas to blob + file
     const dataURL = canvas.toDataURL("image/png");
     const blob = await (await fetch(dataURL)).blob();
     const file = new File([blob], "screenshot.png", { type: "image/png" });
 
-    // inject file into the file input automatically
     const dt = new DataTransfer();
     dt.items.add(file);
     document.getElementById("screenshot").files = dt.files;
 
-    // show preview inside the form
     showScreenshotPreview(dataURL);
 
     console.log("Screenshot captured and attached.");
     feedbackHub.classList.toggle('flex')
-    feedbackHub.classList.toggle('none')  
+    feedbackHub.classList.toggle('none') 
+    c.classList.toggle('flex')
+    c.classList.toggle('none')  
   capBtn.disabled =false
 
   } catch (err) {
     console.error("Screenshot failed:", err);
     feedbackHub.classList.toggle('flex')
     feedbackHub.classList.toggle('none')
+    c.classList.toggle('flex')
+    c.classList.toggle('none')  
   capBtn.disabled =false
 
   }
@@ -219,8 +211,17 @@ capBtn.addEventListener('click', ()=>{
 
 function showScreenshotPreview(src) {
   let prev = document.getElementById("shot-preview");
+  const prevDiv = fForm.querySelector('#preview')
 
   if (!prev) {
+    prevDiv.innerHTML = `<button id="previewImage" type="button" style="position: absolute;
+    border: 0;
+    outline: 0;
+    background: #0000006e;
+    color: #fff;
+    backdrop-filter: blur(2px);
+    border-radius: 50%;
+    right: 0;"><i class="fas fa-eye"></i></button>`
     prev = document.createElement("img");
     prev.id = "shot-preview";
     prev.style.width = "100%";
@@ -228,14 +229,129 @@ function showScreenshotPreview(src) {
     prev.style.borderRadius = "6px";
     prev.style.maxWidth = '300px'
 
-    document
-      .querySelector("#screenshot")
-      .insertAdjacentElement("afterend", prev);
+    // document
+    //   .querySelector("#screenshot")
+    //   .insertAdjacentElement("afterend", prev);
+      prevDiv.appendChild(prev)
   }
 
+
   prev.src = src;
+  prevDiv.querySelector('#previewImage').addEventListener('click', (e)=>{
+    let previewLarge = ''
+    e.stopImmediatePropagation()
+    console.log(e)
+    const exists = document.querySelector('.previewLarge')
+
+    if(exists){
+     previewLarge = exists
+    } else{
+    previewLarge = document.createElement('div')
+
+    document.body.appendChild(previewLarge)
+    }
+    previewLarge.classList.remove('none')
+    previewLarge.classList.add('previewLarge')
+    previewLarge.setAttribute('style', `color: aliceblue;
+    position: fixed;
+    z-index: 200000;
+    top: 0;
+    right: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 0;
+    background: #000000bf;
+    flex-direction: column;`)
+
+    previewLarge.innerHTML = `
+    <div>
+    <h2>Preview</h2>
+    <buttton type="button" style="    padding: 10px;
+    position: absolute;
+    font-size: 3em;
+    font-family: math;
+    color: red;
+    right: 20px;
+    top: 20px;
+    user-select: none;
+    cursor: pointer;
+}" onclick="document.querySelector('.previewLarge').classList.add('none')">&times;</button>
+    </div>
+    <img id="img" style="width: 90%; margin: auto; border: 4px solid green; max-width: 500px; max-height:500px" src="${src}">
+    `
+  })
 }
 
+
+const fForm = document.getElementById("f-form");
+const screenshotInput = document.getElementById("screenshot");
+
+fForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const desc = document.getElementById("description").value.trim();
+  const file = screenshotInput.files[0];
+
+  if (!desc) {
+    alert("Please describe the issue", 'error');
+    document.getElementById("description").focus();
+    return;
+  }
+
+  const submitBtn = fForm.querySelector("button[type='submit']");
+  submitBtn.disabled = true;
+  submitBtn.innerText = "Submitting…";
+
+  try {
+    let base64Image = "";
+
+    // convert file -> base64 if exists
+    if (file) {
+      base64Image = await convertToBase64(file);
+    }
+
+    const payload = {
+      description: desc,
+      image: base64Image
+    };
+
+    const res = await fetch(`${baseUrl}/help`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) throw new Error("Server rejected feedback");
+
+    alert("Feedback sent successfully. We will get back to you soon", 'success');
+
+    fForm.reset();
+    const prev = document.getElementById("shot-preview");
+    if (prev) prev.remove();
+
+  } catch (err) {
+    console.error(err);
+    alert("Network Error");
+  }
+
+  submitBtn.disabled = false;
+  submitBtn.innerText = "Submit";
+});
+
+
+function convertToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => resolve(reader.result); 
+    reader.onerror = () => reject("Failed converting to base64");
+
+    reader.readAsDataURL(file);
+  });
+}
 
   
 })

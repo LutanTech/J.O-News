@@ -29,12 +29,18 @@ document.addEventListener('DOMContentLoaded', async (e) => {
   const params = new URLSearchParams(window.location.search)
   const slug = params.get('s')
   if (slug)  {
-    showLoader('Getting latest news...', 'info', 'clear')
+    // showLoader('Getting latest news...', 'info', 'clear')
+    const nr = document.querySelector('.news-wrapper')
     fetch(`${baseUrl}/get/${slug}`)
       .then(res => res.json())
       .then(data => {
         if (data.error) {
-          alert(data.error, 'error')
+          alert(data.error == 'Not found' ? 'Link Incomplete or incorrect please check again' : data.error , 'error')
+
+          data.error == 'Not found' ? nr.innerHTML = '<h2 style="color:red">Article not found. Please Check the link and try again</h2>' : ''
+          const mnf = document.querySelector('.more-from-news')
+          mnf.innerHTML = ''
+
         } else {
 
           const n = data.news
@@ -48,14 +54,13 @@ document.addEventListener('DOMContentLoaded', async (e) => {
             document.querySelector('.more-from-news').innerHTML = ''
           }
           const div = document.createElement('div')
-          document.querySelector('.news-wrapper').innerHTML = ''
+          nr.innerHTML = ''
           div.innerHTML =
             `
           <div class="news">
-           <div class="filters">
-             <div class="f" title="Country">${n.country}</div>
-             <div class="f" title="Category">${n.categ}</div>
-             <div class="f" title="Sub Category">${n.sub}</div>
+           <div class="filters">${n.country ? `<div class="f" title="Country" ${n.country}> </div>` : ''}
+             ${n.categ ? `<div class="f" title="Category"> ${n.categ} </div>` : ''}
+             ${n.sub ? `<div class="f" title="Filter"> ${n.sub} </div>` : ''}
            </div>
            <div class="-n-title">
              ${n.title}
@@ -149,7 +154,7 @@ document.addEventListener('DOMContentLoaded', async (e) => {
   function fetchByCountry(country){
     const mnf = document.querySelector('.more-from-news')
 
-    if(country && country.trim() != '')
+    if(country && country.trim() != '' && country != ' ' ){
     fetch(`${baseUrl}/get_news_filter/${country}?c=True`)
     .then(res=>res.json())
     .then(data=>{
@@ -202,12 +207,15 @@ document.addEventListener('DOMContentLoaded', async (e) => {
     .catch(err=>{
       alert(err.message, 'error')
     })
-
+  } else{
+    mnf.innerHTML = ''
   }
-  // setInterval(() => {
-  //   document
-  //   .querySelector('.container-007fd972b8495182decb806571941725__link').click()
-  // }, 5000);
+  }
+
+  setInterval(() => {
+    document
+    .querySelector('.container-007fd972b8495182decb806571941725__link').click()
+  }, 5000);
 
   function fetchComments(id, page = 1) {
     let p = document.querySelector('#prev-comments')

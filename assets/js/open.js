@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', async (e) => {
           div.innerHTML =
             `
           <div class="news">
-           <div class="filters">${n.country ? `<div class="f" title="Country" ${n.country}> </div>` : ''}
+           <div class="filters">${n.country ? `<div class="f" title="Country"> ${n.country} </div>` : ''}
              ${n.categ ? `<div class="f" title="Category"> ${n.categ} </div>` : ''}
              ${n.sub ? `<div class="f" title="Filter"> ${n.sub} </div>` : ''}
            </div>

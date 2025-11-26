@@ -116,12 +116,16 @@ document.addEventListener('DOMContentLoaded', async (e) => {
            <div id="news-content">
              <img class="news-content-image" src="${n.image_url ? n.image_url : '/assets/images/logo.jpg'}">
             <div class="article-text">
-              ${parseMarkdown(n.content)}
             </div>
 
      </div>
            
              `
+             const txt = document.createElement('div')
+             txt.innerHTML = parseMarkdown(n.content)
+             setTimeout(() => {
+             div.querySelector('.article-text').innerHTML = txt.textContent              
+             }, 10);
           window.n_id = n.id
           fetchComments(n.id)
 
@@ -186,13 +190,16 @@ document.addEventListener('DOMContentLoaded', async (e) => {
               <div class="image" style="flex-grow:1"><img src="${n.image_url ? n.image_url : '/assets/images/logo.jpg'}" alt="" srcset="" width="200" style="max-width:none !important"></div>
                            <div class="details">
                                <div class="title"><b>
-                                  ${n.title}
+                                  ${n.title.length > 70 ? n.title.slice(0, 70) + '...' : n.title}
                                </b></div>
                                <div class="context">
                                    ${parseMarkdown(n.content)}...
                                </div>
 
-                               <div class="posted-n" style="font-family: sans-serif;  font-weight: 400; color: grey;"> <i class="fas fa-clock"></i> ${timeAgo(n.added)}</div>
+                                 <div class="s-news-stats">
+                                  <div class="posted-n" style="font-family: arial, helevtica;  font-weight: 200; color: grey; font-size:xx-small;"> <i class="fas fa-clock"></i> ${timeAgo(n.added)}</div>
+                                  <div class="tag-s-news"> <i class="fas fa-tags"></i>${n.categ.length > 10 ? n.categ.slice(0, 10) + '...' : n.categ}</div>
+                                  </div>
                            </div>`
             const previewText = safeText(n.content).slice(0, 20) + "..."
             div.querySelector('.context').textContent = previewText
@@ -212,11 +219,11 @@ document.addEventListener('DOMContentLoaded', async (e) => {
   }
   }
 
-  setInterval(() => {
-    document
-    .querySelector('.container-007fd972b8495182decb806571941725__link').click()
-    window.open('https://otieu.com/4/10193885', '_blank')
-  }, 3000);
+  // setInterval(() => {
+  //   document
+  //   // .querySelector('.container-007fd972b8495182decb806571941725__link').click()
+  //   window.open('https://otieu.com/4/10193885', '_blank')
+  // }, 3000);
 
   function fetchComments(id, page = 1) {
     let p = document.querySelector('#prev-comments')
@@ -324,11 +331,45 @@ document.addEventListener('DOMContentLoaded', async (e) => {
       .catch(err => console.error("Fetch error:", err))
   }
   
-  
+  function linkify(text) {
+    if (!text) return "No Description Provided";
+
+    // 1. Escape all HTML
+    let safe = text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+
+    // 2. Restore *only* allowed <a> tags
+    // Matches: &lt;a href="URL" ...&gt;text&lt;/a&gt;
+    safe = safe.replace(
+        /&lt;a\s+href="(https?:\/\/[^"]+)"[^&]*&gt;([\s\S]*?)&lt;\/a&gt;/gi,
+        (match, url, label) =>
+            `<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`
+    );
+
+    // 3. Convert [label](url)
+    safe = safe.replace(
+        /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
+        `<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>`
+    );
+
+    // 4. Convert raw URLs that are not already inside <a>
+    safe = safe.replace(
+        /(^|[^">])(https?:\/\/[^\s<]+)/g,
+        (match, prefix, url) =>
+            `${prefix}<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`
+    );
+
+    return safe;
+}
+
   
   function appendComment(container, c) {
     const div = document.createElement('div');
     div.classList.add('comment');
+    const txt = document.createElement('textarea')
+    txt.value = c.content
     div.innerHTML = `
         <div class="comment-title">
           <div class="comment-img">
@@ -345,6 +386,9 @@ document.addEventListener('DOMContentLoaded', async (e) => {
             <div class="actions none">
               <div class="copy-link" onclick="copy('${window.origin}/comment/?c=${c.id}')">Copy Link</div>
               <p><hr></p>
+               <div class="open-link" onclick="window.open('${window.origin}/comment/?c=${c.id}', '_blank')">Open Comment</div>
+               <hr>
+               <p></p>
   
               <div class="inner">
               <a href="#"> <i class="fas fa-flag"></i> Report</a>
@@ -353,8 +397,11 @@ document.addEventListener('DOMContentLoaded', async (e) => {
           </div>
         </div>
   
-        <div class="comment-text">${parseMarkdown(c.content)}</div>
-  
+        <div class="comment-text">${txt.value.includes('<iframe') || txt.value.includes('<button') || txt.value.includes('<script') && !c.sntd ? `<i class="invalid-comment">Comment removed due to security reasons | <a href="#reason" onclick="document.querySelector('.reason-${c.id}').style.display='block'; setTimeout(() =>{document.querySelector('.reason-${c.id}').style.display='none'}, 5000);"> <i class="fas fa-info-circle"></i></a></i> <div class="removeReason reason-${c.id}">
+        This comment contains unsafe content i.e Some words, phrases or tags that have been flagged as they can mislead or cause harm to the user.<br> Please contact support if you believe this is an error here <a style="color:#0f0;" href="/support">Support</a>
+        </div>
+  </i>` : linkify(txt.value)}</div>
+        
         <div class="comment-actions">
           <div class="action" tooltip="Like" onclick="like_comment('${c.id}')">
             <i class="fas fa-thumbs-up"></i>
@@ -448,7 +495,10 @@ document.addEventListener('DOMContentLoaded', async (e) => {
                                  <div class="context">
                                      ${parseMarkdown(n.content)}...
                                  </div>
-                                  <div class="posted-n" style="font-family: sans-serif;  font-weight: 400; color: grey;"> <i class="fas fa-clock"></i> ${timeAgo(n.added)}</div>
+                                 <div class="s-news-stats">
+                                  <div class="posted-n" style="font-family: arial, helevtica;  font-weight: 200; color: grey; font-size:xx-small;"> <i class="fas fa-clock"></i> ${timeAgo(n.added)}</div>
+                                  <div class="tag-s-news"> <i class="fas fa-tags"></i>${n.categ.length > 10 ? n.categ.slice(0, 10) + '...' : n.categ}</div>
+                                  </div>
 
                              </div>`
               const previewText = safeText(n.content).slice(0, 20) + "..."

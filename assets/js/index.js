@@ -124,10 +124,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="title"><b>${n.title.length > 50 ? n.title.slice(0,50)+'...' : n.title}</b></div>
                     <div class="context">${parseMarkdown(n.content)}</div>
                     <div class="dets">
-                        <div class="category" tooltip="Category"><i class="fas fa-tags"></i> <span>${n.categ || 'Unknown'}</span></div>
-                        <div class="time"><i class="fas fa-clock"></i> <span>${timeAgo(n.added)}</span></div>
+                        <div class="category" tooltip="Category"><i class="fas fa-tags"></i> <span>${n.categ || 'Unknown'}</span></div> |
+                        <div class="time"><i class="fas fa-clock"></i> <span>${timeAgo(n.added)}</span></div> |
                         ${n.user ? `
-                        <div class="user" tooltip="Publisher"><i class="fas fa-user" ></i> By ${n.user.length > 6? n.user.slice(0, 5) + '...' : n.user} </div>` : ''}
+                        <div class="user" tooltip="Publisher"><i class="fas fa-user-circle" ></i> By ${n.user.length > 6? n.user.slice(0, 5) + '...' : n.user} </div>` : ''}
                     </div>
                 </div>
             `;

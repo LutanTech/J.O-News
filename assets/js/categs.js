@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
                         <div class="category" tooltip="Category"><i class="fas fa-tags"></i> <span>${n.categ || 'Unknown'}</span></div>
                         <div class="time"><i class="fas fa-clock"></i> <span>${timeAgo(n.added)}</span></div>
 
-                        <div class="user" tooltip="Publisher"><i class="fas fa-user" ></i> By Lutan </div>
+                        <div class="user" tooltip="Publisher"><i class="fas fa-user-circle" ></i> By ${n.user} </div>
                     </div>
                 </div>
             `;

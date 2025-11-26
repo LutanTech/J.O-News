@@ -20,7 +20,7 @@ function timeAgo(date){
       { label: 'yr', secs: 31536000 },
       { label: 'mon', secs: 2592000 },
       { label: 'wk', secs: 604800 },
-      { label: 'd', secs: 86400 },
+      { label: 'day', secs: 86400 },
       { label: 'hr', secs: 3600 },
       { label: 'min', secs: 60 },
       { label: 'sec', secs: 1 }

@@ -230,7 +230,7 @@
                         <div class="dets">
                           <div class="categ"><i class="fas fa-tags"></i> ${data.category ? data.category : '❗ Empty'}</div>
                           <div class="posted"><i class="fas fa-clock"></i> Just Now</div>
-                          <div class="by"><i class="fas fa-user"></i> By ${localStorage.getItem('usn') ? localStorage.getItem('usn') : 'Unknown' }</div>
+                          <div class="by"><i class="fas fa-user-circle"></i> By ${localStorage.getItem('usn') ? localStorage.getItem('usn') : 'Unknown' }</div>
                         </div>
                       </div>
                     </div>

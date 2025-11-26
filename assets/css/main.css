@@ -243,6 +243,7 @@ overflow: auto;
 .-news .image{
   width: 100%;
   padding: 10px;
+  flex-grow:0 !important;
   img{
     width: 100%;
     max-width: 200px;
@@ -273,10 +274,11 @@ overflow: auto;
 }
  
 .news-content-image{ 
-    width: 95% !important;
+    width: 100% !important;
     margin: 20px auto;
     max-height: 300px !important;
     object-fit: cover;
+    max-width: 700px;
 }
 
 .title{

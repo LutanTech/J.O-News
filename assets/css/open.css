@@ -577,3 +577,37 @@ iframe{
     width: fit-content;
     padding: 5px 0 10px 0px;
   }
+  .s-news-stats{
+    display: flex;
+    justify-content: start;
+    width: 100%;
+    gap: 20px;
+    font-size: xx-small;
+    color: grey;
+    font-weight: 300;
+    font-family: sans-serif;
+    align-items: center;
+  }
+  .tag-s-news{
+    text-transform: capitalize;
+    display: flex;
+    gap: 2px;
+    background: rgb(145, 240, 128);
+    color: rgb(0, 0, 0);
+    padding: 5px ;
+  }
+  .invalid-comment{
+    color: rgb(155, 9, 9);
+    display: flex;
+  }
+  .removeReason{
+    background: black;
+    width: 300px;
+    padding: 20px 10px;
+    border-radius: 5px;
+    color: white;
+    position: absolute;
+    z-index: 23;
+    left: 0;
+    display: none;
+  }

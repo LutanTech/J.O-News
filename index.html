@@ -427,18 +427,18 @@
   </footer>
 
 </body>
-<script>
+<!-- <script>
 setTimeout(() => {
   async function clearAppCache() {
   const names = await caches.keys();
   for (const name of names) {
     if (name.startsWith("v")) await caches.delete(name);
   }
-  alert("App cache cleared ✅ Reload to rebuild");
+  alert("App cache cleared. Reload to rebuild");
 }
 
 clearAppCache()
 }, 2000);
-</script>
+</script> -->
 
 </html>

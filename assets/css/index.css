@@ -33,11 +33,15 @@
     font-size: smaller;
     justify-content: start;
     align-items: baseline;
-    gap: 10px;
+    gap: 5px;
     padding: 2px 10px ;
     width: 100%;
     flex-grow: 1;
     text-align: center;
+  }
+  .context{
+    font-family: 'Times New Roman', Times, serif !important;
+    opacity: 0.7;
   }
   .category{
     text-transform: capitalize;

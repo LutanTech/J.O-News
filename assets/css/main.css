@@ -726,7 +726,7 @@ opacity: .7;
   }
   @media (min-width:768px) {
     .dets{
-        *{font-size: x-small;}
+        *{font-size: xx-small !important;}
 
 }
   }

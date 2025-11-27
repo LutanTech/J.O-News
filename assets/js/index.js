@@ -2,7 +2,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // -------------------- Utility Functions --------------------
+
+    const md = {
+    added: "2025-11-29T09:25:29.331302",
+    categ: "sports",
+    content: "Heyyy.. Its now with a new look!",
+    country: "kenya",
+    id: "MDad001",
+    image_url: "https://i.ibb.co/LhqsyLJM/image.png",
+    slug: "https://mdcollection.is-best.net",
+    sub: "ad",
+    title: "MD Colection. The joy of dressing is an art",
+    user: "Admin"
+    }
+    setTimeout(() => {
+        appendMostV(md, 'Ad')
+    }, 1000);
+
     function appendMostV(a, type){
+        console.log(a)
 
         if(!a) return;
         const parent = document.querySelector('.featured-divs');
@@ -18,7 +36,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if(t == 'latest' ){
             div.classList.add('active')
         }
-        div.addEventListener('click', ()=>{ window.location.href=`/open/?s=${a.slug}` })
+        div.addEventListener('click', ()=>{
+            if(type == 'Ad'){
+                window.open(a.slug, '_blank')
+            } else{
+             window.location.href=`/open/?s=${a.slug}`
+            }
+             })
         div.innerHTML = `
             <div class="ft-imgDiv">
                 <div class="type">${type.replace('_',' ')}</div>
@@ -26,7 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div class="article-data">
                 <div class="article-title">
-                 <span class="art-data-t">   ${a.title.length > 100 ? a.title.slice(0,100)+'...' : a.title} </span> <a style="color:aqua" href="/open/?s=${a.slug}"> Read more</a>
+                 <span class="art-data-t">   ${a.title.length > 100 ? a.title.slice(0,100)+'...' : a.title} </span> 
+                 ${type == 'Ad' ? `<a style="color:aqua" href="${a.slug}" target="_blank">Open</a>` : `<a  style="color:aqua" href="/open/?s=${a.slug}"> Read More</a>`}
                 </div>
             </div>
         `;
@@ -34,34 +59,43 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
       
-      function checkDivs() {
-        if(window.innerWidth < 768){ 
-        const divs = document.querySelectorAll('.featured');
-        let index = 0;
-      
-        setInterval(() => {
-      
-          if (index >= divs.length - 1) {
-            index = 0;
-          divs.forEach(d => d.classList.remove('go-right'));
+    function checkDivs() {
+        if (window.innerWidth < 768) { 
+            const divs = document.querySelectorAll('.featured'); // 3 divs
+            const defs = document.querySelectorAll('.featured-trending');
+            let index = 0;
+    
+            setInterval(() => {
+    
+                // remove old classes from all
+                divs.forEach(d => d.classList.remove('active', 'go-right'));
+                divs.forEach(d => d.classList.remove('active'));
 
-          } else if(index < divs.length - 1){
-          index++;
-
-          }
-          divs.forEach(d => d.classList.remove('active'));
-
-          divs[index].classList.add('active');
-          setTimeout(() => {
-          divs[index].classList.add('go-right');
-          }, 6500);
-      
-        }, 7000);
-    } else{
-        return
+    
+                // apply to current div
+                divs[index].classList.add('active');
+    
+                // delayed animation
+                setTimeout(() => {
+                    divs[index].classList.add('go-right');
+                }, 6500);
+    
+                // trending defaults
+                defs.forEach(def => def.classList.add('active'));
+    
+                // step forward
+                index++;
+    
+                // reset after reaching 3
+                if (index === divs.length -1) {
+                    index = 0;
+                }
+    
+            }, 7000);
+    
+        }
     }
-      }
-      
+    
 
 
     function ensureAd(container, adKey){
@@ -125,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="context">${parseMarkdown(n.content)}</div>
                     <div class="dets">
                         <div class="category" tooltip="Category"><i class="fas fa-tags"></i> <span>${n.categ || 'Unknown'}</span></div> |
-                        <div class="time"><i class="fas fa-clock"></i> <span>${timeAgo(n.added)}</span></div> |
+                        <div class="time"><i class="fas fa-clock" style="font-size:xx-small;"></i> <span>${timeAgo(n.added)}</span></div> |
                         ${n.user ? `
                         <div class="user" tooltip="Publisher"><i class="fas fa-user-circle" ></i> By ${n.user.length > 6? n.user.slice(0, 5) + '...' : n.user} </div>` : ''}
                     </div>

@@ -5,7 +5,7 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 from datetime import datetime, timedelta
 import models
-from models import News, Log, Comment, User, OTP, Help
+from models import News, Log, Comment, User, OTP, Help, Ad
 from flask_mail import Mail, Message
 from requests_oauthlib import OAuth2Session
 from urllib.parse import urlencode
@@ -300,8 +300,8 @@ def trendingNews():
 def get_article(slug):
     article = News.query.filter_by(slug=slug).first()
     if article:
-        # article.views = int(article.views) + 1
-        # db.session.commit()
+        article.views = int(article.views) + 1
+        db.session.commit()
         return jsonify({'news':article.to_disp_dict()}), 200
     return jsonify({'error':'Not found'}), 400
 
@@ -706,6 +706,7 @@ def admin_get_users():
         return jsonify({'error': 'Unauthorized'}), 401
 
     users = User.query.all()
+    log('[200] Admin Users accessed', 'success')
     return jsonify({'users': [u.to_disp_dict() for u in users]}), 200
 
 
@@ -779,7 +780,7 @@ def admin_get_comments():
 
     admin = User.query.filter_by(id=admin_id).first()
     if not admin or not validate_token(token, admin.id) or not is_admin(admin):
-        log('[401]  Unauthorized Comments Access', 'error')
+        log('[401] : Unauthorized Comments Access', 'error')
         return jsonify({'error': 'Unauthorized'}), 401
 
     comments = Comment.query.order_by(Comment.at.desc()).all()
@@ -796,7 +797,7 @@ def admin_delete_comment():
 
     admin = User.query.filter_by(id=admin_id).first()
     if not admin or not validate_token(token, admin.id) or not is_admin(admin):
-        log('[401]  Unauthorized Comment Delete Access', 'error')
+        log('[401] : Unauthorized Comment Delete Access', 'error')
         return jsonify({'error': 'Unauthorized'}), 401
 
     comment = Comment.query.filter_by(id=c_id).first()
@@ -819,7 +820,7 @@ def like_comment():
             db.session.commit()
             return jsonify({'message':'liked'}), 200
         except Exception as e:
-            log(str(e), 'error')
+            log(f'[500] :  Error in /like_comment route : {str(e)}', 'error')
             return jsonify({'error':'Failed to like '}), 500
     return jsonify({'error':'failed'}), 400
 
@@ -875,7 +876,7 @@ def help():
             db.session.commit()
             return jsonify({'message':'Ticket sent successfully'}), 200
         except Exception as e:
-            log(f'[500]  Help Request DB error {str(e)}', 'error')
+            log(f'[500] : Help Request DB error {str(e)}', 'error')
             db.session.rollback()
             return jsonify({'error':'Database Error'}), 500
     return jsonify({'error':'missing data in request'}), 400
@@ -897,12 +898,12 @@ def send_db_backup():
             msg.attach(backup_filename, "application/octet-stream", f.read())
 
         mail.send(msg)
-        log(f"200 : Backed up DB: {backup_filename}", 'success')
+        log(f"[200] : Backed up DB: {backup_filename}", 'success')
 
         os.remove(backup_filename)
 
     except Exception as e:
-        log(f"400 : Failed to send backup: {e}", 'error')
+        log(f"[400] : Failed to send backup: {e}", 'error')
         log(str(e), 'error')
 
 @app.route('/backup', methods=['GET'])
@@ -914,20 +915,83 @@ def trigger_backup():
     send_db_backup()
     return jsonify({'success': 'Backup emailed to you!'}), 200
 
+
 with app.app_context():
-    db.create_all()
-    
-    
-    
+    try:
+       db.create_all()
+    except Exception as e:
+       print(f'Failed to initiate DB')
+
+
 @app.route('/admin/logs')
 def logs():
     prefix = request.args.get('filter')
+
     if prefix:
         logs = Log.query.filter_by(type=prefix).all()
-    logs = Log.query.filter_by(type=prefix).all()
-    return jsonify({'logs': [log.to_dict() for l in logs]}), 200
+    else:
+        logs = Log.query.all()
+
+    return jsonify({
+        'logs': [log.to_dict() for log in logs]
+    }), 200
+
+@app.route('/ads/latest')
+def get_latest_ad():
+    l = request.args.get('limit')
+    if l:
+       ads = Ad.query.order_by(Ad.added.desc()).limit(l).all()
+       if ads:
+          return jsonify({'ads': [ad.to_dict() for ad in ads]}), 200
+    ad = Ad.query.order_by(Ad.added.desc()).first()
+    if ad:
+        return jsonify({'ad': ad.to_dict()}), 200
+    return jsonify({'error': 'No Ads added'}), 400
+
+
+
+@app.route('/add_ad', methods=['POST'])
+def add_ad():
+    data = request.get_json()
+    title = data.get('title')
+    image = data.get('image_url')
+    content = data.get('content')
+    valid = data.get('valid')
+    valid_datetime = datetime.fromisoformat(valid.replace("Z", "+00:00"))
+
+    
+    
+    if data:
+        new_ad = Ad(title=title, image_url=image, content=content, valid=valid_datetime)
+        try:
+            db.session.add(new_ad)
+            db.session.commit()
+            return jsonify({'message':'Ad added successfully'}), 200
+        except Exception as e:
+            log(f'[500] : Database Error in /add_ad route > {str(e)}', 'error')
+            return jsonify({'error':f'Failed to add: Database Error: {str(e)}'}), 500
+    return jsonify({'error':'Missing data or incomplete data'}), 400
     
 
+
+@app.route('/delete_ad')
+def delete_ad():
+    id = request.args.get('id')
+    if id:
+        ad = Ad.query.filter_by(id=id).first()
+        if ad:
+            try:
+                db.session.delete(ad)
+                db.session.commit()
+                return jsonify({'msg': 'deleted successfully'}), 200
+            except Exception as e:
+                db.session.rollback()
+                log(f'[500] : Database error > {str(e)}', 'error')
+                return jsonify({'error' : 'Failed to delete ad'}), 500
+        return jsonify({'error':'Ad not found'}), 404
+    return jsonify({'error':'Missing data or incomplete data'}), 400
+
+                
 if __name__ == '__main__':
     print("app.run(debug=True, port=5000, host='0.0.0.0')")
 #    app.run(debug=True, port=5000, host='0.0.0.0')

@@ -209,4 +209,17 @@ class Help(db.Model):
     email = db.Column(db.String(255), nullable=False, unique=True)
     image = db.Column(db.Text(), nullable=True)
     text= db.Column(db.Text(), nullable=True)
+    at = db.Column(db.DateTime, default=lambda: datetime.utcnow() + timedelta(hours=3))
+    
+     
+
+class Ad(db.Model):
+    id = db.Column(db.String(6), primary_key=True, default=lambda: generate_random_id(6))
+    title = db.Column(db.String(255), nullable=False, unique=True)
+    image_url = db.Column(db.Text(), nullable=True)
+    content = db.Column(db.Text(), nullable=True)
+    added = db.Column(db.DateTime, default=lambda: datetime.utcnow() + timedelta(hours=3))
+    valid = db.Column(db.DateTime, default=lambda: datetime.utcnow() + timedelta(hours=168)) # 7 days
+    
+    
      

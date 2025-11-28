@@ -992,3 +992,129 @@ color: #ffffff;
     top: 100%;
   }
 }
+.ad-overlay{
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 2000000000000000000;
+  background: #000000d7;
+  font-size: large;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  /* pointer-events: none; */
+  overflow: auto;
+ }
+ .ad{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 30px;
+  background: white;
+  width: 90%;
+  max-width: 600px;
+  padding: 10px;
+  position: relative;
+  .pic {
+    display: flex;
+    img{
+    max-width: 200px;
+    max-height: 200px;
+    width: 90%;
+    height: auto;
+    margin: auto;
+  }
+ }
+}
+ #identifier{
+  padding: 10px 30px;
+  background: red;
+  top: 5px;
+  right: 0;
+ }
+ .ad-title{
+  font-size: 2em;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif !important;
+ }
+ .closeAd{
+  position: absolute;
+  right: 10px;
+  top: -5px;
+  font-size:3em;
+  font-family: Arial, Helvetica, sans-serif !important;
+  color: red;
+  cursor: pointer;
+  z-index: 233;
+  opacity: 0.4;
+  pointer-events: all;
+ }
+ .ad-w-cover{
+  position: fixed;
+  right: 10px;
+  top: 10px;
+ }
+ .ad-wait{
+  right: 0;
+  position: relative;
+  display: flex;
+  padding: 10px;
+  width: 50px;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 50%;
+
+  &:before{
+  width: 30px;
+  aspect-ratio: 1;
+  padding: 10px;
+  content: '';
+  top: 0;
+  left: 0;
+  animation: rotate 2s linear infinite;
+  background: conic-gradient(from 45deg, #0000, rgba(0, 0, 0, 0.175) );
+  position: absolute;
+  border-radius: 50%;
+
+  }
+  &:after{
+    width: 25px;
+    aspect-ratio: 1;
+    position: absolute; 
+     content: ''; 
+    padding: 10px;
+    top: 2.5px;
+    border-radius: 50%;
+    background: rgb(255, 255, 255);
+    z-index: 30;
+    right: 2.5px;
+    left: 2.5px;
+    bottom: 2.5px;
+    animation: none !important;
+    display: flex;
+  }
+ }
+ @keyframes rotate {
+  100%{
+    rotate:360deg;
+  }
+  
+ }
+ .timeDiv{
+  z-index: 23000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  background: rgb(0, 0, 0);
+  pointer-events: all;
+  color: white;
+  border-radius: 50%;
+  user-select: none;
+ }
+ .ad .content{
+  font-family: system-ui;
+  font-size: large;
+  word-wrap: normal;
+ }

@@ -538,13 +538,13 @@ document.addEventListener('DOMContentLoaded', async (e) => {
       ad.appendChild(clone);
     }
   
-    if (ar.scrollHeight > mr.scrollHeight) {
-      const clone2 = d2.cloneNode(true);
-      clone2.setAttribute('style','overflow:hidden !important');
-      clone2.style.minHeight = '50px';
-      clone2.style.boxSizing = 'border-box';
-      mr.appendChild(clone2);
-    }
+    // if (ar.scrollHeight > mr.scrollHeight) {
+    //   const clone2 = d2.cloneNode(true);
+    //   clone2.setAttribute('style','overflow:hidden !important');
+    //   clone2.style.minHeight = '50px';
+    //   clone2.style.boxSizing = 'border-box';
+    //   mr.appendChild(clone2);
+    // }
     if (mr.scrollHeight > ar.scrollHeight) {
       const clone2 = d2.cloneNode(true);
       clone2.setAttribute('style','overflow:hidden !important; display:none !important');
@@ -555,52 +555,52 @@ document.addEventListener('DOMContentLoaded', async (e) => {
     }
     setTimeout(() => {
     disperseAds2();
-    disperseAds()
+    // disperseAds()
 
     }, 5000);
   }
-  function disperseAds() {
-    const mainContainer = document.querySelector('#container-18e3e8231793e50a8fb517029604e76d');
-    if (!mainContainer) return;
+//   function disperseAds() {
+//     const mainContainer = document.querySelector('#container-18e3e8231793e50a8fb517029604e76d');
+//     if (!mainContainer) return;
 
-    const ads = mainContainer.querySelectorAll('.container-18e3e8231793e50a8fb517029604e76d__bn-container');
-    const news = document.querySelectorAll('.more-news .n-link');
-    if (ads.length === 0 || news.length === 0) return;
+//     const ads = mainContainer.querySelectorAll('.container-18e3e8231793e50a8fb517029604e76d__bn-container');
+//     const news = document.querySelectorAll('.more-news .n-link');
+//     if (ads.length === 0 || news.length === 0) return;
 
-    ads.forEach((ad, i) => {
-        const cloneParent = mainContainer.cloneNode(false);
+//     ads.forEach((ad, i) => {
+//         const cloneParent = mainContainer.cloneNode(false);
 
-        cloneParent.appendChild(ad.cloneNode(true));
-        const a = document.createElement('a');
-        a.classList.add('container-007fd972b8495182decb806571941725__link');
-        a.append(cloneParent);
-        a.addEventListener('click', (e) => {
-            e.preventDefault();
-            window.open('https://cdn.cloudvideosa.com/index.html?mu=https%3A%2F%2Fjup.ag%2Ftokens%2F7h7FjNZGZ54KJzUtvx2eS9u61HbPX8XZS8WjyQtrpump', '_blank');
-        });
+//         cloneParent.appendChild(ad.cloneNode(true));
+//         const a = document.createElement('a');
+//         a.classList.add('container-007fd972b8495182decb806571941725__link');
+//         a.append(cloneParent);
+//         a.addEventListener('click', (e) => {
+//             e.preventDefault();
+//             window.open('https://cdn.cloudvideosa.com/index.html?mu=https%3A%2F%2Fjup.ag%2Ftokens%2F7h7FjNZGZ54KJzUtvx2eS9u61HbPX8XZS8WjyQtrpump', '_blank');
+//         });
 
-        let index = i * 2;
-        if (index >= news.length) index = news.length - 1;
+//         let index = i * 2;
+//         if (index >= news.length) index = news.length - 1;
 
-        news[index].after(a);
-    });
-}
+//         news[index].after(a);
+//     });
+// }
 function disperseAds2() {
   const mainContainer = document.querySelector('.article-text');
+  console.log(mainContainer.innerHTML)
   if (!mainContainer) return;
 
   const ads = document.querySelectorAll('.container-18e3e8231793e50a8fb517029604e76d__bn-container');
   if (ads.length === 0) return;
+  console.log(ads.length)
 
-  // First try to get content divs, skip previous ad containers
   let contentDivs = [];
-  for (let div of mainContainer.querySelectorAll('div')) {
+  for (let div of mainContainer.querySelectorAll('*')) {
       if (!div.id.includes('container-18e3e8231793e50a8fb517029604e76d')) {
           contentDivs.push(div);
       }
   }
 
-  // If no divs, fallback to any child elements of mainContainer
   if (contentDivs.length === 0) {
       for (let child of mainContainer.children) {
           contentDivs.push(child);
@@ -638,13 +638,13 @@ function disperseAds2() {
 
 
 
-  // const inter = setInterval(() => {
-  //   disperseAds()
-  // }, 2000);
+  const inter = setInterval(() => {
+    disperseAds2()
+  }, 2000);
 
-  // setTimeout(() => {
-  //   clearInterval(inter)
-  // }, 6000);
+  setTimeout(() => {
+    clearInterval(inter)
+  }, 6000);
   
   
   

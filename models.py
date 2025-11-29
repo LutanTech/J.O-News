@@ -220,6 +220,23 @@ class Ad(db.Model):
     content = db.Column(db.Text(), nullable=True)
     added = db.Column(db.DateTime, default=lambda: datetime.utcnow() + timedelta(hours=3))
     valid = db.Column(db.DateTime, default=lambda: datetime.utcnow() + timedelta(hours=168)) # 7 days
+    seen = db.Column(db.Integer, default=0)
+    paid = db.Column(db.Integer, default=0.00)
+    type = db.Column(db.String, default='int')
+    url = db.Column(db.Text(), nullable=True)
     
-    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'image_url': self.image_url,
+            'content': self.content,
+            'added': self.added.isoformat() if self.added else None,
+            'valid': self.valid.isoformat() if self.valid else None,
+            'seen': self.seen,
+            'paid': self.paid,
+            'type': self.type,
+            'url': self.url
+        }
+
      

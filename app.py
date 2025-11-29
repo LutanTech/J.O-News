@@ -936,19 +936,37 @@ def logs():
         'logs': [log.to_dict() for log in logs]
     }), 200
 
+@app.route('/admin/ads')
+def ads():
+    prefix = request.args.get('filter')
+
+    if prefix:
+        ads = Ad.query.filter_by(type=prefix).all()
+    else:
+        ads = Ad.query.all()
+
+    return jsonify({
+        'ads': [ad.to_dict() for ad in ads]
+    }), 200
+
+
 @app.route('/ads/latest')
 def get_latest_ad():
-    l = request.args.get('limit')
+    l = request.args.get('limit'), 5
     if l:
        ads = Ad.query.order_by(Ad.added.desc()).limit(l).all()
        if ads:
           return jsonify({'ads': [ad.to_dict() for ad in ads]}), 200
-    ad = Ad.query.order_by(Ad.added.desc()).first()
-    if ad:
-        return jsonify({'ad': ad.to_dict()}), 200
     return jsonify({'error': 'No Ads added'}), 400
 
-
+@app.route('/get_ad')
+def get_ad():
+    slug = request.args.get('s')
+    ad = Ad.query.filter_by(title=slug).first()
+    if ad:
+        ad.seen = int(ad.seen) + 1
+        return jsonify({'ad': ad.to_dict()}), 200
+    return jsonify({'error':'ad not found'}), 400
 
 @app.route('/add_ad', methods=['POST'])
 def add_ad():
@@ -958,8 +976,6 @@ def add_ad():
     content = data.get('content')
     valid = data.get('valid')
     valid_datetime = datetime.fromisoformat(valid.replace("Z", "+00:00"))
-
-    
     
     if data:
         new_ad = Ad(title=title, image_url=image, content=content, valid=valid_datetime)

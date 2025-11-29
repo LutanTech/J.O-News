@@ -133,7 +133,7 @@ iframe{
     }
   
 
-  @media (max-width:768px) {
+  @media (max-width:800px) {
     .content{
       flex-wrap: wrap !important;
     }
@@ -525,9 +525,21 @@ iframe{
       }
 
     }
+    @media (min-width:1000px) {
+      .news .image img{
+        width: 200px !important;
+      }
+      
+    }
+    @media (max-width:800px) {
+      .content{
+        flex-direction: column;
+      }
+      
+    }
     @media (min-width:500px) {
       .-news .image img{
-       width: 200px !important;
+       width: 100px !important;
        max-height: 100px !important;
       }
       .image{

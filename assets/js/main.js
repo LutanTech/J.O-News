@@ -359,135 +359,130 @@ function convertToBase64(file) {
 
 // Custom Ads
 
-document.addEventListener('DOMContentLoaded', async (e) => {
+document.addEventListener('DOMContentLoaded', async () => {
+
   const body = document.body
   const ad = document.createElement('div')
   ad.classList.add('ad-overlay', 'none')
-  getAd()
-  function getAd(){
-    fetch(`${baseUrl}/ads/latest`)
-    .then(res=>res.json())
-    .then(data=>{
-      const a = data.ad
-      if(a){
-      ad.innerHTML = `
-      ${a.url ?  `<a href="https://lutan-tech.is-great.org" target="_blank">` : ''}
+
+  async function getAd() {
+    try {
+      const res = await fetch(`${baseUrl}/ads/latest`)
+      const data = await res.json()
+
+      let a = data.ads && data.ads.length > 0 ? data.ads[0] : null
+
+      if (a) {
+        ad.innerHTML = `
+          ${a.url ? `<a href="${a.url}" target="_blank">` : ''}
           <div class="ad">
-  <b id="identifier">Sponsored Ad</b>
-  <div class="ad-title">${a.title ? a.title : 'Lutan Tech'}</div>
-  <div class="ad-w-cover">
-  <div class="ad-wait">
-    <div class="timeDiv">${a.time? a.time : 10}</div>
-     <div class="closeAd">&times;</div>
-    </div>
-    </div>
-  <hr style="width: 100%;">
-  <div class="pic">
-    <img src="${a.image_url ? a.image_url : 'https://lutan-tech.is-great.org/images/LUTAN_TECH_LOGO.png'}"  alt="ad image">
-  </div>
-  <div class="content">
-    ${a.content ? a.content :"Need a website like this? Contact <a href='https://lutan-tech.is-great.org'>Lutan Tech</a> and make your business globally recognized."}
-  </div>
-</div>
-${a.url ? '</a>' : ''}
-`
-} else if (data.error){
-ad.innerHTML = `
+            <b id="identifier">Sponsored Ad</b>
+
+            <div class="ad-title">${a.title || 'Lutan Tech'}</div>
+
+            <div class="ad-w-cover">
+              <div class="ad-wait">
+                <div class="timeDiv">10</div>
+                <div class="closeAd">&times;</div>
+              </div>
+            </div>
+
+            <hr style="width: 100%;">
+
+            <div class="pic">
+              <img src="${a.image_url || 'https://lutan-tech.is-great.org/images/LUTAN_TECH_LOGO.png'}">
+            </div>
+
+            <div class="content">
+              ${a.content || `Need a website like this? Contact <a href='https://lutan-tech.is-great.org'>Lutan Tech</a>.`}
+            </div>
+          </div>
+          ${a.url ? '</a>' : ''}
+        `
+      } else {
+        // fallback
+        ad.innerHTML = fallbackHTML()
+      }
+
+    } catch (err) {
+      console.error(err)
+      ad.innerHTML = fallbackHTML()
+    }
+
+    body.appendChild(ad)
+    setTimeout(() => startAd(), 1500)
+  }
+
+
+  function fallbackHTML() {
+    return `
       <a href="https://lutan-tech.is-great.org" target="_blank">
-<div class="ad">
-<b id="identifier">Sponsored Ad</b>
-<div class="ad-title">Lutan Tech</div>
-<div class="ad-w-cover">
-<div class="ad-wait" onclick="document.querySelector('.ad-overlay').classList.add('none');
-document.querySelector('.ad-overlay').classList.remove('flex')">
-<div class="timeDiv">10</div>
-<div class="closeAd">&times;</div>
-</div>
-</div>
-<hr style="width: 100%;">
-<div class="pic">
-<img src="https://lutan-tech.is-great.org/images/LUTAN_TECH_LOGO.png"  alt="ad image">
-</div>
-<div class="content">Need a website like this? Contact <a href='https://lutan-tech.is-great.org'>Lutan Tech</a> and make your business globally recognized.
-</div>
-</div>
-</a>`
+        <div class="ad">
+          <b id="identifier">Sponsored Ad</b>
 
-}
-      
-    })
-    .catch(err=>{
-      console.error(err.message)
-      showAd()
-      ad.innerHTML = `
-      <a href="https://lutan-tech.is-great.org" target="_blank">
-      <div class="ad">
-<b id="identifier">Sponsored Ad</b>
-<div class="ad-title">Lutan Tech</div>
-<div class="ad-w-cover">
-<div class="ad-wait" onclick="document.querySelector('.ad-overlay').classList.add('none');
-document.querySelector('.ad-overlay').classList.remove('flex')">
-<div class="timeDiv">10</div>
- <div class="closeAd">&times;</div>
-</div>
-</div>
-<hr style="width: 100%;">
-<div class="pic">
-<img src="https://lutan-tech.is-great.org/images/LUTAN_TECH_LOGO.png"  alt="ad image">
-</div>
-<div class="content">Need a website like this? Contact <a href='https://lutan-tech.is-great.org'>Lutan Tech</a> and make your business globally recognized.
-</div>
-</div>
-</a>`
+          <div class="ad-title">Lutan Tech</div>
+
+          <div class="ad-w-cover">
+            <div class="ad-wait">
+              <div class="timeDiv">10</div>
+              <div class="closeAd">&times;</div>
+            </div>
+          </div>
+
+          <hr>
+
+          <div class="pic">
+            <img src="https://lutan-tech.is-great.org/images/LUTAN_TECH_LOGO.png">
+          </div>
+
+          <div class="content">
+            Need a website like this? Contact <a href='https://lutan-tech.is-great.org'>Lutan Tech</a>.
+          </div>
+        </div>
+      </a>
+    `
+  }
 
 
-    })
-  
-  body.appendChild(ad)
-  setTimeout(()=>{
-  const parent = document.querySelector('.ad-wait')
-  const adOv = document.querySelector('.ad-overlay')
+  function startAd() {
 
-  function showAd() {
-    if(sessionStorage.getItem('sA1t')){
-      
-      setTimeout(()=>{sessionStorage.removeItem('sA1t')}, 120000)
+    const overlay = document.querySelector('.ad-overlay')
+    const parent = overlay.querySelector('.ad-wait')
+
+    if (sessionStorage.getItem('sA1t')) {
+      setTimeout(() => sessionStorage.removeItem('sA1t'), 120000)
       return
-    } 
-    adOv.classList.add('flex')
-    adOv.classList.remove('none')
+    }
 
-    parent.innerHTML = `<div class="timeDiv">10</div>`
+    overlay.classList.add('flex')
+    overlay.classList.remove('none')
+
+    const timeDiv = parent.querySelector('.timeDiv')
+    let time = 10
 
     const interval = setInterval(() => {
-      const timeDiv = document.querySelector('.timeDiv')
-      const start = parseInt(timeDiv.textContent.trim())
+      time -= 1
+      timeDiv.textContent = time
 
-      if (start > 0) {
-        timeDiv.textContent = start - 1
-
-      } else {
+      if (time <= 0) {
         clearInterval(interval)
-
-        parent.innerHTML = `<div class="closeAd" style="opacity:1;">&times;</div>`
-
-        parent.addEventListener('click', (e) => {
-          if (e.target.classList.contains('closeAd')) {
-            adOv.classList.add('none')
-            adOv.classList.remove('flex')
-            sessionStorage.setItem('sA1t', true)
-          }
-        })
+        parent.innerHTML = `<div class="closeAd" style="opacity: 1;">&times;</div>`
       }
-    }, 1000)
-  }
-// setTimeout(() => {
-   showAd()
-// }, 30000);
- 
 
-}, 2000)
-}
+    }, 1000)
+
+    parent.addEventListener('click', e => {
+      if (e.target.classList.contains('closeAd')) {
+        overlay.classList.add('none')
+        overlay.classList.remove('flex')
+        sessionStorage.setItem('sA1t', true)
+      }
+    })
+  }
+
+
+  getAd()
+
 })
 
 

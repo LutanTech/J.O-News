@@ -4,6 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_migrate import Migrate
 from datetime import datetime, timedelta
+
+from pydantic_core import Url
 import models
 from models import News, Log, Comment, User, OTP, Help, Ad
 from flask_mail import Mail, Message
@@ -70,6 +72,7 @@ def log(content, type):
 
         new_log = Log(
             id=generate_random_id(6),
+
             type=type,
             content=content,
             requestor=meta_json
@@ -920,7 +923,7 @@ with app.app_context():
     try:
        db.create_all()
     except Exception as e:
-       print(f'Failed to initiate DB')
+       print(f'Failed to initiate DB {str(e)}')
 
 
 @app.route('/admin/logs')
@@ -936,78 +939,215 @@ def logs():
         'logs': [log.to_dict() for log in logs]
     }), 200
 
+
+# ------------------------------
+#  GET ALL ADS (FILTER OPTIONAL)
+# ------------------------------
 @app.route('/admin/ads')
 def ads():
-    prefix = request.args.get('filter')
+    try:
+        prefix = request.args.get('filter')
 
-    if prefix:
-        ads = Ad.query.filter_by(type=prefix).all()
-    else:
-        ads = Ad.query.all()
+        if prefix:
+            ads = Ad.query.filter_by(type=prefix).all()
+        else:
+            ads = Ad.query.all()
 
-    return jsonify({
-        'ads': [ad.to_dict() for ad in ads]
-    }), 200
+        return jsonify({
+            'ads': [ad.to_ad_dict() for ad in ads]
+        }), 200
+
+    except Exception as e:
+        log(f'[400]: Bad Request error in /ads route > {str(e)}', 'error')
+        return jsonify({'error': f'route error {str(e)}'}), 400
 
 
+# ------------------------------
+#  GET LATEST ADS (LIMIT OPTIONAL)
+# ------------------------------
 @app.route('/ads/latest')
 def get_latest_ad():
-    l = request.args.get('limit'), 5
-    if l:
-       ads = Ad.query.order_by(Ad.added.desc()).limit(l).all()
-       if ads:
-          return jsonify({'ads': [ad.to_dict() for ad in ads]}), 200
-    return jsonify({'error': 'No Ads added'}), 400
+    try:
+        limit_val = request.args.get('limit')
+        limit_num = int(limit_val) if limit_val else 5
+        
+        ads = (
+            Ad.query
+            .filter_by(is_public=True)
+            .order_by(Ad.added.desc())
+            .limit(limit_num)
+            .all()
+        )
+        
+        if ads:
+            return jsonify({'ads': [ad.to_dict() for ad in ads]}), 200
+        
+        return jsonify({'error':'No ads found'}), 404
 
+    except Exception as e:
+        log(f'[400]: Error in /ads/latest > {str(e)}', 'error')
+        return jsonify({'error': f'Failed: {str(e)}'}), 400
+        
+
+from random import sample
+
+@app.route('/get_featured_ads')
+def get_featured_ads():
+    try:
+        limit_val = request.args.get('limit')
+        limit_num = int(limit_val) if limit_val else 5
+
+        ads = Ad.query.filter_by(type='featured', is_public=True).all() 
+
+        if not ads:
+            return jsonify({'error': 'No Ads added'}), 400
+
+        # pick random ads
+        random_ads = sample(ads, min(limit_num, len(ads)))
+
+        return jsonify({'ads': [ad.to_dict() for ad in random_ads]}), 200
+
+    except Exception as e:
+        log(f'[400]: Error in /get_featured_ads > {str(e)}', 'error')
+        return jsonify({'error': f'Failed: {str(e)}'}), 400
+
+
+
+# ------------------------------
+#  GET AD BY TITLE AND INCREMENT VIEW COUNT
+# ------------------------------
 @app.route('/get_ad')
 def get_ad():
-    slug = request.args.get('s')
-    ad = Ad.query.filter_by(title=slug).first()
-    if ad:
-        ad.seen = int(ad.seen) + 1
-        return jsonify({'ad': ad.to_dict()}), 200
-    return jsonify({'error':'ad not found'}), 400
+    try:
+        slug = request.args.get('s')
+        refined = slug.replace('_', ' ')
+        ad = Ad.query.filter_by(title=refined, is_public=True).first()
+
+        if ad:
+            ad.seen = int(ad.seen) + 1
+            db.session.commit()
+
+            return jsonify({'ad': ad.to_dict()}), 200
+
+        return jsonify({'error': 'ad not found'}), 400
+
+    except Exception as e:
+        log(f'[400]: Error in /get_ad > {str(e)}', 'error')
+        return jsonify({'error': f'Failed: {str(e)}'}), 400
+
+
+# ------------------------------
+#  ADD NEW AD
+# ------------------------------
+
 
 @app.route('/add_ad', methods=['POST'])
 def add_ad():
-    data = request.get_json()
-    title = data.get('title')
-    image = data.get('image_url')
-    content = data.get('content')
-    valid = data.get('valid')
-    valid_datetime = datetime.fromisoformat(valid.replace("Z", "+00:00"))
-    
-    if data:
-        new_ad = Ad(title=title, image_url=image, content=content, valid=valid_datetime)
-        try:
-            db.session.add(new_ad)
-            db.session.commit()
-            return jsonify({'message':'Ad added successfully'}), 200
-        except Exception as e:
-            log(f'[500] : Database Error in /add_ad route > {str(e)}', 'error')
-            return jsonify({'error':f'Failed to add: Database Error: {str(e)}'}), 500
-    return jsonify({'error':'Missing data or incomplete data'}), 400
-    
+    try:
+        data = request.get_json()
+
+        if not data:
+            return jsonify({'error': 'Missing JSON body'}), 400
+
+        title = data.get('title')
+        image = data.get('image_url')
+        content = data.get('content')
+        valid = data.get('valid')
+        t = data.get('type')
+        paid = data.get('paid')
+        url = data.get('url')
+
+        if not all([title, image, content, valid, type]):
+            return jsonify({'error': 'Missing fields'}), 400
+
+        valid_datetime = datetime.fromisoformat(valid.replace("Z", "+00:00"))
+
+        new_ad = Ad(
+            title=title,
+            image_url=image,
+            content=content,
+            valid=valid_datetime,
+            url=url,
+            type=t,
+            paid=paid
+        )
+
+        db.session.add(new_ad)
+        db.session.commit()
+
+        return jsonify({'message': 'Ad added successfully'}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        log(f'[500] : Database Error in /add_ad route > {str(e)}', 'error')
+        return jsonify({'error': f'Failed to add: Database Error: {str(e)}'}), 500
 
 
+# ------------------------------
+#  DELETE AD
+# ------------------------------
 @app.route('/delete_ad')
 def delete_ad():
-    id = request.args.get('id')
+    try:
+        ad_id = request.args.get('id')
+
+        if not ad_id:
+            return jsonify({'error': 'Missing id'}), 400
+
+        ad = Ad.query.filter_by(id=ad_id).first()
+
+        if not ad:
+            return jsonify({'error': 'Ad not found'}), 404
+
+        db.session.delete(ad)
+        db.session.commit()
+
+        return jsonify({'msg': 'deleted successfully'}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        log(f'[500] : Database error > {str(e)}', 'error')
+        return jsonify({'error': 'Failed to delete ad'}), 500
+    
+@app.route('/t_ad/<id>')
+def toggle(id):
+ try:
+    if id:
+        ad = Ad.query.filter_by(id=id).first()
+        if ad:
+                try:
+                    ad.is_public = not ad.is_public  # toggle visibility
+                    db.session.commit()
+                    return jsonify({'msg':'Visibility toggled'}), 200
+                except Exception as e:
+                    db.session.rollback()
+                    log(f'[500]: Database error in /toggle ad visibility route > {str(e)}', 'error')
+                    return jsonify({'error':'Database error'}), 500
+
+        return jsonify({'error':'Ad not found'}), 404
+    return jsonify({'error':'Missing data in request'}), 400
+    
+ except Exception as e:
+        log(f'[500]: Database error in /toggle ad visibility route > {str(e)}', 'error')
+        return jsonify({'error':f'Database error'}), 500
+
+@app.route('/v/<id>')
+def v(id):
     if id:
         ad = Ad.query.filter_by(id=id).first()
         if ad:
             try:
-                db.session.delete(ad)
+                ad.seen = int(ad.seen) + 1
                 db.session.commit()
-                return jsonify({'msg': 'deleted successfully'}), 200
+                return jsonify({'msg': 'success'}), 200
             except Exception as e:
-                db.session.rollback()
-                log(f'[500] : Database error > {str(e)}', 'error')
-                return jsonify({'error' : 'Failed to delete ad'}), 500
-        return jsonify({'error':'Ad not found'}), 404
-    return jsonify({'error':'Missing data or incomplete data'}), 400
+                log(f'[500]: Database error in /view_ad route > {str(e)}', 'error')
+                return jsonify({'error':'Failed to add view'}), 500
+        return jsonify({'error':'Failed to get ad'}), 404
+    return jsonify({'error':'Missing data in request'}), 400
 
-                
+
+
 if __name__ == '__main__':
     print("app.run(debug=True, port=5000, host='0.0.0.0')")
 #    app.run(debug=True, port=5000, host='0.0.0.0')

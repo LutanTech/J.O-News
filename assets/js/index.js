@@ -3,21 +3,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // -------------------- Utility Functions --------------------
 
-    const md = {
-    added: "2025-11-29T09:25:29.331302",
-    categ: "sports",
-    content: "Heyyy.. Its now with a new look!",
-    country: "kenya",
-    id: "MDad001",
-    image_url: "https://i.ibb.co/LhqsyLJM/image.png",
-    slug: "https://mdcollection.is-best.net",
-    sub: "ad",
-    title: "MD Colection. The joy of dressing is an art",
-    user: "Admin"
-    }
-    setTimeout(() => {
-        appendMostV(md, 'Ad')
-    }, 1000);
+
+    fetch(`${baseUrl}/get_featured_ads`)
+    .then(res=>res.json())
+    .then(data=>{
+        if(data.error){
+            console.warn('error getting featured ads')
+        } else{
+            if(data.ad || data.ads)
+            featured_ad = data.ad || data.ads[Math.floor(Math.random() * data.ads.length)]
+            appendMostV(featured_ad, 'Ad')
+
+        }
+    })
 
     function appendMostV(a, type){
         console.log(a)
@@ -33,14 +31,15 @@ document.addEventListener('DOMContentLoaded', () => {
         div.classList.add('featured');
         const t = type.toLowerCase().replaceAll('_', '').replaceAll(' ', '').replace('news', '')
         div.classList.add('featured-'+ t )
-        if(t == 'latest' ){
+        if(t == 'ad' ){
             div.classList.add('active')
         }
         div.addEventListener('click', ()=>{
-            if(type == 'Ad'){
-                window.open(a.slug, '_blank')
+            if(type == 'Ad' && a.url){
+                fetch(`${baseUrl}/v/${a.id}`)
+                window.open(a.url, '_blank')
             } else{
-             window.location.href=`/open/?s=${a.slug}`
+             window.location.href=`/open/?s=${a.url}`
             }
              })
         div.innerHTML = `
@@ -51,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="article-data">
                 <div class="article-title">
                  <span class="art-data-t">   ${a.title.length > 100 ? a.title.slice(0,100)+'...' : a.title} </span> 
-                 ${type == 'Ad' ? `<a style="color:aqua" href="${a.slug}" target="_blank">Open</a>` : `<a  style="color:aqua" href="/open/?s=${a.slug}"> Read More</a>`}
+                 ${type == 'Ad' ? `<a style="color:aqua" href="${a.url ? a.url : '#'}">View</a>` : `<a  style="color:aqua" href="/open/?s=${a.url ? a.url : '#'}"> Read More</a>`}
                 </div>
             </div>
         `;
@@ -61,33 +60,25 @@ document.addEventListener('DOMContentLoaded', () => {
       
     function checkDivs() {
         if (window.innerWidth < 768) { 
-            const divs = document.querySelectorAll('.featured'); // 3 divs
-            const defs = document.querySelectorAll('.featured-trending');
+            const divs = document.querySelectorAll('.featured');
             let index = 0;
     
             setInterval(() => {
     
-                // remove old classes from all
-                divs.forEach(d => d.classList.remove('active', 'go-right'));
                 divs.forEach(d => d.classList.remove('active'));
+                divs.forEach(d => d.classList.remove('go-right'));
 
     
-                // apply to current div
                 divs[index].classList.add('active');
     
-                // delayed animation
                 setTimeout(() => {
                     divs[index].classList.add('go-right');
                 }, 6500);
     
-                // trending defaults
-                defs.forEach(def => def.classList.add('active'));
     
-                // step forward
                 index++;
     
-                // reset after reaching 3
-                if (index === divs.length -1) {
+                if (index === 3 ) {
                     index = 0;
                 }
     

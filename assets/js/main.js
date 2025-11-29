@@ -365,58 +365,152 @@ document.addEventListener('DOMContentLoaded', async () => {
   const ad = document.createElement('div')
   ad.classList.add('ad-overlay', 'none')
 
+  // progress bar
+  const loader = document.createElement('div')
+  loader.classList.add('ad-progress')
+  loader.innerHTML = `<div class="ad-progress-inner"></div>`
+  body.appendChild(loader)
+
+  function startProgress() {
+    loader.style.display = 'block'
+    const bar = loader.querySelector('.ad-progress-inner')
+    bar.style.width = '0'
+
+    let w = 0
+    let grow = setInterval(() => {
+      if (w >= 90) {
+        clearInterval(grow)
+      } else {
+        w += 3
+        bar.style.width = w + '%'
+      }
+    }, 80)
+  }
+
+  function finishProgress() {
+    const bar = loader.querySelector('.ad-progress-inner')
+    bar.style.width = '100%'
+    setTimeout(() => loader.style.display = 'none', 250)
+  }
+
+  function saveCache(ads) {
+    localStorage.setItem('ads_cache', JSON.stringify({
+      time: Date.now(),
+      ads: ads
+    }))
+  }
+
+  function loadCache() {
+    let cache = localStorage.getItem('ads_cache')
+    if (!cache) return null
+    cache = JSON.parse(cache)
+    
+    // expire after 2 hours
+    if (Date.now() - cache.time > 7200000) {
+      localStorage.removeItem('ads_cache')
+      return null
+    }
+
+    return cache.ads
+  }
+
+
   async function getAd() {
+    startProgress()
+
+    // attempt to show cached ad instantly
+    let cachedAds = loadCache()
+    if (cachedAds && cachedAds.length > 0) {
+      displayRandomAd(cachedAds)
+    }
+
     try {
       const res = await fetch(`${baseUrl}/ads/latest`)
       const data = await res.json()
 
-      let a = data.ads && data.ads.length > 0 ? data.ads[0] : null
-
-      if (a) {
-        ad.innerHTML = `
-          ${a.url ? `<a href="${a.url}" target="_blank">` : ''}
-          <div class="ad">
-            <b id="identifier">Sponsored Ad</b>
-
-            <div class="ad-title">${a.title || 'Lutan Tech'}</div>
-
-            <div class="ad-w-cover">
-              <div class="ad-wait">
-                <div class="timeDiv">10</div>
-                <div class="closeAd">&times;</div>
-              </div>
-            </div>
-
-            <hr style="width: 100%;">
-
-            <div class="pic">
-              <img src="${a.image_url || 'https://lutan-tech.is-great.org/images/LUTAN_TECH_LOGO.png'}">
-            </div>
-
-            <div class="content">
-              ${a.content || `Need a website like this? Contact <a href='https://lutan-tech.is-great.org'>Lutan Tech</a>.`}
-            </div>
-          </div>
-          ${a.url ? '</a>' : ''}
-        `
+      if (data.ads && data.ads.length > 0) {
+        saveCache(data.ads)
+        displayRandomAd(data.ads)
       } else {
-        // fallback
         ad.innerHTML = fallbackHTML()
       }
 
     } catch (err) {
       console.error(err)
-      ad.innerHTML = fallbackHTML()
+      if (!cachedAds) {
+        ad.innerHTML = fallbackHTML()
+      }
     }
 
+    finishProgress()
     body.appendChild(ad)
     setTimeout(() => startAd(), 1500)
   }
 
+  function canRecordView(adId) {
+    const key = `views_${adId}`
+    const now = Date.now()
+  
+    let record = localStorage.getItem(key)
+    record = record ? JSON.parse(record) : { count: 0, start: now }
+  
+    if (now - record.start > 60000) {
+      record = { count: 1, start: now }
+      localStorage.setItem(key, JSON.stringify(record))
+      return true
+    }
+  
+    if (record.count < 5) {
+      record.count += 1
+      localStorage.setItem(key, JSON.stringify(record))
+      return true
+    }
+  
+    return false
+  }
+  
+
+
+  function displayRandomAd(ads) {
+    let a = ads[Math.floor(Math.random() * ads.length)]
+
+    if (canRecordView(a.id)) {
+      fetch(`${baseUrl}/v/${a.id}`)
+    }
+    
+    ad.innerHTML = `
+      ${a.url ? `<a href="/ad/?redirect=${a.url}" target="_blank">` : ''}
+      <div class="ad">
+        <b id="identifier">Sponsored Ad</b>
+
+        <div class="ad-title">${a.title || 'Lutan Tech'}</div>
+
+        <div class="ad-w-cover">
+          <div class="ad-wait">
+            <div class="timeDiv">10</div>
+            <div class="closeAd">&times;</div>
+          </div>
+        </div>
+
+        <hr style="width: 100%;">
+
+        <div class="pic">
+          <img src="${a.image_url || 'https://lutan-tech.is-great.org/images/LUTAN_TECH_LOGO.png'}">
+        </div>
+
+        <div class="content">
+          ${parseMarkdown(a.content) || `Need a website like this? Contact <a href='https://lutan-tech.is-great.org'>Lutan Tech</a>.`}
+        </div>
+      </div>
+      ${a.url ? '</a>' : ''}
+    `
+  }
+
+
 
   function fallbackHTML() {
     return `
-      <a href="https://lutan-tech.is-great.org" target="_blank">
+      <a href="/ad/?redirect=https://lutan-tech.is-great.org" target="_blank">
         <div class="ad">
           <b id="identifier">Sponsored Ad</b>
 
@@ -445,44 +539,50 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
   function startAd() {
-
     const overlay = document.querySelector('.ad-overlay')
     const parent = overlay.querySelector('.ad-wait')
-
-    if (sessionStorage.getItem('sA1t')) {
-      setTimeout(() => sessionStorage.removeItem('sA1t'), 120000)
-      return
+  
+    function tryShowAd() {
+      const lastClose = sessionStorage.getItem('sA1t')
+      const now = Date.now()
+  
+      // show ad if never closed or 2 mins (120000 ms) have passed since last close
+      if (!lastClose || now - new Date(lastClose).getTime() >= 120000) {
+        overlay.classList.add('flex')
+        overlay.classList.remove('none')
+  
+        const timeDiv = parent.querySelector('.timeDiv')
+        let time = 10
+  
+        const interval = setInterval(() => {
+          time -= 1
+          timeDiv.textContent = time
+  
+          if (time <= 0) {
+            clearInterval(interval)
+            parent.innerHTML = `<div class="closeAd" style="opacity: 1;">&times;</div>`
+          }
+        }, 1000)
+  
+        parent.addEventListener('click', e => {
+          if (e.target.classList.contains('closeAd')) {
+            overlay.classList.add('none')
+            overlay.classList.remove('flex')
+            sessionStorage.setItem('sA1t', new Date().toISOString())
+          }
+        })
+      }
     }
-
-    overlay.classList.add('flex')
-    overlay.classList.remove('none')
-
-    const timeDiv = parent.querySelector('.timeDiv')
-    let time = 10
-
-    const interval = setInterval(() => {
-      time -= 1
-      timeDiv.textContent = time
-
-      if (time <= 0) {
-        clearInterval(interval)
-        parent.innerHTML = `<div class="closeAd" style="opacity: 1;">&times;</div>`
-      }
-
-    }, 1000)
-
-    parent.addEventListener('click', e => {
-      if (e.target.classList.contains('closeAd')) {
-        overlay.classList.add('none')
-        overlay.classList.remove('flex')
-        sessionStorage.setItem('sA1t', true)
-      }
-    })
+  
+    // check immediately and then every 5 seconds
+    tryShowAd()
+    setInterval(tryShowAd, 5000)
   }
+  
 
-
+setTimeout(() => {
   getAd()
 
+}, 2000);
+  
 })
-
-

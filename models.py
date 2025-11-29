@@ -159,7 +159,7 @@ class Log(db.Model):
    type = db.Column(db.String(20))
    content = db.Column(db.Text)
    requestor = db.Column(db.Text)
-   at = db.Column(db.DateTime, default=lambda: datetime.utcnow() + timedelta(hours=3))
+   at = db.Column(db.DateTime, default=lambda: datetime.utcnow() + timedelta(hours=0))
    
    
    def to_dict(self):

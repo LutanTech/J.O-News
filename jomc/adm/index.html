@@ -508,8 +508,8 @@
 
         function renderLogs() {
             const logs = state.filters.logType 
-                ? state.data.logs.filter(l => l.type === state.filters.logType) 
-                : state.data.logs;
+                ? state.data.logs.filter(l => l.type === state.filters.logType).reverse() 
+                : state.data.logs.reverse();
 
             return `
                 <div class="space-y-4">

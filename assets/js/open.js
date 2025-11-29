@@ -116,16 +116,12 @@ document.addEventListener('DOMContentLoaded', async (e) => {
            <div id="news-content">
              <img class="news-content-image" src="${n.image_url ? n.image_url : '/assets/images/logo.jpg'}">
             <div class="article-text">
+            ${n.content}
             </div>
 
      </div>
            
-             `
-             const txt = document.createElement('div')
-             txt.innerHTML = parseMarkdown(n.content)
-             setTimeout(() => {
-             div.querySelector('.article-text').innerHTML = txt.textContent              
-             }, 10);
+             `       
           window.n_id = n.id
           fetchComments(n.id)
 
@@ -595,7 +591,7 @@ function disperseAds2() {
   console.log(ads.length)
 
   let contentDivs = [];
-  for (let div of mainContainer.querySelectorAll('*')) {
+  for (let div of mainContainer.querySelectorAll('div')) {
       if (!div.id.includes('container-18e3e8231793e50a8fb517029604e76d')) {
           contentDivs.push(div);
       }

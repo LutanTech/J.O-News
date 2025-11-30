@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(res=>res.json())
     .then(data=>{
         if(data.error){
-            console.warn('error getting featured ads')
+            console.warn('error getting featured ads' + data.error)
         } else{
             if(data.ad || data.ads)
             featured_ad = data.ad || data.ads[Math.floor(Math.random() * data.ads.length)]
@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     function appendMostV(a, type){
-        console.log(a)
 
         if(!a) return;
         const parent = document.querySelector('.featured-divs');
@@ -31,15 +30,17 @@ document.addEventListener('DOMContentLoaded', () => {
         div.classList.add('featured');
         const t = type.toLowerCase().replaceAll('_', '').replaceAll(' ', '').replace('news', '')
         div.classList.add('featured-'+ t )
-        if(t == 'ad' ){
+        if(t == 'latest' ){
             div.classList.add('active')
         }
-        div.addEventListener('click', ()=>{
+        div.addEventListener('click', (e)=>{
             if(type == 'Ad' && a.url){
+                e.stopImmediatePropagation()
+                e.preventDefault()
                 fetch(`${baseUrl}/v/${a.id}`)
                 window.open(a.url, '_blank')
             } else{
-             window.location.href=`/open/?s=${a.url}`
+             window.location.href=`/open/?s=${a.slug}`
             }
              })
         div.innerHTML = `
@@ -50,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="article-data">
                 <div class="article-title">
                  <span class="art-data-t">   ${a.title.length > 100 ? a.title.slice(0,100)+'...' : a.title} </span> 
-                 ${type == 'Ad' ? `<a style="color:aqua" href="${a.url ? a.url : '#'}">View</a>` : `<a  style="color:aqua" href="/open/?s=${a.url ? a.url : '#'}"> Read More</a>`}
+                 ${type == 'Ad' ? `<a style="color:aqua" target="_blank" href="${a.url ? a.url : '#'}">View</a>` : `<a  style="color:aqua" href="/open/?s=${a.slug ? a.slug : 'error_page'}"> Read More</a>`}
                 </div>
             </div>
         `;
@@ -149,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="title"><b>${n.title.length > 50 ? n.title.slice(0,50)+'...' : n.title}</b></div>
                     <div class="context">${parseMarkdown(n.content)}</div>
                     <div class="dets">
-                        <div class="category" tooltip="Category"><i class="fas fa-tags"></i> <span>${n.categ || 'Unknown'}</span></div> |
+                        <div class="category" tooltip="Category"><i class="fas fa-tags"></i> <span>${n.categ.length > 8 ? n.categ.slice(0, 8) + '...' : n.categ || 'Unknown'}</span></div> |
                         <div class="time"><i class="fas fa-clock" style="font-size:xx-small;"></i> <span>${timeAgo(n.added)}</span></div> |
                         ${n.user ? `
                         <div class="user" tooltip="Publisher"><i class="fas fa-user-circle" ></i> By ${n.user.length > 6? n.user.slice(0, 5) + '...' : n.user} </div>` : ''}

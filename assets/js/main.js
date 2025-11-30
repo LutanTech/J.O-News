@@ -545,9 +545,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     function tryShowAd() {
       const lastClose = sessionStorage.getItem('sA1t')
       const now = Date.now()
-  
-      // show ad if never closed or 2 mins (120000 ms) have passed since last close
-      if (!lastClose || now - new Date(lastClose).getTime() >= 120000) {
+  //5mins
+      if (!lastClose || now - new Date(lastClose).getTime() >= 300000) {
         overlay.classList.add('flex')
         overlay.classList.remove('none')
   
@@ -556,7 +555,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   
         const interval = setInterval(() => {
           time -= 1
+          if(timeDiv){
           timeDiv.textContent = time
+          }
   
           if (time <= 0) {
             clearInterval(interval)
@@ -566,6 +567,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   
         parent.addEventListener('click', e => {
           if (e.target.classList.contains('closeAd')) {
+            e.stopImmediatePropagation()
+            e.preventDefault()
             overlay.classList.add('none')
             overlay.classList.remove('flex')
             sessionStorage.setItem('sA1t', new Date().toISOString())
@@ -574,7 +577,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
   
-    // check immediately and then every 5 seconds
     tryShowAd()
     setInterval(tryShowAd, 5000)
   }

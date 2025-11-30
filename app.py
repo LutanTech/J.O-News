@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 
 from pydantic_core import Url
 import models
-from models import News, Log, Comment, User, OTP, Help, Ad
+from models import News, Log, Comment, User, OTP, Help, Ad, Likes
 from flask_mail import Mail, Message
 from requests_oauthlib import OAuth2Session
 from urllib.parse import urlencode
@@ -216,8 +216,7 @@ def news():
     news_query = news_query.offset(offset)
 
     news_dict = news_query.all()
-    log('[200] /news route access', 'success')
-
+    log('[200] /news route access', 'info')
     return jsonify({'news': [n.to_small_dict() for n in news_dict]})
 
 
@@ -709,7 +708,7 @@ def admin_get_users():
         return jsonify({'error': 'Unauthorized'}), 401
 
     users = User.query.all()
-    log('[200] Admin Users accessed', 'success')
+    log('[200] Admin Users accessed', 'info')
     return jsonify({'users': [u.to_disp_dict() for u in users]}), 200
 
 
@@ -816,16 +815,62 @@ def admin_delete_comment():
 @app.route('/like_comment')
 def like_comment():
     id = request.args.get('id')
-    comment = Comment.query.filter_by(id=id).first()
-    if comment:
+    uid = request.args.get('uid')
+    if id and uid:
+        art = Comment.query.filter_by(id=id).first()
+        user = User.query.filter_by(id=uid).first()
+
         try:
-            comment.likes = int(comment.likes) + 1
-            db.session.commit()
-            return jsonify({'message':'liked'}), 200
+            if art:
+                if user:
+                    exists = Likes.query.filter_by(ref_id=art.id, user_id=user.id).first()
+                    if exists:
+                      return jsonify({'error':'Already liked'}), 400
+                    try:
+                        art.likes = int(art.likes) + 1
+                        new_like = Likes(ref_id=art.id, user_id=user.id)
+                        db.session.add(new_like)
+                        db.session.commit()
+                        return jsonify({'message':'liked'}), 200
+                    except Exception as e:
+                        log(f'[500] :  Error in /like_comment route : {str(e)}', 'error')
+                        return jsonify({'error':'Failed to like '}), 500
+                return jsonify({'error':'Failed to initialize user'}), 400
+            return jsonify({'error':'Failed to get comment'}), 400
         except Exception as e:
-            log(f'[500] :  Error in /like_comment route : {str(e)}', 'error')
-            return jsonify({'error':'Failed to like '}), 500
-    return jsonify({'error':'failed'}), 400
+            log(f'[400]: Error in /like comment > {str(e)}', 'error')
+            return jsonify({'error':'failed to like comment'}), 400
+    return jsonify({'error':'Missing data in request. Try to log in'}), 404
+
+@app.route('/like_news')
+def like_news():
+    id = request.args.get('id')
+    uid = request.args.get('uid')
+    if id and uid:
+        art = News.query.filter_by(id=id).first()
+        user = User.query.filter_by(id=uid).first()
+
+        try:
+            if art:
+                if user:
+                    exists = Likes.query.filter_by(ref_id=art.id, user_id=user.id).first()
+                    if exists:
+                       return jsonify({'error':'Already liked'}), 400
+                    try:
+                        art.likes = int(art.likes) + 1
+                        new_like = Likes(ref_id=art.id, user_id=user.id)
+                        db.session.add(new_like)
+                        db.session.commit()
+                        return jsonify({'message':'liked'}), 200
+                    except Exception as e:
+                        log(f'[500] :  Database error in /like_comment route : {str(e)}', 'error')
+                        return jsonify({'error':'Failed to like '}), 500
+                return jsonify({'error':'Failed to initialize user'}), 400
+            return jsonify({'error':'Failed to get News article'}), 400
+        except Exception as e:
+            log(f'[400]: Error in /like_news > {str(e)}', 'error')
+            return jsonify({'error':'Failed to like news'}), 400
+    return jsonify({'error':'Missing data in request. Try to log in'}), 404
 
 @app.route('/dislike_comment')
 def dislike_comment():
@@ -885,9 +930,9 @@ def help():
     return jsonify({'error':'missing data in request'}), 400
 
 def send_db_backup():
-    db_path = os.path.join(app.instance_path, 'research.db')
+    db_path = os.path.join(app.instance_path, 'news.db')
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    backup_filename = f"research_backup_{timestamp}.db"
+    backup_filename = f"news_backup_{timestamp}.db"
 
     shutil.copy(db_path, backup_filename)
 
@@ -906,17 +951,20 @@ def send_db_backup():
         os.remove(backup_filename)
 
     except Exception as e:
-        log(f"[400] : Failed to send backup: {e}", 'error')
-        log(str(e), 'error')
+        log(f"[400] : Failed to send backup > {str(e)}", 'error')
 
 @app.route('/backup', methods=['GET'])
 def trigger_backup():
-    key = request.args.get('key')
-    if key != 'not_yet_set':
-        log('[401] Unauthorized DB backup request', 'error')
-        return jsonify({'error': 'Unauthorized'}), 401
-    send_db_backup()
-    return jsonify({'success': 'Backup emailed to you!'}), 200
+    try:
+        key = request.args.get('key')
+        if key != 'not_yet_set':
+            log('[401]: Unauthorized DB backup request', 'error')
+            return jsonify({'error': 'Unauthorized'}), 401
+        info = send_db_backup()
+        return jsonify({'success': 'Backup emailed to you!', 'info':info}), 200
+    except Exception as e:
+        log(f'[400]: failed to initiate backup > {str(e)}', 'error')
+        return jsonify({'error':'failed to initiate backup'}), 400
 
 
 with app.app_context():

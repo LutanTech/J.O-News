@@ -13,6 +13,7 @@
     
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="/assets/js/utils.js" defer></script>
 
     <!-- Tailwind Config for Dark Mode -->
     <script>
@@ -483,29 +484,40 @@
         }
 
         function renderComments() {
-             return `
-                <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
-                    <table class="w-full text-left">
-                        <thead class="bg-gray-50 dark:bg-slate-900/50 text-xs uppercase opacity-70">
-                            <tr><th class="p-4">User</th><th class="p-4">Content</th><th class="p-4">Date</th><th class="p-4 text-right">Action</th></tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100 dark:divide-slate-700">
-                            ${state.data.comments.map(c => `
-                                <tr class="hover:bg-gray-50 dark:hover:bg-slate-700/30">
-                                    <td class="p-4 text-sm font-medium">${c.user}</td>
-                                    <td class="p-4 text-sm opacity-80 max-w-md truncate">${c.content}</td>
-                                    <td class="p-4 text-xs opacity-60">${new Date(c.at).toLocaleDateString()}</td>
-                                    <td class="p-4 text-right">
-                                        <button onclick="deleteItem('comment', '${c.id}')" class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
+            return `
+            <div class="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
+                <table class="w-full text-left">
+                    <thead class="bg-gray-50 dark:bg-slate-900/50 text-xs uppercase opacity-70">
+                        <tr>
+                            <th class="p-4">User</th>
+                            <th class="p-4">Content</th>
+                            <th class="p-4">Date</th>
+                            <th class="p-4 text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 dark:divide-slate-700">
+                        ${state.data.comments.map(c => {
+                            const div = document.createElement('div');
+                            div.innerHTML = c.content; // strip HTML
+                            return `
+                            <tr class="hover:bg-gray-50 dark:hover:bg-slate-700/30">
+                                <td class="p-4 text-sm font-medium">${c.user}</td>
+                                <td class="p-4 text-sm opacity-80 max-w-md truncate" id="cm-ct">${div.textContent}</td>
+                                <td class="p-4 text-xs opacity-60">${new Date(c.at).toLocaleDateString()}</td>
+                                <td class="p-4 text-right">
+                                    <button onclick="deleteItem('comment', '${c.id}')" class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+            </div>
             `;
         }
-
+        
         function renderLogs() {
             const logs = state.filters.logType 
                 ? state.data.logs.filter(l => l.type === state.filters.logType).reverse() 

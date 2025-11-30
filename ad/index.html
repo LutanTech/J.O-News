@@ -138,6 +138,8 @@
     const params = new URLSearchParams(window.location.search)
     const redirect = params.get('redirect')
     if(redirect){
+      window.baseUrl = ''
+
         const a = document.querySelector('#redirectSpan')
         a.textContent = redirect
         a.href = redirect
@@ -152,8 +154,8 @@
             }
         })
         setTimeout(() =>{
-        window.location.href = redirect
-        }, 200)
+         window.location.href = redirect
+        }, 10)
     } else{
         alert('Can not initialize ad', 'error')
         window.history.back()

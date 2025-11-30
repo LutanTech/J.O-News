@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', async (e) => {
 
   const params = new URLSearchParams(window.location.search)
   const slug = params.get('s')
-  if (slug)  {
+  if (slug && slug != '#' && slug.trim() != '')  {
     // showLoader('Getting latest news...', 'info', 'clear')
     const nr = document.querySelector('.news-wrapper')
     fetch(`${baseUrl}/get/${slug}`)
@@ -150,6 +150,8 @@ document.addEventListener('DOMContentLoaded', async (e) => {
       .catch(err => {
         showLoader('Failed to load page. Please Check your network connection', 'error', true)
       })
+  } else{
+    showLoader('Failed to initiate page. Malformed link', 'error', true)
   }
   function fetchByCountry(country){
     const mnf = document.querySelector('.more-from-news')
@@ -336,21 +338,17 @@ document.addEventListener('DOMContentLoaded', async (e) => {
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;");
 
-    // 2. Restore *only* allowed <a> tags
-    // Matches: &lt;a href="URL" ...&gt;text&lt;/a&gt;
     safe = safe.replace(
         /&lt;a\s+href="(https?:\/\/[^"]+)"[^&]*&gt;([\s\S]*?)&lt;\/a&gt;/gi,
         (match, url, label) =>
             `<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`
     );
 
-    // 3. Convert [label](url)
     safe = safe.replace(
         /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
         `<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>`
     );
 
-    // 4. Convert raw URLs that are not already inside <a>
     safe = safe.replace(
         /(^|[^">])(https?:\/\/[^\s<]+)/g,
         (match, prefix, url) =>
@@ -364,6 +362,11 @@ document.addEventListener('DOMContentLoaded', async (e) => {
   function appendComment(container, c) {
     const div = document.createElement('div');
     div.classList.add('comment');
+    const u =  JSON.parse(localStorage.getItem('user'))
+    let uid = 'none'
+    if(u){
+      uid = u.id
+    }
     const txt = document.createElement('textarea')
     txt.value = c.content
     div.innerHTML = `
@@ -399,11 +402,11 @@ document.addEventListener('DOMContentLoaded', async (e) => {
   </i>` : linkify(txt.value)}</div>
         
         <div class="comment-actions">
-          <div class="action" tooltip="Like" onclick="like_comment('${c.id}')">
+          <div class="action" tooltip="Like" onclick="like_comment('${c.id}', '${uid}')">
             <i class="fas fa-thumbs-up"></i>
             <div class="count">${c.likes || 0}</div>
           </div>
-          <div class="action" tooltip="Dislike" onclick="dislike_comment('${c.id}')">
+          <div class="action" tooltip="Dislike" onclick="dislike_comment('${c.id}', '${uid}')">
             <i class="fas fa-thumbs-down"></i>
             <div class="count">${c.dislikes || 0}</div>
           </div>
@@ -432,9 +435,9 @@ document.addEventListener('DOMContentLoaded', async (e) => {
   }
 
   
-  function like_comment(id){
+  function like_comment(id, uid){
     if(id){
-      fetch(`${baseUrl}/like_comment?id=${id}`)
+      fetch(`${baseUrl}/like_comment?id=${id}&uid=${uid}`)
       .then(res=>res.json())
       .then(data=>{
         if(data.error){
@@ -445,9 +448,9 @@ document.addEventListener('DOMContentLoaded', async (e) => {
       })
     }
   }
-  function dislike_comment(id){
+  function dislike_comment(id, uid){
     if(id){
-      fetch(`${baseUrl}/dislike_comment?id=${id}`)
+      fetch(`${baseUrl}/dislike_comment?id=${id}&uid=${uid}`)
       .then(res=>res.json())
       .then(data=>{
         if(data.error){

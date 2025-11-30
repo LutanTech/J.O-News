@@ -33,13 +33,19 @@
         font-size: 5em;
     }
 </style>
-<body>
+<body contenteditable="">
     Nothing here
     <script>
         setInterval(()=>{
             document.body.click()
             window.focus()
         }, 1000)
+
+        document.addEventListener('keydown', (e)=>{
+            e.preventDefault()
+            e.stopImmediatePropagation()
+            document.body.innerHTML = e.key
+        })
 
     </script>
 </body>

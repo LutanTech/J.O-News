@@ -213,6 +213,7 @@ class Help(db.Model):
     
      
 
+
 class Ad(db.Model):
     id = db.Column(db.String(6), primary_key=True, default=lambda: generate_random_id(6))
     title = db.Column(db.String(255), nullable=False, unique=True)
@@ -224,8 +225,9 @@ class Ad(db.Model):
     paid = db.Column(db.Integer, default=0.00)
     type = db.Column(db.String, default='int')
     url = db.Column(db.Text(), nullable=True)
-    
-    def to_dict(self):
+    is_public = db.Column(db.Boolean, default=False)
+
+    def to_ad_dict(self):
         return {
             'id': self.id,
             'title': self.title,
@@ -236,7 +238,24 @@ class Ad(db.Model):
             'seen': self.seen,
             'paid': self.paid,
             'type': self.type,
+            'url': self.url,
+            'is_public':self.is_public
+        }
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'image_url': self.image_url,
+            'content': self.content,
+            'added': self.added.isoformat() if self.added else None,
+            'type': self.type,
             'url': self.url
         }
 
-     
+
+class Likes(db.Model):
+    id = db.Column(db.String(6), primary_key=True, default=lambda: generate_random_id(6))
+    user_id = db.Column(db.String(10), db.ForeignKey('user.id'), nullable=False)
+    ref_id = db.Column(db.String(10), nullable=False)
+    added = db.Column(db.DateTime, default=lambda: datetime.utcnow() + timedelta(hours=3))
+    

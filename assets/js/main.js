@@ -479,7 +479,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     ad.innerHTML = `
-      ${a.url ? `<a href="/ad/?redirect=${a.url}" target="_blank">` : ''}
+      ${a.url ? `<a href="/ad/?redirect=${a.url}" target="_blank" style="display: flex;justify-content: center;">` : ''}
       <div class="ad">
         <b id="identifier">Sponsored Ad</b>
 

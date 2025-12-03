@@ -441,7 +441,7 @@ document.addEventListener('DOMContentLoaded', async (e) => {
       .then(res=>res.json())
       .then(data=>{
         if(data.error){
-          alert(data.error || 'Unkown error occurred', 'error')
+          alert(String(data.error).startsWith('Failed to initialize') ? 'Please Login to like' : data.error  || 'Unkown error occurred', 'error')
         } else{
           fetchComments(window.n_id)
         }

@@ -292,7 +292,7 @@
                 { id: 'articles', icon: 'file-text', label: 'Articles' },
                 { id: 'comments', icon: 'message-square', label: 'Comments' },
                 { id: 'logs', icon: 'activity', label: 'System Logs' },
-                { id: 'refresh', icon: 'circle-arrow', label: 'Refresh' }
+                { id: 'refresh', icon: 'circle', label: 'Refresh' }
             ];
 
             const navHTML = items.map(item => `
@@ -363,7 +363,7 @@
                 { title: 'Articles', value: articles.length, icon: 'file-text', color: 'text-emerald-500', bg: 'bg-emerald-50 dark:bg-emerald-500/10' },
                 { title: 'Comments', value: comments.length, icon: 'message-square', color: 'text-purple-500', bg: 'bg-purple-50 dark:bg-purple-500/10' },
                 { title: 'Events', value: logs.length, icon: 'activity', color: 'text-amber-500', bg: 'bg-amber-50 dark:bg-amber-500/10' },
-                { title: 'View and Manage Ads', value: '<a style="color:#0f0; text-decoration:underline;" href="ads">Ads</a>', icon: 'globe', color: 'text-amber-500', bg: 'bg-amber-50 dark:bg-amber-500/10' }
+                { title: 'View and Manage Ads', value: '<a style="color:#0f0; text-decoration:underline;" href="/ads">Ads</a>', icon: 'globe', color: 'text-amber-500', bg: 'bg-amber-50 dark:bg-amber-500/10' }
             ];
 
             return `

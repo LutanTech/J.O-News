@@ -160,7 +160,6 @@ document.addEventListener('DOMContentLoaded', async (e) => {
     fetch(`${baseUrl}/get_news_filter/${country}?c=True`)
     .then(res=>res.json())
     .then(data=>{
-      console.table(data)
       if(data.error){
         alert(data.error, 'error')
       } else{
@@ -170,14 +169,12 @@ document.addEventListener('DOMContentLoaded', async (e) => {
           mnf.innerHTML = ''
         }
         if (news && news.length > 1 ) {
-          console.log(news.length)
           mnf.innerHTML = `
           <h3 style="margin-top:20px;">More from <a href="/category/?c=${country}&country=1" id="f-country" style="color: #0f0; text-transform:capitalize;">${country.replaceAll('_', ' ')}</a></h3>
           <hr>
          `
           news.forEach(n => {
             if(n.id == window.n_id){
-              console.log('same')
             } else{
             const div = document.createElement('div')
             const a = document.createElement('a')
@@ -478,7 +475,6 @@ document.addEventListener('DOMContentLoaded', async (e) => {
           if (news) {
             news.forEach(n => {
               if(n.id == window.n_id){
-                console.log('same')
               } else{
               const div = document.createElement('div')
               const a = document.createElement('a')
@@ -586,12 +582,10 @@ document.addEventListener('DOMContentLoaded', async (e) => {
 // }
 function disperseAds2() {
   const mainContainer = document.querySelector('.article-text');
-  console.log(mainContainer.innerHTML)
   if (!mainContainer) return;
 
   const ads = document.querySelectorAll('.container-18e3e8231793e50a8fb517029604e76d__bn-container');
   if (ads.length === 0) return;
-  console.log(ads.length)
 
   let contentDivs = [];
   for (let div of mainContainer.querySelectorAll('div')) {

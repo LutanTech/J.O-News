@@ -2,7 +2,6 @@
 from datetime import datetime, timedelta
 import string, secrets, uuid, base64, json, hmac, hashlib, requests
 import requests
-from app import log
 import re
 # -------------------
 
@@ -54,7 +53,6 @@ def upload_to_imgbb(image_b64):
     if response.status_code == 200 and "data" in resp_json and "url" in resp_json["data"]:
         return resp_json["data"]["url"]
     else:
-        log(f'Imgbb upload failed {resp_json}', 'error')
         raise Exception(f"ImgBB upload failed: {resp_json}")
     
 def remove_punct(txt):

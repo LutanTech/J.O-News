@@ -7,7 +7,6 @@ from datetime import datetime, timedelta
 
 from pydantic_core import Url
 import models
-from models import News, Log, Comment, User, OTP, Help, Ad, Likes
 from flask_mail import Mail, Message
 from requests_oauthlib import OAuth2Session
 from urllib.parse import urlencode
@@ -19,6 +18,7 @@ import math
 from utils import generate_random_id, make_slug, upload_to_imgbb, remove_punct, generate_otp, generate_token, validate_token
 import user_agents
 import os, shutil
+from models import News, Log, Comment, User, OTP, Help, Ad, Likes, Subscription
 
 app = Flask(__name__)
 
@@ -33,6 +33,7 @@ app.config['MAIL_USERNAME'] = 'lutancorpinfoteam@gmail.com'
 app.config['MAIL_PASSWORD'] = 'ecpb aukn nagd csqh'
 app.config['MAIL_DEFAULT_SENDER'] = ('JOMC News Team', 'lutancorpinfoteam@gmail.com')
 app.config['ADMIN_EMAIL'] = 'lutancorpinfoteam@gmail.com'
+app.config['ADMIN_EMAIL2'] = 'owinojoseph361@gmail.com'
 
 ALLOWED_FRONTEND_ORIGINS = [
      "http://127.0.0.1:5500",
@@ -216,7 +217,7 @@ def news():
     news_query = news_query.offset(offset)
 
     news_dict = news_query.all()
-    log('[200] /news route access', 'info')
+    # log('[200] /news route access', 'info')
     return jsonify({'news': [n.to_small_dict() for n in news_dict]})
 
 
@@ -503,6 +504,7 @@ def send_otp_route():
     except Exception as e:
         db.session.rollback()
         print(f"DB Error: {e}")
+        log(f"400 : Error in  /send-otp route: {str(e)}", 'error')
         return jsonify({'success': False, 'message': 'Failed to send OTP'}), 500
 
 @app.route('/register', methods=['POST'])
@@ -534,7 +536,7 @@ def register():
                     db.session.delete(otpEntry)
                     db.session.commit()
                     log(f'200: New User : {new_user}', 'success')
-                    return jsonify({'message','Registration successfull'}), 200
+                    return jsonify({'message':'Registration successfull'}), 200
                 except Exception as e:
                     log(f'[500]  DB error in /register route : {str(e)}', 'error')
                     return jsonify({'error':f'Database Error {str(e)}'}), 500
@@ -692,7 +694,11 @@ def get_user_articles():
 # --------------------- ADMIN ROUTES ---------------------
 
 def is_admin(user):
-    return user.email == app.config['ADMIN_EMAIL']
+    return user.email in {
+        app.config['ADMIN_EMAIL'],
+        app.config['ADMIN_EMAIL2']
+    }
+
 
 
 # GET all users
@@ -729,6 +735,11 @@ def admin_delete_user():
     user = User.query.filter_by(id=delete_id).first()
     if not user:
         return jsonify({'error': 'User not found'}), 404
+
+    if user.email == 'lutancorpinfoteam@gmail.com':
+       log('[401]  Unauthorized. Admin account deletion detected!. Alerting Admin...', 'error')
+       return jsonify({'error': 'User can not be deleted'}), 404
+
 
     db.session.delete(user)
     db.session.commit()
@@ -911,11 +922,11 @@ def get_comment():
     return jsonify({'error':'missing data in request'}), 400
 
 
-@app.route('/help')
+@app.route('/help', methods=['POST'])
 def help():
     data = request.get_json()
     if data:
-        email = data.get('email')
+        email = 'Anonymous'
         text = data.get('description')
         image = data.get('image')
         try:
@@ -926,7 +937,7 @@ def help():
         except Exception as e:
             log(f'[500] : Help Request DB error {str(e)}', 'error')
             db.session.rollback()
-            return jsonify({'error':'Database Error'}), 500
+            return jsonify({'error':f'Database Error {str(e)}'}), 500
     return jsonify({'error':'missing data in request'}), 400
 
 def send_db_backup():
@@ -1018,7 +1029,7 @@ def get_latest_ad():
     try:
         limit_val = request.args.get('limit')
         limit_num = int(limit_val) if limit_val else 5
-        
+
         ads = (
             Ad.query
             .filter_by(is_public=True)
@@ -1026,16 +1037,16 @@ def get_latest_ad():
             .limit(limit_num)
             .all()
         )
-        
+
         if ads:
             return jsonify({'ads': [ad.to_dict() for ad in ads]}), 200
-        
+
         return jsonify({'error':'No ads found'}), 404
 
     except Exception as e:
         log(f'[400]: Error in /ads/latest > {str(e)}', 'error')
         return jsonify({'error': f'Failed: {str(e)}'}), 400
-        
+
 
 from random import sample
 
@@ -1045,7 +1056,7 @@ def get_featured_ads():
         limit_val = request.args.get('limit')
         limit_num = int(limit_val) if limit_val else 5
 
-        ads = Ad.query.filter_by(type='featured', is_public=True).all() 
+        ads = Ad.query.filter_by(type='featured', is_public=True).all()
 
         if not ads:
             return jsonify({'error': 'No Ads added'}), 400
@@ -1147,6 +1158,10 @@ def delete_ad():
         if not ad:
             return jsonify({'error': 'Ad not found'}), 404
 
+        if ad.title == 'Lutan Techy':
+            return jsonify({'error': 'Ad not up for deletion 😂'}), 404
+
+
         db.session.delete(ad)
         db.session.commit()
 
@@ -1156,7 +1171,7 @@ def delete_ad():
         db.session.rollback()
         log(f'[500] : Database error > {str(e)}', 'error')
         return jsonify({'error': 'Failed to delete ad'}), 500
-    
+
 @app.route('/t_ad/<id>')
 def toggle(id):
  try:
@@ -1174,7 +1189,7 @@ def toggle(id):
 
         return jsonify({'error':'Ad not found'}), 404
     return jsonify({'error':'Missing data in request'}), 400
-    
+
  except Exception as e:
         log(f'[500]: Database error in /toggle ad visibility route > {str(e)}', 'error')
         return jsonify({'error':f'Database error'}), 500
@@ -1194,8 +1209,24 @@ def v(id):
         return jsonify({'error':'Failed to get ad'}), 404
     return jsonify({'error':'Missing data in request'}), 400
 
-
+@app.route('/subscribe', methods=['POST'])
+def subscribe():
+    data = request.get_json()
+    email = data.get('email')
+    if not data or not email:
+        return jsonify({'error':'Missing details in request'}), 400
+    existing = Subscription.query.filter_by(email=email).first()
+    if existing:
+        return jsonify({'error':'Already sybscribed'}), 401
+    try:
+        new_sub = Subscription(email=email)
+        db.session.add(new_sub)
+        db.session.commit()
+        return jsonify({'msg':'Subscribed'}),200
+    except Exception as e:
+        log(f'[500] Database error in /subscribe route: {str(e)}', 'error')
+        return jsonify({'error':'An error occured on our end'}), 500
 
 if __name__ == '__main__':
     print("app.run(debug=True, port=5000, host='0.0.0.0')")
-#    app.run(debug=True, port=5000, host='0.0.0.0')
+    app.run(debug=True, port=5000, host='0.0.0.0')

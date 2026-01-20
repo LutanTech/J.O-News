@@ -259,3 +259,15 @@ class Likes(db.Model):
     ref_id = db.Column(db.String(10), nullable=False)
     added = db.Column(db.DateTime, default=lambda: datetime.utcnow() + timedelta(hours=3))
     
+class Subscription(db.Model):
+    id = db.Column(db.String(6), primary_key=True, default=lambda: generate_random_id(6))
+    email = db.Column(db.String(255), unique=True)
+    added = db.Column(db.DateTime, default=lambda: datetime.utcnow() + timedelta(hours=3))
+    
+    def to_dict(self):
+        return {
+            'id':self.id,
+            'email':self.email,
+            'at':self.added
+        }
+    

@@ -1,4 +1,9 @@
 User-agent: *
-Disallow:
+Allow: /
 
-Sitemap: https://lutan-tech.is-great.org/sitemap.xml
+Disallow: /account
+Disallow: /login
+Disallow: /register
+Disallow: /user
+
+Sitemap: https://jomc-news.vercel.app/sitemap.xml

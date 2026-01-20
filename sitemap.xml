@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url>
+    <loc>https://jomc-news.vercel.app/</loc>
+    <priority>1.0</priority>
+  </url>
+
+  <url><loc>https://jomc-news.vercel.app/world</loc></url>
+  <url><loc>https://jomc-news.vercel.app/kenya</loc></url>
+  <url><loc>https://jomc-news.vercel.app/politics</loc></url>
+  <url><loc>https://jomc-news.vercel.app/business</loc></url>
+  <url><loc>https://jomc-news.vercel.app/climate</loc></url>
+  <url><loc>https://jomc-news.vercel.app/health</loc></url>
+  <url><loc>https://jomc-news.vercel.app/sports</loc></url>
+  <url><loc>https://jomc-news.vercel.app/entertainment</loc></url>
+  <url><loc>https://jomc-news.vercel.app/people</loc></url>
+  <url><loc>https://jomc-news.vercel.app/countries</loc></url>
+  <url><loc>https://jomc-news.vercel.app/search</loc></url>
+
+  <url><loc>https://jomc-news.vercel.app/login</loc></url>
+  <url><loc>https://jomc-news.vercel.app/register</loc></url>
+  <url><loc>https://jomc-news.vercel.app/account</loc></url>
+  <url><loc>https://jomc-news.vercel.app/user</loc></url>
+
+  <url><loc>https://jomc-news.vercel.app/privacy_policy</loc></url>
+  <url><loc>https://jomc-news.vercel.app/terms</loc></url>
+  <url><loc>https://jomc-news.vercel.app/open</loc></url>
+
+</urlset>
